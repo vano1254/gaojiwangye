@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计 11-4：同一段关键帧动画，换成七种 animation-timing-function，直观对比节奏差别。">
+    <title>11-4 · 王梓杨的动画节奏对比</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 26px 20px 40px;
+            line-height: 1.7;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            margin: 32px 0 14px;
+            padding-left: 10px;
+            font-size: 20px;
+            color: #2c3e50;
+            border-left: 5px solid #2980b9;
+        }
+
+        .sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .tip {
+            max-width: 920px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+            color: #7a5c00;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 控制条：勾选后暂停全部动画（纯 CSS，:has 选择器）===== */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin: 22px 0 14px;
+            padding: 12px 16px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .controls input {
+            width: 17px;
+            height: 17px;
+            accent-color: #008879;
+            cursor: pointer;
+        }
+
+        .controls label {
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .controls small {
+            color: #7b8794;
+            font-size: 13px;
+        }
+
+        .page:has(#pause:checked) .dot {
+            animation-play-state: paused;
+        }
+
+        /* ===== 对比行 ===== */
+        .rows {
+            display: grid;
+            gap: 12px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        /* 鼠标移到某一行，只暂停这一行，方便逐条对比 */
+        .row:hover .dot {
+            animation-play-state: paused;
+        }
+
+        .name {
+            flex: none;
+            width: 236px;
+            font-size: 13px;
+            color: #5b6f80;
+        }
+
+        .name b {
+            display: block;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .name code {
+            font-size: 11.5px;
+            background-color: #eef3f7;
+            color: #2876c6;
+        }
+
+        /* 轨道：点的活动范围。留出右侧余量，给「回弹」曲线冲过头的空间 */
+        .track {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+            height: 22px;
+            background-color: #f6f9fb;
+            border: 1px solid #e8eef3;
+        }
+
+        /* 所有行共用同一段关键帧，只有 timing-function 不同 */
+        .dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #2876c6;
+            animation: slide 1.8s infinite alternate;
+        }
+
+        @keyframes slide {
+            from { left: 2px; }
+            to   { left: 72%; }
+        }
+
+        /* ===== 七种时间函数：只有这一行不同 ===== */
+        .tf-linear .dot { animation-timing-function: linear; }
+        .tf-ease .dot { animation-timing-function: ease; }
+        .tf-in .dot { animation-timing-function: ease-in; }
+        .tf-out .dot { animation-timing-function: ease-out; }
+        .tf-inout .dot { animation-timing-function: ease-in-out; }
+        .tf-back .dot { animation-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+        .tf-steps .dot { animation-timing-function: steps(6, end); }
+
+        .tf-back .dot { background-color: #9659b8; }
+        .tf-steps .dot { background-color: #cc7033; }
+
+        /* ===== 要点说明 ===== */
+        .note {
+            max-width: 920px;
+            padding: 16px 22px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .note li {
+            margin: 7px 0 7px 20px;
+            font-size: 15px;
+        }
+
+        details {
+            max-width: 920px;
+            margin-top: 18px;
+            padding: 15px 20px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        summary {
+            color: #2876c6;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        pre {
+            margin-top: 14px;
+            padding: 16px;
+            overflow-x: auto;
+            background-color: #f1f6fa;
+            border: 1px solid #e0e9ef;
+            font: 13px/1.85 Consolas, "Courier New", monospace;
+            color: #284d67;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+            color: inherit;
+            font: inherit;
+        }
+
+        .foot {
+            max-width: 920px;
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        /* ===== 窄屏：标签换到上方，轨道占满整行 ===== */
+        @media (max-width: 620px) {
+            body { padding: 20px 14px 32px; }
+            .row { flex-direction: column; align-items: stretch; gap: 8px; }
+            .name { width: auto; }
+            .name b { display: inline; }
+            .name code { margin-left: 6px; }
+        }
+
+        /* ===== 无障碍：系统开启「减少动态效果」时停用动画 ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .dot {
+                animation: none !important;
+                left: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <h1>王梓杨的动画节奏对比</h1>
+    <p class="sub">
+        七行用的是<b>同一段关键帧</b>、同样的时长，只换 <code>animation-timing-function</code> —— 节奏差别一眼可见。
+        <br>上一页 <code>11-2</code> 演示的是动画「效果」，这一页专门比较动画「节奏」。
+    </p>
+    <p class="tip">鼠标移到某一行可以只暂停那一行，方便逐条对比；勾选下面的开关则全部一起停。</p>
+
+    <div class="controls">
+        <input type="checkbox" id="pause">
+        <label for="pause">暂停全部动画</label>
+        <small>动画时长统一 1.8s，往复播放（alternate）</small>
+    </div>
+
+    <h2>同一段动画 · 七种节奏</h2>
+
+    <div class="rows">
+
+        <div class="row tf-linear">
+            <div class="name"><b>linear · 匀速</b><code>linear</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-ease">
+            <div class="name"><b>ease · 默认</b><code>ease</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-in">
+            <div class="name"><b>ease-in · 慢起快收</b><code>ease-in</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-out">
+            <div class="name"><b>ease-out · 快起慢收</b><code>ease-out</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-inout">
+            <div class="name"><b>ease-in-out · 两头慢</b><code>ease-in-out</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-back">
+            <div class="name"><b>回弹 · 冲过头再回来</b><code>cubic-bezier(.34, 1.56, .64, 1)</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+        <div class="row tf-steps">
+            <div class="name"><b>阶梯 · 逐格跳</b><code>steps(6, end)</code></div>
+            <div class="track"><span class="dot"></span></div>
+        </div>
+
+    </div>
+
+    <h2>要点说明</h2>
+
+    <ol class="note">
+        <li><code>animation-timing-function</code> 决定动画在<b>每一段</b>里怎么加速、怎么减速。关键帧一模一样，节奏可以完全不同 —— 上面七行就是证明。</li>
+        <li><code>linear</code> 匀速；<code>ease</code> 是默认值，起步稍快、结尾变慢；<code>ease-in</code> 慢起快收；<code>ease-out</code> 快起慢收；<code>ease-in-out</code> 两头慢、中间快。</li>
+        <li><code>cubic-bezier(x1, y1, x2, y2)</code> 自定义曲线，四个数就是两个控制点。y 值可以<b>超过 1</b>，就会「冲过头再回来」，做出回弹感（第 6 行）。</li>
+        <li><code>steps(n, end)</code> 不做平滑补间，把整段切成 n 格跳着走 —— 第 7 行的点是一格一格挪过去的。</li>
+        <li>本页为了让点来回走，动画改的是 <code>left</code>，会触发布局重排。实际项目里更推荐动 <code>transform: translateX()</code>，只触发合成，性能更好。</li>
+        <li>「暂停全部」用的是 <code>:has(#pause:checked)</code> —— 不写一行 JavaScript 也能让勾选框控制整页动画。</li>
+        <li>系统开启「减少动态效果」时，动画会自动停用，点停回起点。</li>
+        <li>整页纯原生 HTML + CSS，没有 JavaScript，也没有引用任何外部库，可离线打开。</li>
+    </ol>
+
+    <details>
+        <summary>查看核心 CSS（含中文注释）</summary>
+        <pre><code>/* 七行共用同一段关键帧 */
+@keyframes slide {
+    from { left: 2px; }
+    to   { left: 72%; }
+}
+
+/* 点的公共样式：时长、往复都一样 */
+.dot {
+    position: absolute;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    animation: slide 1.8s infinite alternate;
+}
+
+/* 唯一不同的是时间函数 */
+.tf-linear .dot { animation-timing-function: linear; }
+.tf-ease   .dot { animation-timing-function: ease; }
+.tf-in     .dot { animation-timing-function: ease-in; }
+.tf-out    .dot { animation-timing-function: ease-out; }
+.tf-inout  .dot { animation-timing-function: ease-in-out; }
+.tf-back   .dot { animation-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+.tf-steps  .dot { animation-timing-function: steps(6, end); }
+
+/* 悬停单行暂停：animation-play-state 不继承，要写在动的元素上 */
+.row:hover .dot { animation-play-state: paused; }
+
+/* 纯 CSS 全局暂停 */
+.page:has(#pause:checked) .dot { animation-play-state: paused; }</code></pre>
+    </details>
+
+    <p class="foot">高级网页设计 · 第十一章 CSS3 动画 · 王梓杨</p>
+
+</div>
+</body>
+</html>
