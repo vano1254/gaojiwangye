@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .flex{
+            display:flex;
+            margin-bottom:20px;
+        }
+        .flex li{
+            border:1px solid #039;
+            line-height:100px;
+            list-style:none;
+            text-align:center;
+        }
+        /* 第1个：单个盒子 */
+        .flex1 li{
+            width:100px;
+        }
+        /* 第2个：纵向两个盒子 */
+        .flex2{
+            flex-direction:column;
+        }
+        .flex2 li{
+            width:100px;
+        }
+        /* 第3个：2行2列4个盒子，换行 */
+        .flex3{
+            flex-wrap:wrap;
+            width:220px;
+        }
+        .flex3 li{
+            width:48%;
+        }
+        /* 第4个：上面1个通栏，下面2个并排 */
+        .flex4{
+            flex-wrap:wrap;
+            width:220px;
+        }
+        .flex4 li:first-child{
+            width:100%;
+        }
+        .flex4 li{
+            width:48%;
+        }
+    </style>
+</head>
+<body>
+    <h2>wzy 411</h2>
+    <!-- 布局1：1个方块 -->
+    <ul class="flex flex1">
+        <li>1</li>
+    </ul>
+    <!-- 布局2：上下2个方块 -->
+    <ul class="flex flex2">
+        <li>1</li>
+        <li>2</li>
+    </ul>
+    <!-- 布局3：2×2 4个方块 -->
+    <ul class="flex flex3">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+    </ul>
+    <!-- 布局4：上1下2 -->
+    <ul class="flex flex4">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+</body>
+</html>

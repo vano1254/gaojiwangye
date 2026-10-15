@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h2,h3,p{
+            padding: 0;
+            margin: 0;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        #box h3{
+            font-size: 16px;
+            text-align: center;
+            line-height: 33px;
+            letter-spacing: 3px;
+            color: #036;
+        }
+        #box p{
+            line-height: 150%;
+            color: #666;
+            text-indent: 3em;
+        }
+        #box a{
+            color: #ff6600;
+            text-decoration: none;
+        }
+        /* =========新增样式========= */
+        .stu-id{
+            color: blue;  /*蓝色*/
+            font-weight: bold; /*加粗*/
+        }
+        .stu-name{
+            color: #222;  /*深色*/
+            font-weight: bold; /*加粗*/
+        }
+        .knowledge{
+            border: 1px solid purple; /*紫色边框*/
+        }
+    </style>
+</head>
+<body>
+    <h2>css进阶</h2>
+    <div id = 'box'>
+        <h3>CSS那些事</h3>
+        <p>
+            学号：<span class="stu-id">411</span>，姓名：<span class="stu-name">王梓杨</span>，性别：男，年龄：20，专业：计算机科学与技术，班级：24004
+            这个例子对应的<span class="knowledge">知识点是：群组选择器，后代选择器，层叠与继承。</span>
+            <a href="#" >更多>></a>
+        </p>
+    </div>
+    <!--扩展-->
+</body>
+</html>

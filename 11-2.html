@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的CSS动画</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 24px 20px 40px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 32px 0 14px;
+            padding-left: 10px;
+            border-left: 5px solid #2980b9;
+            color: #2c3e50;
+        }
+
+        .sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .tip {
+            margin-top: 12px;
+            max-width: 920px;
+            padding: 10px 14px;
+            font-size: 14px;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+            color: #7a5c00;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 卡片网格：一行自动排几个，窄屏自动变少 ===== */
+        .grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
+
+        .demo {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        /* 动画舞台：固定高度，元素在正中间动，超出部分裁掉 */
+        .demo .stage {
+            height: 152px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafbfc;
+            border-bottom: 1px solid #e2e8ee;
+            overflow: hidden;
+        }
+
+        .demo .cap {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 9px 12px;
+            font-size: 13px;
+            color: #4a5a6a;
+        }
+
+        .demo .cap b {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .demo .cap code {
+            font-size: 11.5px;
+            padding: 1px 4px;
+        }
+
+        /* 鼠标移到卡片上，卡片里的动画全部暂停（animation-play-state 不继承，
+           所以每个带 animation 的元素都加了 .anim 类，由下面这条统一控制） */
+        .demo:hover .anim {
+            animation-play-state: paused;
+        }
+
+        /* ===== ① 无限旋转 ===== */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .box-spin {
+            width: 56px;
+            height: 56px;
+            background-color: #2980b9;
+            animation: spin 3s linear infinite;
+        }
+
+        /* ===== ② 心跳：来回缩放 ===== */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.22); }
+        }
+        .heart {
+            width: 56px;
+            height: 56px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        /* ===== ③ 上下弹跳：cubic-bezier 让落地有个减速感 ===== */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-34px); }
+        }
+        .ball {
+            width: 44px;
+            height: 44px;
+            background-color: #f39c12;
+            border-radius: 50%;
+            animation: bounce .9s cubic-bezier(.3, 0, .7, 1) infinite;
+        }
+
+        /* ===== ④ 呼吸：透明度和缩放一起变 ===== */
+        @keyframes breathe {
+            0%, 100% { opacity: 1;   transform: scale(1); }
+            50%      { opacity: .35; transform: scale(.86); }
+        }
+        .breath {
+            width: 56px;
+            height: 56px;
+            background-color: #27ae60;
+            border-radius: 50%;
+            animation: breathe 2.4s ease-in-out infinite;
+        }
+
+        /* ===== ⑤ 加载圆环：一圈灰边框、上边蓝，转起来就是转圈加载 ===== */
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+        .ring {
+            width: 56px;
+            height: 56px;
+            border: 5px solid #dfe6ee;
+            border-top-color: #2980b9;
+            border-radius: 50%;
+            animation: rotate 1s linear infinite;
+        }
+
+        /* ===== ⑥ 三点波浪：同一个关键帧，靠 animation-delay 错开时间 ===== */
+        @keyframes wave {
+            0%, 60%, 100% { transform: translateY(0); }
+            30%           { transform: translateY(-16px); }
+        }
+        .dots {
+            display: flex;
+            gap: 9px;
+        }
+        .dots i {
+            display: block;
+            width: 14px;
+            height: 14px;
+            background-color: #9b59b6;
+            border-radius: 50%;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        .dots i:nth-child(2) { animation-delay: .15s; }
+        .dots i:nth-child(3) { animation-delay: .3s; }
+
+        /* ===== ⑦ 进度条：宽度来回变化（alternate 正反往复） ===== */
+        @keyframes grow {
+            0%   { width: 8%; }
+            100% { width: 100%; }
+        }
+        .bar-track {
+            width: 124px;
+            height: 12px;
+            background-color: #e2e8ee;
+        }
+        .bar {
+            height: 100%;
+            background-color: #1abc9c;
+            animation: grow 2.2s ease-in-out infinite alternate;
+        }
+
+        /* ===== ⑧ 打字机：宽度用 steps() 一格一格长出来，光标同时闪 ===== */
+        @keyframes typing {
+            0%        { width: 0; }
+            55%, 100% { width: 185px; }
+        }
+        @keyframes caret {
+            50% { border-color: transparent; }
+        }
+        .type {
+            display: inline-block;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 15px;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #2980b9;
+            animation: typing 3s steps(20, end) infinite, caret .8s step-end infinite;
+        }
+
+        /* ===== ⑨ 3D 翻转：rotateY 绕竖轴翻，父级给 perspective 才有立体感 ===== */
+        @keyframes flip {
+            0%   { transform: rotateY(0deg); }
+            100% { transform: rotateY(180deg); }
+        }
+        .flip-stage {
+            perspective: 600px;
+        }
+        .flip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            font-size: 12px;
+            color: #fff;
+            background-color: #34495e;
+            animation: flip 2.6s ease-in-out infinite alternate;
+        }
+
+        /* ===== 要点说明 ===== */
+        .note {
+            max-width: 920px;
+            padding: 16px 22px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+        .note li {
+            margin: 7px 0 7px 20px;
+            font-size: 15px;
+        }
+
+        .foot {
+            margin-top: 28px;
+            padding-top: 12px;
+            max-width: 920px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        /* ===== 无障碍：系统开启「减少动态效果」时，动画全部停用 ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .anim {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>王梓杨的CSS动画</h1>
+    <p class="sub">
+        用 <code>@keyframes</code> 定义关键帧、<code>animation</code> 调用动画，做出的九个纯 CSS 动画效果。
+    </p>
+    <p class="tip">
+        鼠标移到任意卡片上可以暂停该卡片的动画，方便慢慢看；系统开启「减少动态效果」时全部动画会自动停用。
+    </p>
+
+    <!-- ========== 九个动画 ========== -->
+    <h2>动画效果一览</h2>
+
+    <div class="grid">
+
+        <div class="demo">
+            <div class="stage"><div class="anim box-spin"></div></div>
+            <div class="cap">
+                <b>① 无限旋转</b>
+                <code>spin 3s linear infinite</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage"><div class="anim heart"></div></div>
+            <div class="cap">
+                <b>② 心跳</b>
+                <code>pulse 1.2s ease-in-out</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage"><div class="anim ball"></div></div>
+            <div class="cap">
+                <b>③ 上下弹跳</b>
+                <code>bounce .9s cubic-bezier()</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage"><div class="anim breath"></div></div>
+            <div class="cap">
+                <b>④ 呼吸</b>
+                <code>opacity + scale 一起变</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage"><div class="anim ring"></div></div>
+            <div class="cap">
+                <b>⑤ 加载圆环</b>
+                <code>rotate 1s linear infinite</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage">
+                <div class="dots">
+                    <i class="anim"></i><i class="anim"></i><i class="anim"></i>
+                </div>
+            </div>
+            <div class="cap">
+                <b>⑥ 三点波浪</b>
+                <code>animation-delay 错开时间</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage">
+                <div class="bar-track"><div class="anim bar"></div></div>
+            </div>
+            <div class="cap">
+                <b>⑦ 进度条</b>
+                <code>grow 2.2s infinite alternate</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage"><span class="anim type">CSS animation 动画</span></div>
+            <div class="cap">
+                <b>⑧ 打字机</b>
+                <code>typing 3s steps(20, end)</code>
+            </div>
+        </div>
+
+        <div class="demo">
+            <div class="stage flip-stage"><div class="anim flip">翻我</div></div>
+            <div class="cap">
+                <b>⑨ 3D 翻转</b>
+                <code>rotateY + perspective</code>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== 要点说明 ========== -->
+    <h2>要点说明</h2>
+
+    <ol class="note">
+        <li><code>@keyframes</code> 负责定义关键帧，<code>animation</code> 一次性给出「动画名 时长 速度曲线 延迟 循环次数 方向」这几个参数，两者配合才动起来。</li>
+        <li><code>animation-play-state: paused</code> 可以暂停 / 继续动画；这个属性<b>不会继承</b>，必须写在真正带 <code>animation</code> 的那个元素上（所以本页给每个动的元素都加了 <code>.anim</code> 类）。</li>
+        <li><code>animation-delay</code> 用来把同一个动画错开时间播放，第 ⑥ 个「三点波浪」就是同一个关键帧 + 三个不同延迟做出来的。</li>
+        <li><code>steps()</code> 让动画逐格跳变、不做补间，第 ⑧ 个「打字机」用 <code>steps(20, end)</code> 让宽度一格一格长出来，光标再用另一个动画闪。</li>
+        <li><code>transform</code> 的 <code>translate</code> / <code>scale</code> / <code>rotate</code> / <code>rotateY</code> 是动画的主力；<code>rotateY</code> 这类 3D 变换要给父级加 <code>perspective</code> 才有立体感。</li>
+        <li>动画优先动 <code>transform</code> 和 <code>opacity</code>：它们只触发合成，不重新排版，性能最好；动 <code>width</code> / <code>height</code> 会触发布局，尽量少用（第 ⑦ ⑧ 个是为了演示效果才动的宽度）。</li>
+        <li>用 <code>@media (prefers-reduced-motion: reduce)</code> 在用户开启「减少动态效果」时停掉动画，照顾对动效敏感的人。</li>
+        <li>整页是纯原生 HTML + CSS，没有 JavaScript，也没有引用任何外部库，断网也能正常播放。</li>
+    </ol>
+
+    <p class="foot">高级网页设计 · 第十一章 CSS3 动画 · 王梓杨</p>
+
+</body>
+</html>

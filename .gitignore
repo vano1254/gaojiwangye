@@ -1,0 +1,10 @@
+# 页面检查产物（本地截图 + 校验脚本），非课程交付内容
+outputs/
+
+# 助手工作区数据（项目记忆等），非课程交付内容
+.workbuddy-ai/
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+desktop.ini

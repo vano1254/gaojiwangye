@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的css animation幻灯片</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            font-size: 30px;
+        }
+        .sub {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .sub code {
+            background-color: #e8edf2;
+            color: #b5382f;
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+        }
+        .tip {
+            margin-top: 10px;
+            font-size: 14px;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+            padding: 8px 14px;
+        }
+        h2 {
+            font-size: 20px;
+            margin: 30px 0 12px;
+            border-left: 5px solid #2980b9;
+            padding-left: 10px;
+        }
+
+        /* ===== 幻灯片外框 ===== */
+        /* overflow: hidden 是关键：窗口只有 600px 宽，一次只露出 1 张图片 */
+        .viewport {
+            width: 600px;
+            height: 464px;
+            overflow: hidden;
+            margin: 0 auto;
+            border: 1px solid #d5dbe1;
+            background-color: #2c3e50;
+        }
+        /* 装图片的轨道：宽 2400px = 4 张 × 600px */
+        /* 第 4 张是 1.jpg 的复制，用来首尾接上、无缝循环 */
+        .track {
+            display: flex;
+            width: 2400px;
+            animation: slideShow 12s ease-in-out infinite;
+        }
+        /* 每一张 = 上图 + 下文，整块一起被轨道带着左右移动 */
+        .slide {
+            width: 600px;
+            flex: none;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 上图 */
+        .slide img {
+            display: block;
+            width: 600px;
+            height: 400px;
+            object-fit: cover;
+        }
+        /* 下文：图片下面的说明条 */
+        .cap {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            background-color: #2c3e50;
+            color: #fff;
+            font-size: 18px;
+        }
+        .cap .file {
+            font-size: 13px;
+            color: #93a8bd;
+        }
+
+        /* ===== 核心动画：图片位置动画 ===== */
+        /* 这里改变的是 transform: translateX（位置），不是 opacity（透明度） */
+        /* 每张停 3.2 秒、滑动 0.8 秒，一轮 12 秒，所以每张占 33.33% */
+        @keyframes slideShow {
+            0%,     26.67%  { transform: translateX(0); }         /* 停在第 1 张 */
+            33.33%, 60%     { transform: translateX(-600px); }    /* 停在第 2 张 */
+            66.67%, 93.33%  { transform: translateX(-1200px); }   /* 停在第 3 张 */
+            100%            { transform: translateX(-1800px); }   /* 滑到第 4 张（画面和第 1 张一样） */
+        }
+
+        /* ===== 鼠标悬停暂停（方便观察，不影响切换方式） ===== */
+        .viewport:hover .track {
+            animation-play-state: paused;
+        }
+
+        /* ===== 要点说明 ===== */
+        .note {
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+            padding: 16px 22px;
+            max-width: 820px;
+        }
+        .note li {
+            margin: 6px 0 6px 20px;
+            font-size: 15px;
+        }
+        .note code {
+            background-color: #e8edf2;
+            color: #b5382f;
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+        }
+        .foot {
+            margin-top: 26px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* ===== 尊重系统的“减少动态效果”设置 ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .track {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>王梓杨的css animation幻灯片</h1>
+    <p class="sub">基于 <code>css animation</code> 的幻灯片，上图下文，图片用 <code>img</code> 目录下的 1.jpg 到 3.jpg；图片切换用的是<strong>位置动画</strong>（<code>transform: translateX</code>），<strong>不是透明度变化</strong>。</p>
+    <p class="tip">鼠标移到幻灯片上可以暂停动画，方便慢慢看。</p>
+
+    <!-- ========== 幻灯片：上图下文 ========== -->
+    <h2>幻灯片演示（上图下文 · 位置动画切换）</h2>
+
+    <div class="viewport">
+        <div class="track">
+            <!-- 第 1 张 -->
+            <div class="slide">
+                <img src="img/1.jpg" alt="峡湾与悬崖">
+                <div class="cap">
+                    <span>① 峡湾与悬崖</span>
+                    <span class="file">img/1.jpg</span>
+                </div>
+            </div>
+            <!-- 第 2 张 -->
+            <div class="slide">
+                <img src="img/2.jpg" alt="雪山上的棕熊">
+                <div class="cap">
+                    <span>② 雪山上的棕熊</span>
+                    <span class="file">img/2.jpg</span>
+                </div>
+            </div>
+            <!-- 第 3 张 -->
+            <div class="slide">
+                <img src="img/3.jpg" alt="展翅的雄鹰">
+                <div class="cap">
+                    <span>③ 展翅的雄鹰</span>
+                    <span class="file">img/3.jpg</span>
+                </div>
+            </div>
+            <!-- 第 4 张：第 1 张的复制，只为无缝循环，不显示新内容 -->
+            <div class="slide">
+                <img src="img/1.jpg" alt="峡湾与悬崖">
+                <div class="cap">
+                    <span>① 峡湾与悬崖</span>
+                    <span class="file">img/1.jpg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <p class="foot">高级网页设计 · 第十章 CSS3 动画 · 王梓杨</p>
+
+</body>
+</html>

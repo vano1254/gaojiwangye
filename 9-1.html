@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9-1 transition 过渡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+            background: #fff;
+            padding: 20px;
+        }
+
+        /* ===== 页面大标题：王梓杨的transition过渡 ===== */
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+            margin: 0 0 20px 10px;
+        }
+
+        /* ===== 卡片容器：一行三张，自动换行 ===== */
+        .list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* ===== 每张卡片（图片 + 底部标题条）===== */
+        .card {
+            position: relative;          /* 给标题条做定位父级 */
+            width: 360px;
+            height: 240px;
+            overflow: hidden;            /* 图片放大时超出部分裁掉 */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+            cursor: pointer;
+            /* 过渡：所有可动画属性 0.5s 平滑变化（本课重点） */
+            transition: all .5s ease;
+        }
+        .card img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;           /* 按比例裁切填满，不变形 */
+            transition: all .5s ease;
+        }
+        /* 图片底部的半透明标题条 */
+        .card .title {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 16px;
+            color: #fff;
+            background: rgba(0, 0, 0, .45);
+            transition: all .5s ease;
+        }
+
+        /* ===== 九张卡片，九个不同的过渡效果 ===== */
+
+        /* ① 整体放大（要求里必须有的一种） */
+        .card1:hover {
+            transform: scale(1.08);
+            z-index: 2;
+        }
+
+        /* ② 图片放大：卡片不动，画面往里推 */
+        .card2:hover img {
+            transform: scale(1.3);
+        }
+
+        /* ③ 整体旋转 */
+        .card3:hover {
+            transform: rotate(-4deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+        }
+
+        /* ④ 灰度 → 彩色 */
+        .card4 {
+            filter: grayscale(100%);
+        }
+        .card4:hover {
+            filter: grayscale(0%);
+        }
+
+        /* ⑤ 模糊 → 清晰 */
+        .card5 img {
+            filter: blur(4px);
+        }
+        .card5:hover img {
+            filter: blur(0);
+        }
+
+        /* ⑥ 变亮 */
+        .card6:hover {
+            filter: brightness(1.45);
+        }
+
+        /* ⑦ 标题条从下方滑入 */
+        .card7 .title {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .card7:hover .title {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ⑧ 整张卡片上浮 + 投影变大 */
+        .card8:hover {
+            transform: translateY(-14px);
+            box-shadow: 0 18px 28px rgba(0, 0, 0, .35);
+        }
+
+        /* ⑨ 倾斜 */
+        .card9:hover {
+            transform: skewX(-6deg) scale(1.03);
+        }
+    </style>
+</head>
+<body>
+    <h1>王梓杨的transition过渡</h1>
+
+    <div class="list">
+        <!-- 图片放在 images/9-1 文件夹里，换图只改 src 和 alt -->
+        <div class="card card1">
+            <img src="./images/9-1/p1.jpg" alt="峡湾与悬崖">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card2">
+            <img src="./images/9-1/p2.jpg" alt="红色岩壁日落">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card3">
+            <img src="./images/9-1/p3.jpg" alt="绿色山谷公路">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card4">
+            <img src="./images/9-1/p4.jpg" alt="雪山上的棕熊">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card5">
+            <img src="./images/9-1/p5.jpg" alt="雾中的森林">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card6">
+            <img src="./images/9-1/p6.jpg" alt="极光与松树">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card7">
+            <img src="./images/9-1/p7.jpg" alt="展翅的鹰">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card8">
+            <img src="./images/9-1/p8.jpg" alt="山谷瀑布">
+            <div class="title">王梓杨的标题</div>
+        </div>
+
+        <div class="card card9">
+            <img src="./images/9-1/p9.jpg" alt="湖畔森林与岩壁">
+            <div class="title">王梓杨的标题</div>
+        </div>
+    </div>
+</body>
+</html>

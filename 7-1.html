@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-1 上图下文</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        /* 上图下文：一行三组，每组上面是图片、下面跟一条说明文字 */
+        .pic-list {
+            display: flex;            /* 让三组图片横向并排 */
+            justify-content: center;  /* 整体居中 */
+            gap: 10px;                /* 每组之间的间距 */
+            padding: 10px;
+        }
+        .pic-list figure {
+            width: 32%;               /* 一行放三个，剩下的是间距 */
+            background: #000;         /* 说明文字的底色 */
+        }
+        .pic-list img {
+            display: block;           /* 去掉图片底部的空隙 */
+            width: 100%;              /* 图片宽度跟着盒子走 */
+            height: 200px;            /* 三张图高度统一 */
+            object-fit: cover;        /* 图片按比例裁剪填满，不变形 */
+        }
+        .pic-list figcaption {
+            line-height: 34px;        /* 文字在色条里垂直居中 */
+            text-align: center;       /* 文字水平居中 */
+            color: #fff;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 图片放在 images 文件夹里，换图只改 src 和 alt 就行 -->
+    <div class="pic-list">
+        <figure>
+            <img src="./images/banner1.jpg" alt="学习贯彻党的二十届四中全会精神专题辅导课程">
+            <figcaption>王梓杨的上图下文</figcaption>
+        </figure>
+        <figure>
+            <img src="./images/banner2.jpg" alt="我们的中国梦 文化进万家">
+            <figcaption>图片2</figcaption>
+        </figure>
+        <figure>
+            <img src="./images/banner3.jpg" alt="加快发展新质生产力">
+            <figcaption>图片3</figcaption>
+        </figure>
+    </div>
+</body>
+</html>

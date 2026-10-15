@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-1 CSS3 选择器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        /* 一行 7 个：150 + 左右各 10 */
+        .main {
+            width: 1190px;
+            max-width: calc(100% - 20px);
+            margin: 10px auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        /* ↓↓↓ 老师屏幕上的 .box，原样写在这里 ↓↓↓ */
+        .box{
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: white;
+            font-size:40px;
+            display: flex;
+            /* 水平垂直居中 */
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s;
+            box-sizing: border-box;
+            /* width包括了padding和border */
+        }
+        /* ↑↑↑ 老师屏幕上的 .box，原样写在这里 ↑↑↑ */
+
+        /* ===== 静止时 ===== */
+        .box:nth-of-type(even) {
+            background: #f2f2f2;              /* 偶数格浅灰 */
+        }
+        .box:first-child {
+            background: #c8102e;              /* 第 1 格红 */
+            color: #fff;
+            border-color: #c8102e;
+        }
+        .box:last-child {
+            background: #1878d6;              /* 第 12 格蓝 */
+            color: #fff;
+            border-color: #1878d6;
+        }
+        .box:nth-of-type(3n) {
+            border: 2px solid #e8801f;        /* 3 的倍数橙边 */
+        }
+        .box:nth-of-type(6) {
+            background: radial-gradient(circle at 50% 35%, #3d4f6b, #0e141d 72%);
+            color: #fff;
+            border-color: #0e141d;
+        }
+
+        /* ===== 鼠标放上去 ===== */
+        /* 第 5 格：渐变自上而下铺满 */
+        .box:nth-of-type(5) {
+            background-image: linear-gradient(to bottom, #4a5f80, #0e141d);
+            background-repeat: no-repeat;
+            background-position: top;
+            background-size: 100% 0;
+        }
+        .box:nth-of-type(5):hover {
+            background-size: 100% 100%;
+            color: #fff;
+        }
+        .box:nth-of-type(3n):hover {
+            border: 3px solid #f00;
+        }
+        /* 拓展：鼠标在偶数个盒子上时有变化，变化效果自定义 */
+        .box:nth-of-type(even):hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
+        }
+        /* 拓展：黑底白字居中圆角的你的名字，有距离 */
+        .box:last-child:hover::after {
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 10px;
+            content: "王梓杨";
+            background: #000;
+            color: #fff;
+            font-size: 12px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="box">1</div>
+        <div class="box">2</div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+        <div class="box">5</div>
+        <div class="box">6</div>
+        <div class="box">7</div>
+        <div class="box">8</div>
+        <div class="box">9</div>
+        <div class="box">10</div>
+        <div class="box">11</div>
+        <div class="box">12</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的媒体查询布局</title>
+    <style>
+        /* ==================================================================
+           拓展：支持三个 media（媒体类型）
+           CSS3 里媒体类型只保留三种：
+             screen —— 屏幕：电脑 / 手机浏览器（默认就是它）
+             print  —— 打印：打印、打印预览、导出 PDF 时用
+             speech —— 语音：语音合成器等朗读设备
+           写法：@media 媒体类型 and (特征) { 样式 }
+           ================================================================== */
+
+        /* ===== 一、公共样式：三种媒体类型都生效 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            /* border-box 让内边距算在宽度里，
+               所以盒子宽度直接写 100% / 50% / 33.33% / 25% 就行，不用 calc */
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;               /* 页面最小宽度 320px：视口再窄也不小于它 */
+            padding: 20px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            color: #333333;
+        }
+
+        .page {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        code {
+            padding: 1px 5px;
+            background-color: #dfe4ea;
+            color: #c0392b;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+        }
+
+        .sub {
+            margin-top: 8px;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666666;
+        }
+
+        /* 媒体类型徽标：三种类型互相切换显示，一眼看出当前是哪种 media */
+        .media-type {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 14px;
+            font-size: 14px;
+        }
+
+        .mt-screen,
+        .mt-print,
+        .mt-speech {
+            display: none;
+        }
+
+        /* 一行几个盒子的提示条 */
+        .live {
+            font-size: 15px;
+        }
+
+        .live span {
+            display: none;
+        }
+
+        .live .l1 {
+            display: inline;
+        }
+
+        .live b {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        /* ===== 八个盒子的栅格（公共布局）=====
+           浮动排列：盒子宽度用百分比分，容器用 ::after 清除浮动 */
+        .grid::after {
+            content: "";
+            display: block;
+            clear: both;                     /* 清除浮动，撑开容器高度 */
+        }
+
+        .box {
+            float: left;
+            width: 100%;                     /* 默认（窄屏）：一行 1 个 */
+            padding: 8px;                    /* 用内边距当间距，配合 border-box 不改变总宽度 */
+        }
+
+        .card {
+            height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card .num {
+            font-size: 34px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .card .txt {
+            font-size: 14px;
+        }
+
+        /* 八个盒子的颜色 */
+        .c1 { background-color: #e74c3c; }
+        .c2 { background-color: #e67e22; }
+        .c3 { background-color: #2ecc71; }
+        .c4 { background-color: #1abc9c; }
+        .c5 { background-color: #3498db; }
+        .c6 { background-color: #2980b9; }
+        .c7 { background-color: #9b59b6; }
+        .c8 { background-color: #34495e; }
+
+        .foot {
+            margin-top: 24px;
+            padding-top: 12px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        /* ==================================================================
+           二、screen（屏幕）—— 彩色卡片、阴影、悬停上浮
+           ================================================================== */
+        @media screen {
+            body {
+                background-color: #eef1f5;
+            }
+
+            .mt-screen {
+                display: inline;
+            }
+
+            .media-type {
+                background-color: #2c3e50;
+                color: #ffffff;
+            }
+
+            .live {
+                margin-top: 14px;
+                padding: 10px 14px;
+                background-color: #fff8e1;
+                border-left: 5px solid #f39c12;
+                color: #7a5c00;
+            }
+
+            .card {
+                color: #ffffff;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
+            }
+        }
+
+        /* 屏幕下的三个断点：视口越宽，一行装的盒子越多 */
+        @media screen and (min-width: 480px) {          /* 视口 ≥ 480px：一行 2 个 */
+            .box {
+                width: 50%;
+            }
+            .live .l1 {
+                display: none;
+            }
+            .live .l2 {
+                display: inline;
+            }
+        }
+
+        @media screen and (min-width: 768px) {          /* 视口 ≥ 768px：一行 3 个 */
+            .box {
+                width: 33.3333%;
+            }
+            .live .l2 {
+                display: none;
+            }
+            .live .l3 {
+                display: inline;
+            }
+        }
+
+        @media screen and (min-width: 1024px) {         /* 视口 ≥ 1024px：一行 4 个 */
+            .box {
+                width: 25%;
+            }
+            .live .l3 {
+                display: none;
+            }
+            .live .l4 {
+                display: inline;
+            }
+        }
+
+        @media screen and (prefers-reduced-motion: reduce) {
+            .card {
+                transition: none;
+            }
+            .card:hover {
+                transform: none;
+            }
+        }
+
+        /* ==================================================================
+           三、print（打印）—— 白底黑框、去掉阴影和彩色底，省墨又清楚
+           打印纸（A4）宽度大约 794px，所以这里直接排 4 个一行
+           ================================================================== */
+        @media print {
+            .mt-print {
+                display: inline;
+            }
+
+            body {
+                min-width: 0;                /* 纸上不需要最小宽度 */
+                padding: 0;
+                background-color: #ffffff;
+            }
+
+            .media-type {
+                background-color: #ffffff;
+                color: #000000;
+                border: 1px solid #000000;
+            }
+
+            .live {
+                display: none;               /* 提示条只给屏幕看，不打印 */
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .box {
+                width: 25%;                  /* 打印时一行 4 个 */
+                break-inside: avoid;         /* 一个盒子不要被分到两页 */
+            }
+
+            .card {
+                height: 90px;
+                background-color: #ffffff;   /* 覆盖掉八个彩色背景 */
+                color: #000000;
+                border: 1px solid #888888;
+                box-shadow: none;
+            }
+
+            .card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .foot {
+                border-top: 1px solid #000000;
+            }
+        }
+
+        /* ==================================================================
+           四、speech（语音）—— 只留正文和必要文字，去掉装饰
+           ================================================================== */
+        @media speech {
+            .mt-speech {
+                display: inline;
+            }
+
+            body {
+                min-width: 0;
+                font-size: 18px;
+                line-height: 2;
+            }
+
+            .live,
+            .foot {
+                display: none;               /* 装饰性内容不朗读 */
+            }
+
+            .card {
+                height: auto;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>王梓杨的媒体查询布局</h1>
+        <p class="sub">八个盒子，用 <code>@media</code> 媒体查询控制一行显示几个：视口越宽，一行装的盒子越多（1 → 2 → 3 → 4）。页面最小宽度 320px。</p>
+        <p class="sub">拓展：支持三个 media 媒体类型 —— <code>screen</code>（屏幕）、<code>print</code>（打印）、<code>speech</code>（语音）。</p>
+
+        <p class="media-type">
+            <span class="mt-screen">当前媒体类型：screen（屏幕）</span>
+            <span class="mt-print">当前媒体类型：print（打印）</span>
+            <span class="mt-speech">当前媒体类型：speech（语音）</span>
+        </p>
+
+        <p class="live">
+            <span class="l1">当前视口：<b>一行 1 个</b>盒子 —— 窄屏手机（视口 &lt; 480px）</span>
+            <span class="l2">当前视口：<b>一行 2 个</b>盒子 —— 视口 ≥ 480px</span>
+            <span class="l3">当前视口：<b>一行 3 个</b>盒子 —— 视口 ≥ 768px</span>
+            <span class="l4">当前视口：<b>一行 4 个</b>盒子 —— 视口 ≥ 1024px</span>
+        </p>
+
+        <!-- 八个盒子 -->
+        <div class="grid">
+            <div class="box"><div class="card c1"><span class="num">1</span><span class="txt">盒子 1</span></div></div>
+            <div class="box"><div class="card c2"><span class="num">2</span><span class="txt">盒子 2</span></div></div>
+            <div class="box"><div class="card c3"><span class="num">3</span><span class="txt">盒子 3</span></div></div>
+            <div class="box"><div class="card c4"><span class="num">4</span><span class="txt">盒子 4</span></div></div>
+            <div class="box"><div class="card c5"><span class="num">5</span><span class="txt">盒子 5</span></div></div>
+            <div class="box"><div class="card c6"><span class="num">6</span><span class="txt">盒子 6</span></div></div>
+            <div class="box"><div class="card c7"><span class="num">7</span><span class="txt">盒子 7</span></div></div>
+            <div class="box"><div class="card c8"><span class="num">8</span><span class="txt">盒子 8</span></div></div>
+        </div>
+
+        <h2 class="sub" style="margin-top:26px;font-size:18px;color:#2c3e50;">要点说明</h2>
+        <p class="sub">
+            1. <code>* { box-sizing: border-box }</code>：盒子的宽度按 100% / 50% / 33.33% / 25% 来分，内边距算在宽度里，所以留间距不用写 <code>calc()</code>。<br>
+            2. <code>.box { float: left }</code> 浮动排列，容器用 <code>::after { clear: both }</code> 清除浮动；媒体查询里只改 <code>.box</code> 的 <code>width</code>，一行就从 1 个变成 2 个、3 个、4 个。<br>
+            3. <code>min-width: 480px</code> 的意思是「视口宽度 ≥ 480px 时才生效」，三条查询从小往大写，后面的自动覆盖前面的。<br>
+            4. <code>body { min-width: 320px }</code>：视口再窄页面也不会小于 320px，出现横向滚动条，而不是把盒子挤变形。<br>
+            5. <b>拓展——三个媒体类型</b>：<code>@media screen</code> 管屏幕上怎么显示（彩色卡片 + 阴影 + 悬停，断点写成 <code>screen and (min-width: 480px)</code>）；<code>@media print</code> 管打印，改成白底黑框、去掉阴影和彩色底、一行固定 4 个，省墨又看得清；<code>@media speech</code> 管语音朗读，去掉提示条、页脚这些装饰，只留正文。<br>
+            6. 页面全部是原生 HTML + CSS，没有 JavaScript，也没有引用任何外部库。
+        </p>
+
+        <p class="foot">高级网页设计 · 第十章 CSS3动画 · 王梓杨</p>
+    </div>
+</body>
+</html>

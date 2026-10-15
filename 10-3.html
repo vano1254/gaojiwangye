@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的媒体查询背景颜色变化</title>
+    <style>
+        /* ===== 拓展：根字号（rem 的基准）=====
+           1rem = 根元素 html 的 font-size。
+           把根字号交给媒体查询，视口一变根字号就变，
+           页面里所有用 rem 写的长度会自动跟着整体缩放，
+           不用一个个元素去改字号 —— 这就是 rem 的好处。 */
+        html {
+            font-size: 16px;                /* 窄屏（手机）：1rem = 16px */
+        }
+
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* ===== 全屏固定区域 ===== */
+        .stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            color: #ffffff;
+            background-color: #e74c3c;      /* 默认 = 窄屏（手机）：红色 */
+            transition: background-color 0.5s ease;
+        }
+
+        /* 文字大小一律用 rem，跟着根字号一起变 */
+        .stage h1 {
+            font-size: 2rem;                /* 32px / 40px / 52px */
+            letter-spacing: 0.12rem;
+        }
+
+        .stage .desc {
+            margin-top: 0.75rem;
+            max-width: 30rem;
+            font-size: 0.875rem;            /* 14px / 17.5px / 22.75px */
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .now {
+            margin-top: 1.25rem;
+            padding: 0.4rem 0.875rem;
+            font-size: 0.875rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .now .line {
+            display: block;
+        }
+
+        /* 三个档位提示，默认只显示窄屏那条 */
+        .now-tablet,
+        .now-desktop {
+            display: none;
+        }
+
+        /* ===== 媒体查询：平板（视口 ≥ 600px）===== */
+        @media (min-width: 600px) {
+            html {
+                font-size: 20px;            /* 1rem 变 20px，所有 rem 一起变大 */
+            }
+            .stage {
+                background-color: #2980b9;  /* 蓝色 */
+            }
+            .now-phone {
+                display: none;
+            }
+            .now-tablet {
+                display: inline-block;
+            }
+        }
+
+        /* ===== 媒体查询：桌面（视口 ≥ 1024px）===== */
+        @media (min-width: 1024px) {
+            html {
+                font-size: 26px;            /* 1rem 变 26px */
+            }
+            .stage {
+                background-color: #27ae60;  /* 绿色 */
+            }
+            .now-tablet {
+                display: none;
+            }
+            .now-desktop {
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <h1>王梓杨</h1>
+        <p class="desc">纯 CSS 媒体查询：拖动浏览器窗口改变视口宽度，全屏背景颜色会跟着变化；文字大小用 rem 作单位，媒体查询只改根字号，所有文字就一起缩放</p>
+        <div class="now now-phone">
+            <span class="line">当前视口：窄屏（手机）· 红色背景</span>
+            <span class="line">1rem = 16px　｜　h1 = 2rem = 32px</span>
+        </div>
+        <div class="now now-tablet">
+            <span class="line">当前视口：平板 · 蓝色背景</span>
+            <span class="line">1rem = 20px　｜　h1 = 2rem = 40px</span>
+        </div>
+        <div class="now now-desktop">
+            <span class="line">当前视口：桌面 · 绿色背景</span>
+            <span class="line">1rem = 26px　｜　h1 = 2rem = 52px</span>
+        </div>
+    </div>
+</body>
+</html>

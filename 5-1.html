@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p{
+            color: red;
+            font-size: 100px;
+        }
+        .text{
+            color: blue;
+        }
+        #text{
+            color: purple;
+        }
+        .box p{
+            color: orange;
+        }
+        #box #text{
+            color: silver;
+        }
+        .text{
+            color: blue ;
+        }
+        #box{
+            width:400px;
+            height:400px;
+            background-color: gray;
+            margin: 10px;
+            letter-spacing:25px;
+        }
+    </style>
+</head>
+<body>
+    <h2>层叠与继承</h2>
+    <div id="box" class="box">
+        <p id="text" class="text">411 wzy</p>
+        <p>层叠与继承的优先级</p>
+    </div>
+</body>
+</html>
