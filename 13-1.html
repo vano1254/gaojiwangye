@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的 Font Awesome 图标（link 引入）</title>
+    <!-- 整个图标库只要这一行 <link>：样式表在本地 cdn/ 下 -->
+    <link rel="stylesheet" href="cdn/all.min.css">
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 24px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f5f6f8;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            padding-left: 10px;
+            font-size: 19px;
+            border-left: 5px solid #2c7be5;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+            font-size: 15px;
+            color: #34495e;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            color: #c0392b;
+            background-color: #e8edf3;
+        }
+
+        pre {
+            margin: 10px 0;
+            padding: 14px 16px;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #e6edf3;
+            background-color: #1f2d3d;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+        }
+
+        /* ===== 白色演示盒 ===== */
+        .box {
+            padding: 18px;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        /* 只作用于演示盒里「直接放着的」图标，且优先级归 0，
+           免得盖掉 fa-2x / fa-spin 这些类自己的样式 */
+        :where(.box > i) {
+            margin: 0 12px;
+            font-size: 30px;
+            color: #2c7be5;
+        }
+
+        .tip {
+            margin-top: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 5px solid #f39c12;
+        }
+
+        /* ===== 三种前缀对照 ===== */
+        .prefix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .prefix > div {
+            padding: 16px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .prefix i {
+            font-size: 40px;
+            color: #2c7be5;
+        }
+
+        .prefix b {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .prefix span {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #7b8794;
+        }
+
+        /* ===== 图标网格 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            padding: 14px 6px 10px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .item i {
+            display: block;
+            font-size: 26px;
+            color: #2c7be5;
+        }
+
+        .item span {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #7b8794;
+            word-break: break-all;
+        }
+
+        .item:hover {
+            background-color: #f0f6ff;
+            border-color: #2c7be5;
+        }
+
+        .item:hover i {
+            color: #e74c3c;
+        }
+
+        /* ===== 加载链路 ===== */
+        .chain {
+            padding: 16px 18px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 2;
+            color: #2c3e50;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .chain em {
+            font-style: normal;
+            color: #c0392b;
+        }
+
+        .foot {
+            margin-top: 36px;
+            padding-top: 14px;
+            font-size: 13px;
+            color: #8a97a5;
+            border-top: 1px solid #e1e6ec;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>王梓杨的 Font Awesome 图标（link 引入）</h1>
+        <p class="sub">
+            整个图标库只要一行 <code>&lt;link&gt;</code> 把 <code>cdn/all.min.css</code> 引进来，
+            之后写 <code>&lt;i class="fas fa-heart"&gt;&lt;/i&gt;</code> 就是一个图标。
+            图标本体不是图片，是 <strong>@font-face</strong> 加载的 <code>cdn/webfonts/*.woff2</code> 字体文件，
+            所以放大不糊、改字号不糊、颜色跟着文字颜色走。
+        </p>
+
+        <!-- ==================== 一、一行 link ==================== -->
+        <h2>一、一行 link，之后全是类名</h2>
+        <div class="box">
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-house"></i>
+            <i class="fas fa-gear fa-spin"></i>
+            <i class="fas fa-mug-hot"></i>
+        </div>
+        <pre><code>&lt;!-- 1. 引入整个图标库（本地文件，断网也能用） --&gt;
+&lt;link rel="stylesheet" href="cdn/all.min.css"&gt;
+
+&lt;!-- 2. 想要哪个图标，就写类名 --&gt;
+&lt;i class="fas fa-heart"&gt;&lt;/i&gt;      &lt;!-- 实心心形 --&gt;
+&lt;i class="fas fa-gear fa-spin"&gt;&lt;/i&gt; &lt;!-- 齿轮 + 一直转（纯 CSS animation） --&gt;</code></pre>
+        <div class="tip">
+            <code>fas</code> 决定用哪套字体、<code>fa-heart</code> 决定用哪个字，
+            两个类名合起来才是一个完整的图标。少写 <code>fas</code> 图标就出不来。
+        </div>
+
+        <!-- ==================== 二、三种前缀 ==================== -->
+        <h2>二、三种前缀：fas 实心 / far 线性 / fab 品牌</h2>
+        <div class="prefix">
+            <div>
+                <i class="fas fa-heart"></i>
+                <b>fas</b>
+                <span>Solid 实心（weight 900）</span>
+            </div>
+            <div>
+                <i class="far fa-heart"></i>
+                <b>far</b>
+                <span>Regular 线性（weight 400）</span>
+            </div>
+            <div>
+                <i class="fab fa-github"></i>
+                <b>fab</b>
+                <span>Brands 品牌标志</span>
+            </div>
+        </div>
+        <p class="sub" style="margin-top:10px">
+            同一个名字 <code>heart</code>，加 <code>fas</code> 是实心、加 <code>far</code> 是空心线框 ——
+            因为它们是<strong>同一套字体里的两个字重</strong>，不是两张图片。
+        </p>
+
+        <!-- ==================== 三、常用图标 ==================== -->
+        <h2>三、常用实心图标（24 个）</h2>
+        <div class="grid">
+            <div class="item"><i class="fas fa-house"></i><span>fa-house</span></div>
+            <div class="item"><i class="fas fa-user"></i><span>fa-user</span></div>
+            <div class="item"><i class="fas fa-users"></i><span>fa-users</span></div>
+            <div class="item"><i class="fas fa-gear"></i><span>fa-gear</span></div>
+            <div class="item"><i class="fas fa-search"></i><span>fa-search</span></div>
+            <div class="item"><i class="fas fa-heart"></i><span>fa-heart</span></div>
+            <div class="item"><i class="fas fa-star"></i><span>fa-star</span></div>
+            <div class="item"><i class="fas fa-envelope"></i><span>fa-envelope</span></div>
+            <div class="item"><i class="fas fa-phone"></i><span>fa-phone</span></div>
+            <div class="item"><i class="fas fa-camera"></i><span>fa-camera</span></div>
+            <div class="item"><i class="fas fa-image"></i><span>fa-image</span></div>
+            <div class="item"><i class="fas fa-music"></i><span>fa-music</span></div>
+            <div class="item"><i class="fas fa-video"></i><span>fa-video</span></div>
+            <div class="item"><i class="fas fa-play"></i><span>fa-play</span></div>
+            <div class="item"><i class="fas fa-bookmark"></i><span>fa-bookmark</span></div>
+            <div class="item"><i class="fas fa-calendar"></i><span>fa-calendar</span></div>
+            <div class="item"><i class="fas fa-clock"></i><span>fa-clock</span></div>
+            <div class="item"><i class="fas fa-comment"></i><span>fa-comment</span></div>
+            <div class="item"><i class="fas fa-bell"></i><span>fa-bell</span></div>
+            <div class="item"><i class="fas fa-cart-shopping"></i><span>fa-cart-shopping</span></div>
+            <div class="item"><i class="fas fa-folder"></i><span>fa-folder</span></div>
+            <div class="item"><i class="fas fa-wifi"></i><span>fa-wifi</span></div>
+            <div class="item"><i class="fas fa-bolt"></i><span>fa-bolt</span></div>
+            <div class="item"><i class="fas fa-check"></i><span>fa-check</span></div>
+        </div>
+
+        <h2>四、品牌图标（8 个）</h2>
+        <div class="grid">
+            <div class="item"><i class="fab fa-github"></i><span>fa-github</span></div>
+            <div class="item"><i class="fab fa-weixin"></i><span>fa-weixin</span></div>
+            <div class="item"><i class="fab fa-qq"></i><span>fa-qq</span></div>
+            <div class="item"><i class="fab fa-weibo"></i><span>fa-weibo</span></div>
+            <div class="item"><i class="fab fa-html5"></i><span>fa-html5</span></div>
+            <div class="item"><i class="fab fa-css3-alt"></i><span>fa-css3-alt</span></div>
+            <div class="item"><i class="fab fa-js"></i><span>fa-js</span></div>
+            <div class="item"><i class="fab fa-bilibili"></i><span>fa-bilibili</span></div>
+        </div>
+
+        <!-- ==================== 五、为什么是字体 ==================== -->
+        <h2>五、为什么是字体：字号、颜色、动画全都是免费的</h2>
+        <div class="box">
+            <i class="fas fa-house fa-1x"></i>
+            <i class="fas fa-house fa-2x"></i>
+            <i class="fas fa-house fa-3x"></i>
+            <i class="fas fa-heart" style="color:#e74c3c"></i>
+            <i class="fas fa-heart" style="color:#f39c12"></i>
+            <i class="fas fa-star fa-spin"></i>
+        </div>
+        <pre><code>&lt;i class="fas fa-house fa-2x"&gt;&lt;/i&gt;          &lt;!-- fa-2x 等于 font-size: 2em --&gt;
+&lt;i class="fas fa-heart" style="color:#e74c3c"&gt;&lt;/i&gt; &lt;!-- 颜色就是文字颜色 --&gt;
+&lt;i class="fas fa-star fa-spin"&gt;&lt;/i&gt;        &lt;!-- 自带旋转动画 --&gt;</code></pre>
+
+        <!-- ==================== 六、加载链路 ==================== -->
+        <h2>六、它到底是怎么显示出来的</h2>
+        <div class="chain">
+            <em>&lt;link href="cdn/all.min.css"&gt;</em><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp; ① 样式表里用 @font-face 声明字体，指向 <em>cdn/webfonts/fa-solid-900.woff2</em><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp; ② 浏览器把 woff2 当字体加载进来<br>
+            <em>.fa-house { --fa: "\f015" }</em><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp; ③ 每个图标类只记一个码位<br>
+            <em>.fas::before { content: var(--fa) }</em><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp; ④ 用伪元素把这个字打印出来<br>
+            <em>屏幕上看到的图标 = 一个字形</em>
+        </div>
+        <p class="sub" style="margin-top:10px">
+            所以 <code>.fa-house</code> 的本质是「<code>\f015</code> 这个私用区字符」。
+            在浏览器里按 F12 选中图标，能在 <code>::before</code> 的 <code>content</code> 里直接看到这个码位。
+        </p>
+
+        <div class="foot">
+            高级网页设计 · 第十三章 图标与字体库（1/3）· 王梓杨 ｜ Font Awesome Free 6.7.2 ｜ 图标全部来自本地 <code>cdn/</code>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>王梓杨的移动端底部导航</title>
+    <!-- 图标字体：本项目自建，4 个导航图标，文件在 font/ 目录 -->
+    <link rel="stylesheet" href="font/iconfont.css">
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #eef1f5;
+        }
+
+        /* 整页按手机宽度排版：屏幕上够宽时居中，像个手机壳 */
+        .page {
+            max-width: 480px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background-color: #f5f6f8;
+        }
+
+        /* ===== 顶部标题栏 ===== */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            padding: 12px 16px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #2c7be5;
+        }
+
+        .topbar h1 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .content {
+            /* 底部留出导航条的高度，免得内容被挡住 */
+            padding: 14px 14px 92px;
+        }
+
+        h2 {
+            margin: 6px 0 10px;
+            padding-left: 9px;
+            font-size: 15px;
+            border-left: 4px solid #2c7be5;
+        }
+
+        h2 + h2 {
+            margin-top: 22px;
+        }
+
+        /* ===== 内容卡片 ===== */
+        .card {
+            margin-bottom: 10px;
+            padding: 14px;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .card b {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .card span {
+            font-size: 13px;
+            color: #5a6b7c;
+        }
+
+        .note {
+            padding: 14px;
+            font-size: 13px;
+            line-height: 1.9;
+            color: #34495e;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .note code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+            color: #c0392b;
+            background-color: #e8edf3;
+        }
+
+        .note li {
+            margin-left: 18px;
+        }
+
+        /* ========================================================
+           底部导航：固定在下边、宽度自适应、4 项等分
+           ======================================================== */
+        .tabbar {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            z-index: 10;
+            /* 居中 + 最宽 480px：手机上就是满宽，桌面上是个居中的手机条 */
+            width: 100%;
+            max-width: 480px;
+            transform: translateX(-50%);
+            display: flex;
+            /* 4 个 .tab 各 flex:1，所以不管屏幕多宽，都是四等分 */
+            background-color: #ffffff;
+            border-top: 1px solid #dce3ea;
+            /* 刘海屏底部安全区 */
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        /* 用隐藏的单选框记住「当前选中哪一项」，纯 CSS 就够，不用 JS */
+        .tabbar input {
+            display: none;
+        }
+
+        .tab {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 7px 0 6px;
+            font-size: 11px;
+            color: #8a97a5;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .tab .iconfont {
+            font-size: 23px;
+            line-height: 1.2;
+        }
+
+        /* 被选中的那项：图标和文字一起变蓝 */
+        .tabbar input:checked + .tab {
+            color: #2c7be5;
+        }
+
+        /* ===== 右上角的数字徽章 ===== */
+        .badge {
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            margin-left: 4px;
+            min-width: 17px;
+            height: 17px;
+            padding: 0 5px;
+            font-size: 10px;
+            font-style: normal;
+            line-height: 17px;
+            text-align: center;
+            color: #ffffff;
+            background-color: #e74c3c;
+            /* 只有徽章和红点是圆的，其余元素一律直角 */
+            border-radius: 9px;
+        }
+
+        /* ===== 右上角的小红点（不带数字） ===== */
+        .dot {
+            position: absolute;
+            top: 7px;
+            left: 50%;
+            margin-left: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar"><h1>王梓杨 · 移动端底部导航</h1></header>
+
+        <div class="content">
+            <h2>消息</h2>
+            <div class="card">
+                <b>课程作业已提交</b>
+                <span>第十三章 图标与字体库 · 10 分钟前</span>
+            </div>
+            <div class="card">
+                <b>老师回复了你的作业</b>
+                <span>「底部导航记得留出安全区」· 1 小时前</span>
+            </div>
+            <div class="card">
+                <b>新的课程资料</b>
+                <span>第十三章课件已上传 · 昨天</span>
+            </div>
+
+            <h2>这一页用到了什么</h2>
+            <div class="note">
+                <ul>
+                    <li><b>固定的下导航</b>：<code>position: fixed; bottom: 0;</code> 钉在视口底部，内容滚动时不动。</li>
+                    <li><b>自适应宽度</b>：导航条 <code>width: 100%; max-width: 480px;</code> 加 <code>left: 50% + translateX(-50%)</code> 居中；
+                        里面 4 个 <code>.tab</code> 各 <code>flex: 1</code>，所以手机多宽就四等分多宽，缩到 320px 也不会挤成两行。</li>
+                    <li><b>图标是字体</b>：来自本目录 <code>font/iconfont.css</code>，写 <code>&lt;i class="iconfont icon-home"&gt;</code> 即可，
+                        图标本体是 <code>font/iconfont.woff2</code> 里的四个字形（码位 E600~E603）。</li>
+                    <li><b>数字徽章</b>：<code>.badge</code> 绝对定位在图标右上角，红色的圆角小胶囊里写数字。</li>
+                    <li><b>红点</b>：<code>.dot</code> 同样是绝对定位，只是个 8px 的圆，不带数字，用来表示「有新内容」。</li>
+                    <li><b>切换高亮</b>：用 4 个隐藏的 <code>radio</code> 记住当前项，<code>input:checked + .tab</code> 变蓝，纯 CSS，没有 JavaScript。</li>
+                </ul>
+            </div>
+
+            <h2>试试拖动窗口</h2>
+            <div class="note">
+                把浏览器窗口从宽拖到窄（或者按 F12 切到手机视图），会发现底部 4 个图标始终<strong>等宽铺满</strong>、
+                不会被挤掉 —— 这就是 <code>flex: 1</code> 的效果。
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 底部固定导航 ===== -->
+    <nav class="tabbar">
+        <input type="radio" name="tab" id="tab-home" checked>
+        <label class="tab" for="tab-home">
+            <i class="iconfont icon-home"></i>
+            <span>首页</span>
+        </label>
+
+        <input type="radio" name="tab" id="tab-message">
+        <label class="tab" for="tab-message">
+            <i class="iconfont icon-message"></i>
+            <span>消息</span>
+            <!-- 数字徽章：右上角红色小胶囊 -->
+            <em class="badge">3</em>
+        </label>
+
+        <input type="radio" name="tab" id="tab-find">
+        <label class="tab" for="tab-find">
+            <i class="iconfont icon-find"></i>
+            <span>发现</span>
+            <!-- 红点：只表示有新内容，不写数字 -->
+            <em class="dot"></em>
+        </label>
+
+        <input type="radio" name="tab" id="tab-user">
+        <label class="tab" for="tab-user">
+            <i class="iconfont icon-user"></i>
+            <span>我的</span>
+        </label>
+    </nav>
+</body>
+</html>

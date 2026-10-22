@@ -167,3 +167,97 @@
     减少动态效果、首页 29 条与搜索 11-4）全部通过。
   - 中途修正：第 6 行曲线值原本换行导致行高不齐，把标签列宽 200px → 236px 后对齐。
   - 最后用项目级 `git-commit` 技能完成预检、提交与推送，验证该技能端到端可用。
+
+---
+
+## 2026-10-19 13:56:12
+
+- **时间**：2026-10-19 13:56:12（GMT+8）
+- **使用的模型**：deepseek-flash（当前会话模型标识）
+- **提示词内容**：
+
+  > 按照文件夹下prompt文件的规则处理新的两个html 顺便不要在网页里显示我的提示词 只用在prompt那个文件里显示 记住
+
+- **执行目标**：按规则 #3 把 `12-1.html`（Font Awesome 字体图标）与 `12-2.html`（Lucide SVG 图标）并入 `index.html`；
+  同时落实本次新增的长期规则 —— **提示词只写在本文件，网页上一律不显示提示词**：删除首页既有的 `PROMPT · 01~08` 提示词板块，
+  改为「本页收录说明」并去掉复制/字数统计脚本，此后不再新增 `PROMPT · NN` 卡片。
+- **执行结果**：已完成，两件事都落地。
+  - **首页收录（规则 #3）**：`index.html` 新增「第十二章 · 字体图标与 SVG 图标」分组与两张卡片，编号 **21**（`12-1.html` Font Awesome 字体图标）、**22**（`12-2.html` Lucide SVG 图标）；
+    原「其他页面」9 条编号 21~29 → **23~31**。同步更新口径：meta description、头部注释（依赖说明 + 主收录清单）、
+    lede（第 2~12 章 / 22 个页面 / 图标文件在 `cdn/`）、idcard 范围、stats（总数 31 / 作品 22）、works 标题与计数、
+    收录说明清单（+第十二章条目、+`cdn/` 目录、"分十一组"）、标记含义、目录结构一览（+12-1 / 12-2 / `cdn/`）、页脚、
+    countLabel、使用说明里「复制提示词」的措辞。
+  - **提示词不再上网页（本次新增的长期规则）**：删掉首页整块「本页生成提示词」板块 —— 8 张 `PROMPT · 01~08` 卡片、
+    `#prompt` section、`.prompt-*` 样式（1386 字符）、提示词字数统计与复制脚本（1562 字符）；改为「本页收录说明」`#about`，
+    导航「提示词」改为「收录说明」。今后所有提示词只写在本文件，网页里不再展示。
+  - 静态校验：`<article>` 22/22、`<div>` 203/203、`<section>` 4/4、`<p>` 27/27 配平；卡片编号 01~22、其他页面 23~31 连续；
+    id 无重复；22 个本地链接目标全部存在；无 `PROMPT` / `p1~p8` / `copy-btn` 残留；旧口径（第 2~11 章、共 20 个页面、显示 29）零残留。
+    `index.html` 91,006 字节 / 1,627 行（含最后一次措辞修正）。
+  - 真机校验（无头 Edge 155 + CDP）：countLabel「显示 31 / 31」、statTotal 31、31 张卡片、11 个课堂分组；
+    搜索 12-1 / 12-2 / lucide / fontawesome / 图标 均命中；筛选 course 22、offline 23、online 4、build 4；
+    深浅主题切换后计数正常；控制台 0 错误 0 异常；打开 `12-1.html` 三个 FontFace 全部 loaded、118 个图标 0 异常，
+    打开 `12-2.html` 48 个 `img` 全部加载成功。
+---
+
+## 2026-10-19 14:25:23
+
+- **时间**：2026-10-19 14:25:23（GMT+8）
+- **使用的模型**：deepseek-flash（当前会话模型标识）
+- **提示词内容**：
+
+  > 按图中所有信息 做出13-1 13-2 13-3
+
+- **附图信息（另一工具给出的计划，逐项照做）**：
+  - 「下载的 CDN 文件（cdn/ 目录）」表：cdn/all.min.css 45.9 KB Font Awesome 全部样式；cdn/webfonts/fa-solid-900.woff2 152.7 KB 实体图标字体；
+    cdn/webfonts/fa-regular-400.woff2 24.8 KB 线性图标字体；cdn/webfonts/fa-brands-400.woff2 53.7 KB 品牌图标字体；cdn/lucide.min.js 444 KB Lucide SVG 图标库。
+  - 「技术对比」：13-1.html（Font Awesome）通过 <link> 引入 CSS + 字体文件，用 <i class="fas fa-heart"> 类名调用图标，依赖 @font-face 加载 woff2；
+    13-2.html（Lucide）通过 <script> 引入 JS，用 <i data-lucide="heart"> 标记，JS 运行时自动把 <i> 替换成内联 SVG。
+  - 「13-3 需求原文」：根据 font 目录中的 iconfont 图标，完成移动端的固定的自适应宽度的下导航，导航项目包括 4 个，
+    完成 html 网页的设计，网页名称 13-3.html，包括右上角的数字徽章和红点。
+- **执行目标**：
+  1. 按图中的 cdn/ 目录结构整理资源：字体 CSS 放到 cdn/all.min.css、字体文件放 cdn/webfonts/（并同步改 12-1.html 的引用），
+     新增 cdn/lucide.min.js（Lucide 的 UMD 运行库，供 <script> 引入）；cdn/lucide/*.svg（12-2 用）保留。
+  2. 新建 font/ 目录并自建一套 iconfont（font/iconfont.css + iconfont.woff2/.woff/.ttf，4 个导航图标），供 13-3 使用。
+  3. 新写 13-1.html（<link> + <i class="fas fa-*">）、13-2.html（<script> + <i data-lucide="*"> + lucide.createIcons()）、
+     13-3.html（移动端固定底部导航、4 项自适应等宽、数字徽章 + 红点）。
+  4. 页面风格按本项目既有页面统一（微软雅黑、蓝色主色、无圆角、署名王梓杨、纯本地零 CDN 请求）；
+     图中「暖纸色 + Noto Serif SC」是另一个项目（vite_js）的既有风格，本项目按自身一致性处理。
+  5. 按规则 #3 并入 index.html（第十三章，编号 23~25，其他页面顺延 26~34，统计与分节口径同步）。
+- **执行结果**：
+  1. **cdn/ 重组完成**：`cdn/all.min.css`（73,830 字节，文件内 20 处 `../webfonts/` 已改成 `webfonts/`）+ `cdn/webfonts/` 8 个字体文件（woff2 / ttf）；
+     新增 `cdn/lucide.min.js`（454,638 字节 = 444 KB，UMD 全局 `lucide.createIcons`）；`cdn/lucide/` 48 个 svg 保留给 12-2。
+     `cdn/fontawesome/` 目录已删除，`12-1.html` 的引用同步改为 `cdn/all.min.css`（全文已无 `cdn/fontawesome` 字样，图标仍为 118 个 0 异常）。
+  2. **font/ 自建图标字体**：`font/iconfont.css` + `iconfont.woff2`(812 B) / `.woff`(1,204 B) / `.ttf`(1,852 B) / `.svg`(1,193 B)，
+     4 个字形 home / message / find / user，码位 E600~E603（用 svgicons2svgfont → svg2ttf → ttf2woff → ttf2woff2 生成）。
+  3. **三个页面**：13-1.html 12.3 KB、13-2.html 16.2 KB、13-3.html 8.4 KB。
+     - **13-1**（`<link>` + 类名）：46 个图标元素、33 个不同私用区码位、**0 异常**；Font Awesome 6 Free 400/900 与 6 Brands 400 三个 FontFace
+       全部 loaded，`document.fonts.check()` 全 true；`fa-spin` 动画名生效；控制台 0 错误。
+     - **13-2**（`<script>` + `data-lucide`）：运行后生成 **35 个 `svg.lucide`**，残留 `i[data-lucide]` **0 个**、空 svg 0 个、零尺寸 0 个；
+       viewBox `0 0 24 24`、stroke=`currentColor`、stroke-width=2；连点「再加一个」两次，svg 35 → **37**；控制台 0 错误。
+     - **13-3**（移动端底部导航）：320 / 375 / 414 下 4 项等宽 **80 / 94 / 104 px**，768 / 1200 下导航固定 **480 px** 居中；
+       `position:fixed`、距底 0、无横向滚动；数字徽章「3」、红点 8×8 px；iconfont 字体 **loaded**；点击切换高亮生效；
+       滚到底部内容不被挡（末尾元素 bottom 668 < 导航 top 701）。
+  4. **index.html 并入第十三章**（25 处替换全部带「出现次数必须为 1」断言，全 OK）：新增「第十三章 · 图标库与移动端导航」分组、
+     卡片 **23 / 24 / 25**；其他页面 23~31 → **26~34**；stats **34 / 25**；countLabel「显示 **34 / 34**」；
+     lede（第 2~13 章 / 共 25 个页面）、idcard、works 标题与计数、收录说明（+第十三章条目、25 个作品、分十二组）、
+     目录结构（+13-1 / 13-2 / 13-3 三行 + `font/` 一行 + cdn 行改写）、页脚全部同步。
+     实测：data-item **34**、分组 **15**、课堂分组 **12**；卡片编号 01~25、其他页面 26~34 连续；25 个本地链接目标全部存在；
+     搜索 13-1 / 13-3 / iconfont / 移动端 / lucide / 图标 均命中，乱串 0 命中；筛选 all 34 / course 25 / offline 26 / online 4 / build 4；
+     深浅主题切换正常；控制台 **0 错误 0 异常**。`index.html` **100,738 字节（含最后把卡片 23 标题改短的一次微调）**。
+  5. **未做 git 提交**（用户明确要求「先不要提交 需要提交我再说」）；工作区仍是 `M index.html`、`M "wang prompt.md"`、`?? 13-1/13-2/13-3.html`、`?? font/`、`?? 12-1/12-2.html`、`?? cdn/`。
+
+---
+
+## 2026-10-22 14:04:08
+
+- **时间**：2026-10-22 14:04:08（GMT+8）
+- **使用的模型**：DeepSeek-V4.1-Flash（当前会话模型标识）
+- **提示词内容**：
+
+  > 提交
+
+- **执行结果**：按 `git-commit` 技能提交并推送本轮全部改动 ——
+  第十二章（`12-1` / `12-2` 字体图标与 SVG 图标）、第十三章（`13-1` / `13-2` / `13-3` 图标库与移动端导航）、
+  本地资源目录 `cdn/` 与 `font/`、首页并入两章并移除「本页生成提示词」板块（提示词改为只留在本文件）。
+  **`14-1.html` 未提交**：该文件仅 227 字节、`<title>Document</title>`，是刚建的空模板，不是可交付页面；
+  待内容写好后再按规则并入首页并提交。

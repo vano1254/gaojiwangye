@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的 Font Awesome 字体图标</title>
+    <!-- 字体图标的样式表，指向本目录下已下载的文件（不联网也能用） -->
+    <link rel="stylesheet" href="cdn/all.min.css">
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 24px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f5f6f8;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            padding-left: 10px;
+            font-size: 19px;
+            border-left: 5px solid #2c7be5;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+            font-size: 15px;
+            color: #34495e;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            color: #c0392b;
+            background-color: #e8edf3;
+        }
+
+        pre {
+            margin: 10px 0;
+            padding: 14px 16px;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #e6edf3;
+            background-color: #1f2d3d;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+        }
+
+        /* ===== 图标网格 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            padding: 14px 6px 10px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .item i {
+            display: block;
+            font-size: 26px;
+            color: #2c7be5;
+            transition: color 0.2s;
+        }
+
+        .item span {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #7b8794;
+            word-break: break-all;
+        }
+
+        .item:hover {
+            background-color: #f0f6ff;
+            border-color: #2c7be5;
+        }
+
+        .item:hover i {
+            color: #e74c3c;
+        }
+
+        /* ===== 演示用的白色介绍盒 ===== */
+        .box {
+            padding: 18px;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        /* 只作用在演示盒里「直接放着的」图标上。
+           用 :where() 包起来是把优先级降到 0，
+           这样 fa-1x / fa-2x / fa-5x 这些尺寸类才能盖过这里的 font-size；
+           fa-stack 里的 i 是孙子元素，也不受影响 */
+        :where(.box > i) {
+            margin: 0 10px;
+            font-size: 28px;
+            color: #2c7be5;
+        }
+
+        .row {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        .row > span {
+            display: inline-block;
+            min-width: 96px;
+            color: #34495e;
+        }
+
+        /* 各种品牌色，演示「图标颜色就是文字颜色」 */
+        .b-github { color: #181717 !important; }
+        .b-weibo { color: #e6162d !important; }
+        .b-qq { color: #12b7f5 !important; }
+        .b-weixin { color: #07c160 !important; }
+        .b-apple { color: #000000 !important; }
+        .b-windows { color: #0078d7 !important; }
+        .b-android { color: #3ddc84 !important; }
+        .b-chrome { color: #4285f4 !important; }
+        .b-html5 { color: #e34f26 !important; }
+        .b-css3 { color: #1572b6 !important; }
+        .b-js { color: #f0db4f !important; }
+        .b-react { color: #61dafb !important; }
+        .b-vuejs { color: #41b883 !important; }
+        .b-node { color: #5fa04e !important; }
+        .b-python { color: #3776ab !important; }
+        .b-java { color: #5382a1 !important; }
+        .b-figma { color: #f24e1e !important; }
+        .b-bilibili { color: #fb7299 !important; }
+        .b-tiktok { color: #000000 !important; }
+        .b-linux { color: #f6c000 !important; }
+
+        .foot {
+            margin-top: 36px;
+            padding-top: 14px;
+            font-size: 13px;
+            color: #8a97a5;
+            border-top: 1px solid #e1e6ec;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>王梓杨的 Font Awesome 字体图标</h1>
+        <p class="sub">
+            Font Awesome Free <strong>6.7.2</strong>，样式表和字体文件都已下载到本目录
+            <code>cdn/</code> 下，断网也能正常显示。
+            这里的图标不是图片，是<strong>字体</strong>：一个 <code>&lt;i&gt;</code> 标签加两个类名就是一个图标，
+            放大不糊、改字号不糊、颜色跟着文字颜色走。
+        </p>
+
+        <!-- ==================== 一、基本用法 ==================== -->
+        <h2>一、基本用法：一个 i 标签就是一个图标</h2>
+        <div class="box">
+            <i class="fa-solid fa-house"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-heart"></i>
+            <i class="fa-solid fa-gear"></i>
+            <i class="fa-brands fa-github"></i>
+        </div>
+        <pre><code>&lt;link rel="stylesheet" href="cdn/all.min.css"&gt;
+
+&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;    &lt;!-- 实心房子 --&gt;
+&lt;i class="fa-regular fa-star"&gt;&lt;/i&gt;   &lt;!-- 线框星星 --&gt;
+&lt;i class="fa-brands fa-github"&gt;&lt;/i&gt; &lt;!-- GitHub 标志 --&gt;</code></pre>
+        <p class="row">类名分两段：<code>fa-solid</code> / <code>fa-regular</code> / <code>fa-brands</code> 决定用哪套字体，<code>fa-图标名</code> 决定用哪个字形。</p>
+
+        <!-- ==================== 二、solid ==================== -->
+        <h2>二、实心图标 fa-solid（49 个）</h2>
+        <div class="grid">
+            <div class="item"><i class="fa-solid fa-house"></i><span>house</span></div>
+            <div class="item"><i class="fa-solid fa-user"></i><span>user</span></div>
+            <div class="item"><i class="fa-solid fa-users"></i><span>users</span></div>
+            <div class="item"><i class="fa-solid fa-gear"></i><span>gear</span></div>
+            <div class="item"><i class="fa-solid fa-search"></i><span>search</span></div>
+            <div class="item"><i class="fa-solid fa-heart"></i><span>heart</span></div>
+            <div class="item"><i class="fa-solid fa-star"></i><span>star</span></div>
+            <div class="item"><i class="fa-solid fa-envelope"></i><span>envelope</span></div>
+            <div class="item"><i class="fa-solid fa-phone"></i><span>phone</span></div>
+            <div class="item"><i class="fa-solid fa-camera"></i><span>camera</span></div>
+            <div class="item"><i class="fa-solid fa-image"></i><span>image</span></div>
+            <div class="item"><i class="fa-solid fa-music"></i><span>music</span></div>
+            <div class="item"><i class="fa-solid fa-video"></i><span>video</span></div>
+            <div class="item"><i class="fa-solid fa-play"></i><span>play</span></div>
+            <div class="item"><i class="fa-solid fa-pause"></i><span>pause</span></div>
+            <div class="item"><i class="fa-solid fa-bookmark"></i><span>bookmark</span></div>
+            <div class="item"><i class="fa-solid fa-calendar"></i><span>calendar</span></div>
+            <div class="item"><i class="fa-solid fa-clock"></i><span>clock</span></div>
+            <div class="item"><i class="fa-solid fa-location-dot"></i><span>location-dot</span></div>
+            <div class="item"><i class="fa-solid fa-globe"></i><span>globe</span></div>
+            <div class="item"><i class="fa-solid fa-download"></i><span>download</span></div>
+            <div class="item"><i class="fa-solid fa-upload"></i><span>upload</span></div>
+            <div class="item"><i class="fa-solid fa-share-nodes"></i><span>share-nodes</span></div>
+            <div class="item"><i class="fa-solid fa-trash-can"></i><span>trash-can</span></div>
+            <div class="item"><i class="fa-solid fa-pen"></i><span>pen</span></div>
+            <div class="item"><i class="fa-solid fa-copy"></i><span>copy</span></div>
+            <div class="item"><i class="fa-solid fa-link"></i><span>link</span></div>
+            <div class="item"><i class="fa-solid fa-lock"></i><span>lock</span></div>
+            <div class="item"><i class="fa-solid fa-unlock"></i><span>unlock</span></div>
+            <div class="item"><i class="fa-solid fa-eye"></i><span>eye</span></div>
+            <div class="item"><i class="fa-solid fa-bell"></i><span>bell</span></div>
+            <div class="item"><i class="fa-solid fa-comment"></i><span>comment</span></div>
+            <div class="item"><i class="fa-solid fa-paper-plane"></i><span>paper-plane</span></div>
+            <div class="item"><i class="fa-solid fa-cart-shopping"></i><span>cart-shopping</span></div>
+            <div class="item"><i class="fa-solid fa-credit-card"></i><span>credit-card</span></div>
+            <div class="item"><i class="fa-solid fa-folder"></i><span>folder</span></div>
+            <div class="item"><i class="fa-solid fa-file"></i><span>file</span></div>
+            <div class="item"><i class="fa-solid fa-floppy-disk"></i><span>floppy-disk</span></div>
+            <div class="item"><i class="fa-solid fa-print"></i><span>print</span></div>
+            <div class="item"><i class="fa-solid fa-wifi"></i><span>wifi</span></div>
+            <div class="item"><i class="fa-solid fa-sun"></i><span>sun</span></div>
+            <div class="item"><i class="fa-solid fa-moon"></i><span>moon</span></div>
+            <div class="item"><i class="fa-solid fa-cloud"></i><span>cloud</span></div>
+            <div class="item"><i class="fa-solid fa-bolt"></i><span>bolt</span></div>
+            <div class="item"><i class="fa-solid fa-droplet"></i><span>droplet</span></div>
+            <div class="item"><i class="fa-solid fa-check"></i><span>check</span></div>
+            <div class="item"><i class="fa-solid fa-xmark"></i><span>xmark</span></div>
+            <div class="item"><i class="fa-solid fa-plus"></i><span>plus</span></div>
+            <div class="item"><i class="fa-solid fa-bars"></i><span>bars</span></div>
+        </div>
+
+        <!-- ==================== 三、regular ==================== -->
+        <h2>三、线框图标 fa-regular（18 个）</h2>
+        <p class="row">同一套「Font Awesome 6 Free」字体里的另一种字重：<code>fa-regular</code> 是 400（细线），<code>fa-solid</code> 是 900（实心）。</p>
+        <div class="grid">
+            <div class="item"><i class="fa-regular fa-star"></i><span>star</span></div>
+            <div class="item"><i class="fa-regular fa-heart"></i><span>heart</span></div>
+            <div class="item"><i class="fa-regular fa-user"></i><span>user</span></div>
+            <div class="item"><i class="fa-regular fa-bell"></i><span>bell</span></div>
+            <div class="item"><i class="fa-regular fa-calendar"></i><span>calendar</span></div>
+            <div class="item"><i class="fa-regular fa-clock"></i><span>clock</span></div>
+            <div class="item"><i class="fa-regular fa-eye"></i><span>eye</span></div>
+            <div class="item"><i class="fa-regular fa-envelope"></i><span>envelope</span></div>
+            <div class="item"><i class="fa-regular fa-file"></i><span>file</span></div>
+            <div class="item"><i class="fa-regular fa-folder"></i><span>folder</span></div>
+            <div class="item"><i class="fa-regular fa-comment"></i><span>comment</span></div>
+            <div class="item"><i class="fa-regular fa-trash-can"></i><span>trash-can</span></div>
+            <div class="item"><i class="fa-regular fa-credit-card"></i><span>credit-card</span></div>
+            <div class="item"><i class="fa-regular fa-floppy-disk"></i><span>floppy-disk</span></div>
+            <div class="item"><i class="fa-regular fa-sun"></i><span>sun</span></div>
+            <div class="item"><i class="fa-regular fa-moon"></i><span>moon</span></div>
+            <div class="item"><i class="fa-regular fa-image"></i><span>image</span></div>
+            <div class="item"><i class="fa-regular fa-map"></i><span>map</span></div>
+        </div>
+
+        <!-- ==================== 四、brands ==================== -->
+        <h2>四、品牌图标 fa-brands（20 个）</h2>
+        <p class="row">品牌图标来自另一套字体「Font Awesome 6 Brands」，所以类名前缀是 <code>fa-brands</code>。</p>
+        <div class="grid">
+            <div class="item"><i class="fa-brands fa-github b-github"></i><span>github</span></div>
+            <div class="item"><i class="fa-brands fa-weibo b-weibo"></i><span>weibo</span></div>
+            <div class="item"><i class="fa-brands fa-qq b-qq"></i><span>qq</span></div>
+            <div class="item"><i class="fa-brands fa-weixin b-weixin"></i><span>weixin</span></div>
+            <div class="item"><i class="fa-brands fa-apple b-apple"></i><span>apple</span></div>
+            <div class="item"><i class="fa-brands fa-windows b-windows"></i><span>windows</span></div>
+            <div class="item"><i class="fa-brands fa-android b-android"></i><span>android</span></div>
+            <div class="item"><i class="fa-brands fa-chrome b-chrome"></i><span>chrome</span></div>
+            <div class="item"><i class="fa-brands fa-html5 b-html5"></i><span>html5</span></div>
+            <div class="item"><i class="fa-brands fa-css3-alt b-css3"></i><span>css3-alt</span></div>
+            <div class="item"><i class="fa-brands fa-js b-js"></i><span>js</span></div>
+            <div class="item"><i class="fa-brands fa-react b-react"></i><span>react</span></div>
+            <div class="item"><i class="fa-brands fa-vuejs b-vuejs"></i><span>vuejs</span></div>
+            <div class="item"><i class="fa-brands fa-node-js b-node"></i><span>node-js</span></div>
+            <div class="item"><i class="fa-brands fa-python b-python"></i><span>python</span></div>
+            <div class="item"><i class="fa-brands fa-java b-java"></i><span>java</span></div>
+            <div class="item"><i class="fa-brands fa-figma b-figma"></i><span>figma</span></div>
+            <div class="item"><i class="fa-brands fa-bilibili b-bilibili"></i><span>bilibili</span></div>
+            <div class="item"><i class="fa-brands fa-tiktok b-tiktok"></i><span>tiktok</span></div>
+            <div class="item"><i class="fa-brands fa-linux b-linux"></i><span>linux</span></div>
+        </div>
+
+        <!-- ==================== 五、字体图标的好处 ==================== -->
+        <h2>五、字体图标的好处（这些都是图片做不到的）</h2>
+
+        <h3>1. 字号一改，图标就跟着变大变小</h3>
+        <div class="box">
+            <i class="fa-solid fa-house fa-1x"></i>
+            <i class="fa-solid fa-house fa-2x"></i>
+            <i class="fa-solid fa-house fa-3x"></i>
+            <i class="fa-solid fa-house fa-5x"></i>
+        </div>
+        <pre><code>&lt;i class="fa-solid fa-house fa-1x"&gt;&lt;/i&gt;
+&lt;i class="fa-solid fa-house fa-2x"&gt;&lt;/i&gt;   &lt;!-- .fa-2x 就是 font-size: 2em --&gt;
+&lt;i class="fa-solid fa-house fa-5x"&gt;&lt;/i&gt;</code></pre>
+
+        <h3>2. 文字颜色一改，图标颜色就跟着变（当前色 currentColor）</h3>
+        <div class="box">
+            <i class="fa-solid fa-heart" style="color:#e74c3c"></i>
+            <i class="fa-solid fa-heart" style="color:#f39c12"></i>
+            <i class="fa-solid fa-heart" style="color:#27ae60"></i>
+            <i class="fa-solid fa-heart" style="color:#2980b9"></i>
+            <i class="fa-solid fa-heart" style="color:#8e44ad"></i>
+        </div>
+        <pre><code>&lt;i class="fa-solid fa-heart" style="color:#e74c3c"&gt;&lt;/i&gt;</code></pre>
+
+        <h3>3. 直接转方向、加旋转动画</h3>
+        <div class="box">
+            <i class="fa-solid fa-arrow-right fa-rotate-90"></i>
+            <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
+            <i class="fa-solid fa-arrow-right fa-flip-horizontal"></i>
+            <i class="fa-solid fa-gear fa-spin"></i>
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <i class="fa-solid fa-heart fa-beat"></i>
+            <i class="fa-solid fa-house fa-bounce"></i>
+        </div>
+        <pre><code>&lt;i class="fa-solid fa-arrow-right fa-rotate-90"&gt;&lt;/i&gt;   &lt;!-- 转 90° --&gt;
+&lt;i class="fa-solid fa-gear fa-spin"&gt;&lt;/i&gt;            &lt;!-- 一直转（纯 CSS animation）--&gt;
+&lt;i class="fa-solid fa-heart fa-beat"&gt;&lt;/i&gt;           &lt;!-- 心跳 --&gt;
+&lt;i class="fa-solid fa-house fa-bounce"&gt;&lt;/i&gt;         &lt;!-- 弹跳 --&gt;</code></pre>
+
+        <h3>4. 两个图标堆叠成一个（fa-stack）</h3>
+        <div class="box">
+            <span class="fa-stack fa-2x" style="color:#2c7be5">
+                <i class="fa-solid fa-circle fa-stack-2x"></i>
+                <i class="fa-solid fa-flag fa-stack-1x fa-inverse" style="color:#ffffff"></i>
+            </span>
+            <span class="fa-stack fa-2x" style="color:#e74c3c">
+                <i class="fa-solid fa-square fa-stack-2x"></i>
+                <i class="fa-solid fa-check fa-stack-1x" style="color:#ffffff"></i>
+            </span>
+            <span class="fa-stack fa-2x" style="color:#27ae60">
+                <i class="fa-solid fa-circle fa-stack-2x"></i>
+                <i class="fa-solid fa-heart fa-stack-1x" style="color:#ffffff"></i>
+            </span>
+        </div>
+        <pre><code>&lt;span class="fa-stack fa-2x"&gt;
+    &lt;i class="fa-solid fa-circle fa-stack-2x"&gt;&lt;/i&gt;   &lt;!-- 底层：大图标 --&gt;
+    &lt;i class="fa-solid fa-check  fa-stack-1x"&gt;&lt;/i&gt;   &lt;!-- 上层：小图标 --&gt;
+&lt;/span&gt;</code></pre>
+
+        <h3>5. 当成列表项目符号（fa-ul + fa-li）</h3>
+        <div class="box">
+            <ul class="fa-ul">
+                <li><i class="fa-li fa-solid fa-check"></i>图标是字体，放大缩小都很清晰</li>
+                <li><i class="fa-li fa-solid fa-check"></i>颜色直接用 color 控制，不用再准备一套配色图片</li>
+                <li><i class="fa-li fa-solid fa-check"></i>列表的缩进、换行由浏览器自动处理，不会像图片那样对不齐</li>
+            </ul>
+        </div>
+
+        <!-- ==================== 六、原理 ==================== -->
+        <h2>六、它到底是怎么把一个字变成图标的</h2>
+        <p class="row">
+            原理就四步：<strong>准备一套字体 → 把图标画在字体的「私用区」码位上 → 用 @font-face 加载 → 用伪元素把那个字打出来</strong>。
+            所以图标本质上就是一个<strong>字</strong>，只不过这个字长得像图标。
+        </p>
+        <pre><code>/* 1. 用 @font-face 把字体文件当字体加载（文件就在 cdn/webfonts/ 里）*/
+@font-face {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    src: url("../webfonts/fa-solid-900.woff2") format("woff2");
+}
+
+/* 2. 给 .fa-solid 指定用这套字体 */
+.fa { font-family: var(--fa-style-family, "Font Awesome 6 Free"); font-weight: var(--fa-style, 900); }
+
+/* 3. 每个图标类只负责记下自己在私用区的编码，比如房子的码位是 F015（十进制 61461）*/
+.fa-house { --fa: "\f015"; }
+
+/* 4. 一条总规则把编码打出来 —— 藏在伪元素里，所以 HTML 里只写空标签就够了 */
+.fa-solid:before, .fa-regular:before, .fa-brands:before, .fa:before { content: var(--fa); }</code></pre>
+        <p class="row">
+            几个已经查到的真实码位：房子 <code>fa-house</code> = <code>\f015</code>，
+            齿轮 <code>fa-gear</code> = <code>\f013</code>，星星 <code>fa-star</code> = <code>\f005</code>，
+            心动 <code>fa-heart</code> = <code>\f004</code>，GitHub <code>fa-github</code> = <code>\f09b</code>。
+            这些码位都在 Unicode 私用区（U+E000–U+F8FF）里，正常输入法打不出来，只给图标字体自己用。
+        </p>
+        <p class="row">
+            也正因为是「字」，所以：<strong>能选中的是一段文字</strong>、<strong>能被屏幕阅读器读到</strong>（所以要配 <code>aria-hidden="true"</code> 或文字说明）、
+            <strong>字体文件只要几十 KB 就能装下几百个图标</strong>，比几百张 PNG 小得多。
+        </p>
+
+        <p class="foot">高级网页设计 · 字体图标 Font Awesome 6.7.2 · 王梓杨</p>
+    </div>
+</body>
+</html>

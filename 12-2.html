@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的 Lucide SVG 图标</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 24px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f5f6f8;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            padding-left: 10px;
+            font-size: 19px;
+            border-left: 5px solid #f39c12;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+            font-size: 15px;
+            color: #34495e;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            color: #c0392b;
+            background-color: #e8edf3;
+        }
+
+        pre {
+            margin: 10px 0;
+            padding: 14px 16px;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #e6edf3;
+            background-color: #1f2d3d;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+        }
+
+        /* ===== 图标网格 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            padding: 14px 6px 10px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .item img,
+        .item svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .item span {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #7b8794;
+            word-break: break-all;
+        }
+
+        .item em {
+            display: block;
+            margin-top: 2px;
+            font-size: 10px;
+            font-style: normal;
+            color: #b0b8c1;
+        }
+
+        .item:hover {
+            background-color: #fffaf0;
+            border-color: #f39c12;
+        }
+
+        /* 内联演示那一排盒子留大一点 */
+        .grid-big {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .grid-big .item {
+            padding: 18px 8px 14px;
+            min-height: 132px;
+        }
+
+        .grid-big .item svg {
+            color: #2c3e50;
+        }
+
+        .box {
+            padding: 18px;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .row {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        /* ===== 对比表 ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 9px 12px;
+            text-align: left;
+            border: 1px solid #e1e6ec;
+            vertical-align: top;
+        }
+
+        th {
+            color: #ffffff;
+            background-color: #34495e;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .foot {
+            margin-top: 36px;
+            padding-top: 14px;
+            font-size: 13px;
+            color: #8a97a5;
+            border-top: 1px solid #e1e6ec;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>王梓杨的 Lucide SVG 图标</h1>
+        <p class="sub">
+            Lucide <strong>v1.59.0</strong>，48 个图标全部下载在本目录 <code>cdn/lucide/</code> 下，断网也能看。
+            和上一页的 Font Awesome 不同：这里的每个图标是一个 <strong>.svg 文件</strong>，
+            不是字体 —— 所以既可以用 <code>&lt;img&gt;</code> 引进来，也可以把 <code>&lt;svg&gt;</code> 直接写进页面里随便改颜色。
+        </p>
+
+        <!-- ==================== 一、外链 ==================== -->
+        <h2>一、外链 SVG 文件：用 img 标签引进来（48 个）</h2>
+        <p class="row">
+            每个 <code>.svg</code> 文件里就是一段 <code>&lt;svg&gt;</code> 图形代码，浏览器把它当图片显示。
+            这种写法最简单，缺点是 <strong>img 里的 SVG 不受页面 CSS 控制</strong>，颜色改不了。
+        </p>
+        <div class="grid">
+            <div class="item"><img src="cdn/lucide/house.svg" alt="house" width="40" height="40"><span>house</span></div>
+            <div class="item"><img src="cdn/lucide/user.svg" alt="user" width="40" height="40"><span>user</span></div>
+            <div class="item"><img src="cdn/lucide/users.svg" alt="users" width="40" height="40"><span>users</span></div>
+            <div class="item"><img src="cdn/lucide/settings.svg" alt="settings" width="40" height="40"><span>settings</span></div>
+            <div class="item"><img src="cdn/lucide/search.svg" alt="search" width="40" height="40"><span>search</span></div>
+            <div class="item"><img src="cdn/lucide/heart.svg" alt="heart" width="40" height="40"><span>heart</span></div>
+            <div class="item"><img src="cdn/lucide/star.svg" alt="star" width="40" height="40"><span>star</span></div>
+            <div class="item"><img src="cdn/lucide/mail.svg" alt="mail" width="40" height="40"><span>mail</span></div>
+            <div class="item"><img src="cdn/lucide/phone.svg" alt="phone" width="40" height="40"><span>phone</span></div>
+            <div class="item"><img src="cdn/lucide/camera.svg" alt="camera" width="40" height="40"><span>camera</span></div>
+            <div class="item"><img src="cdn/lucide/image.svg" alt="image" width="40" height="40"><span>image</span></div>
+            <div class="item"><img src="cdn/lucide/music.svg" alt="music" width="40" height="40"><span>music</span></div>
+            <div class="item"><img src="cdn/lucide/video.svg" alt="video" width="40" height="40"><span>video</span></div>
+            <div class="item"><img src="cdn/lucide/play.svg" alt="play" width="40" height="40"><span>play</span></div>
+            <div class="item"><img src="cdn/lucide/pause.svg" alt="pause" width="40" height="40"><span>pause</span></div>
+            <div class="item"><img src="cdn/lucide/bookmark.svg" alt="bookmark" width="40" height="40"><span>bookmark</span></div>
+            <div class="item"><img src="cdn/lucide/calendar.svg" alt="calendar" width="40" height="40"><span>calendar</span></div>
+            <div class="item"><img src="cdn/lucide/clock.svg" alt="clock" width="40" height="40"><span>clock</span></div>
+            <div class="item"><img src="cdn/lucide/map-pin.svg" alt="map-pin" width="40" height="40"><span>map-pin</span></div>
+            <div class="item"><img src="cdn/lucide/globe.svg" alt="globe" width="40" height="40"><span>globe</span></div>
+            <div class="item"><img src="cdn/lucide/download.svg" alt="download" width="40" height="40"><span>download</span></div>
+            <div class="item"><img src="cdn/lucide/upload.svg" alt="upload" width="40" height="40"><span>upload</span></div>
+            <div class="item"><img src="cdn/lucide/share-2.svg" alt="share-2" width="40" height="40"><span>share-2</span></div>
+            <div class="item"><img src="cdn/lucide/trash-2.svg" alt="trash-2" width="40" height="40"><span>trash-2</span></div>
+            <div class="item"><img src="cdn/lucide/pencil.svg" alt="pencil" width="40" height="40"><span>pencil</span></div>
+            <div class="item"><img src="cdn/lucide/copy.svg" alt="copy" width="40" height="40"><span>copy</span></div>
+            <div class="item"><img src="cdn/lucide/link.svg" alt="link" width="40" height="40"><span>link</span></div>
+            <div class="item"><img src="cdn/lucide/lock.svg" alt="lock" width="40" height="40"><span>lock</span></div>
+            <div class="item"><img src="cdn/lucide/unlock.svg" alt="unlock" width="40" height="40"><span>unlock</span></div>
+            <div class="item"><img src="cdn/lucide/eye.svg" alt="eye" width="40" height="40"><span>eye</span></div>
+            <div class="item"><img src="cdn/lucide/bell.svg" alt="bell" width="40" height="40"><span>bell</span></div>
+            <div class="item"><img src="cdn/lucide/message-circle.svg" alt="message-circle" width="40" height="40"><span>message-circle</span></div>
+            <div class="item"><img src="cdn/lucide/send.svg" alt="send" width="40" height="40"><span>send</span></div>
+            <div class="item"><img src="cdn/lucide/shopping-cart.svg" alt="shopping-cart" width="40" height="40"><span>shopping-cart</span></div>
+            <div class="item"><img src="cdn/lucide/credit-card.svg" alt="credit-card" width="40" height="40"><span>credit-card</span></div>
+            <div class="item"><img src="cdn/lucide/folder.svg" alt="folder" width="40" height="40"><span>folder</span></div>
+            <div class="item"><img src="cdn/lucide/file.svg" alt="file" width="40" height="40"><span>file</span></div>
+            <div class="item"><img src="cdn/lucide/save.svg" alt="save" width="40" height="40"><span>save</span></div>
+            <div class="item"><img src="cdn/lucide/printer.svg" alt="printer" width="40" height="40"><span>printer</span></div>
+            <div class="item"><img src="cdn/lucide/wifi.svg" alt="wifi" width="40" height="40"><span>wifi</span></div>
+            <div class="item"><img src="cdn/lucide/sun.svg" alt="sun" width="40" height="40"><span>sun</span></div>
+            <div class="item"><img src="cdn/lucide/moon.svg" alt="moon" width="40" height="40"><span>moon</span></div>
+            <div class="item"><img src="cdn/lucide/cloud.svg" alt="cloud" width="40" height="40"><span>cloud</span></div>
+            <div class="item"><img src="cdn/lucide/zap.svg" alt="zap" width="40" height="40"><span>zap</span></div>
+            <div class="item"><img src="cdn/lucide/check.svg" alt="check" width="40" height="40"><span>check</span></div>
+            <div class="item"><img src="cdn/lucide/x.svg" alt="x" width="40" height="40"><span>x</span></div>
+            <div class="item"><img src="cdn/lucide/plus.svg" alt="plus" width="40" height="40"><span>plus</span></div>
+            <div class="item"><img src="cdn/lucide/menu.svg" alt="menu" width="40" height="40"><span>menu</span></div>
+        </div>
+        <pre><code>&lt;img src="cdn/lucide/house.svg" alt="house" width="40" height="40"&gt;</code></pre>
+
+        <!-- ==================== 二、内联 ==================== -->
+        <h2>二、内联 SVG：把 svg 直接写进页面（可以随便改）</h2>
+        <p class="row">
+            把 svg 代码粘进 HTML，它就变成了 DOM 的一部分，于是颜色（<code>color</code> / <code>fill</code> / <code>stroke</code>）、
+            线条粗细（<code>stroke-width</code>）、尺寸、旋转全都能用 CSS 控制。
+        </p>
+        <div class="grid grid-big">
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#2c7be5">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg>
+                <span>house</span>
+                <em>默认 24×24 网格，stroke-width 2</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#e74c3c">
+            <path d="m21 21-4.34-4.34" />
+            <circle cx="11" cy="11" r="8" />
+                </svg>
+                <span>search</span>
+                <em>颜色改 color（描边是 currentColor）</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:56px;height:56px;color:#f39c12">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" />
+            <path d="M12 20v2" />
+            <path d="m4.93 4.93 1.41 1.41" />
+            <path d="m17.66 17.66 1.41 1.41" />
+            <path d="M2 12h2" />
+            <path d="M20 12h2" />
+            <path d="m6.34 17.66-1.41 1.41" />
+            <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+                <span>sun</span>
+                <em>尺寸改 width/height，矢量不糊</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#e84393;fill:currentColor">
+            <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+                </svg>
+                <span>heart</span>
+                <em>改成实心：fill:currentColor</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#8e44ad;stroke-width:1">
+            <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+                </svg>
+                <span>star</span>
+                <em>细线：stroke-width 1</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#16a085;stroke-width:3">
+            <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+            <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                </svg>
+                <span>bell</span>
+                <em>粗线：stroke-width 3</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#27ae60;transform:rotate(45deg)">
+            <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+            <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span>settings</span>
+                <em>旋转：transform rotate(45deg)</em>
+            </div>
+            <div class="item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:#34495e">
+            <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+                </svg>
+                <span>moon</span>
+                <em>深色也能直接用</em>
+            </div>
+        </div>
+        <pre><code>&lt;svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;color:#2c7be5"&gt;
+    &lt;path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /&gt;
+    &lt;path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /&gt;
+&lt;/svg&gt;</code></pre>
+
+        <!-- ==================== 三、特点 ==================== -->
+        <h2>三、Lucide 图标的三个特点</h2>
+        <div class="box">
+            <p class="row"><strong>1. 统一画在 24×24 的网格上</strong> —— 每个文件都是 <code>viewBox="0 0 24 24"</code>，所以几十个图标放在一起，粗细、大小、视觉重量都是一致的。</p>
+            <p class="row"><strong>2. 是「线性图标」不是「实心图标」</strong> —— 用 <code>stroke</code> 描边画出来，<code>fill="none"</code>。想变实心，改一个 <code>fill: currentColor</code> 就行。</p>
+            <p class="row"><strong>3. 描边默认用当前文字颜色</strong> —— 文件里写的是 <code>stroke="currentColor"</code>，所以在内联用法下，父元素的 <code>color</code> 是什么颜色，图标就是什么颜色。</p>
+        </div>
+
+        <!-- ==================== 四、对比 ==================== -->
+        <h2>四、字体图标（Font Awesome）和 SVG 图标（Lucide）怎么选</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:15%">对比项</th>
+                    <th style="width:42%">字体图标 · Font Awesome</th>
+                    <th style="width:43%">SVG 图标 · Lucide</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>文件形式</td>
+                    <td>1 个 css + 4 个字体文件（woff2/ttf），一套字体装 2000 多个图标</td>
+                    <td>每个图标一个独立的 .svg 文本文件，用哪个下哪个</td>
+                </tr>
+                <tr>
+                    <td>页面里怎么写</td>
+                    <td><code>&lt;i class="fa-solid fa-house"&gt;&lt;/i&gt;</code></td>
+                    <td><code>&lt;img src="house.svg"&gt;</code> 或内联 <code>&lt;svg&gt;...&lt;/svg&gt;</code></td>
+                </tr>
+                <tr>
+                    <td>改颜色</td>
+                    <td><code>color</code> 一改就变（字就是图标）</td>
+                    <td>内联可以随便改；用 <code>&lt;img&gt;</code> 引的改不了</td>
+                </tr>
+                <tr>
+                    <td>改线条粗细</td>
+                    <td>只能换字重：<code>fa-regular</code>(400) / <code>fa-solid</code>(900)，没有更细的</td>
+                    <td><code>stroke-width</code> 想写几写几，1 / 2 / 3 都能试</td>
+                </tr>
+                <tr>
+                    <td>放大后清晰度</td>
+                    <td>字体也是矢量，放多大都不糊</td>
+                    <td>矢量图形，放多大都不糊</td>
+                </tr>
+                <tr>
+                    <td>体积</td>
+                    <td>整套字体约 1 MB（全量），不管用几个都这么大</td>
+                    <td>单个图标 0.4~1 KB，用多少下多少</td>
+                </tr>
+                <tr>
+                    <td>能不能做复杂动画</td>
+                    <td>只能整体转/缩放/变色（CSS animation 作用在一个字上）</td>
+                    <td>可以精确控制每一根线条（stroke-dasharray 画线动画等）</td>
+                </tr>
+                <tr>
+                    <td>主要缺点</td>
+                    <td>只能单色；要靠伪元素 <code>:before</code> 显示；改不了内部结构</td>
+                    <td>图标一多要管理很多小文件；<code>&lt;img&gt;</code> 方式不能改样式</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="row" style="margin-top:14px">
+            一句话总结：<strong>图标少、样式统一、图省事 → 字体图标</strong>；
+            <strong>图标要改颜色改粗细、要按需加载、要做精细动画 → SVG 图标</strong>。
+        </p>
+
+        <p class="foot">高级网页设计 · SVG 图标 Lucide v1.59.0 · 王梓杨</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王梓杨的 Lucide 图标（JS 运行时生成 SVG）</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 24px;
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f5f6f8;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            padding-left: 10px;
+            font-size: 19px;
+            border-left: 5px solid #2c7be5;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+            font-size: 15px;
+            color: #34495e;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            color: #c0392b;
+            background-color: #e8edf3;
+        }
+
+        pre {
+            margin: 10px 0;
+            padding: 14px 16px;
+            overflow: auto;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #e6edf3;
+            background-color: #1f2d3d;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+        }
+
+        /* ===== 白色演示盒 ===== */
+        .box {
+            padding: 18px;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        /* Lucide 被 JS 换成了 <svg>，所以这里选 svg 而不是 i */
+        :where(.box > svg) {
+            margin: 0 12px;
+            width: 30px;
+            height: 30px;
+            color: #2c7be5;
+            vertical-align: middle;
+        }
+
+        .tip {
+            margin-top: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 5px solid #f39c12;
+        }
+
+        /* ===== 图标网格 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            padding: 16px 6px 10px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .item svg {
+            width: 26px;
+            height: 26px;
+            color: #2c7be5;
+        }
+
+        .item span {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #7b8794;
+            word-break: break-all;
+        }
+
+        .item:hover {
+            background-color: #f0f6ff;
+            border-color: #2c7be5;
+        }
+
+        .item:hover svg {
+            color: #e74c3c;
+        }
+
+        /* ===== 可控性演示 ===== */
+        .ctrl {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .ctrl > div {
+            padding: 16px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e1e6ec;
+        }
+
+        .ctrl svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .ctrl b {
+            display: block;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .ctrl span {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #7b8794;
+        }
+
+        /* 改色 / 改粗细 / 实心 / 放大 */
+        .c-red { color: #e74c3c; }
+        .c-green { color: #27ae60; }
+        .w1 svg { stroke-width: 1; }
+        .w3 svg { stroke-width: 3; }
+        .fill-i svg { fill: #e74c3c; stroke: #e74c3c; }
+        .big svg { width: 56px; height: 56px; }
+
+        /* ===== 运行时新增演示 ===== */
+        .btn {
+            padding: 8px 18px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #ffffff;
+            background-color: #2c7be5;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #1a5fb4;
+        }
+
+        .drop {
+            min-height: 56px;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px dashed #b9c6d4;
+        }
+
+        .drop svg {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+            color: #27ae60;
+            vertical-align: middle;
+        }
+
+        /* ===== 对比表 ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid #e1e6ec;
+        }
+
+        th {
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #2c3e50;
+        }
+
+        td:first-child {
+            width: 130px;
+            color: #34495e;
+            background-color: #f7f9fb;
+        }
+
+        .foot {
+            margin-top: 36px;
+            padding-top: 14px;
+            font-size: 13px;
+            color: #8a97a5;
+            border-top: 1px solid #e1e6ec;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>王梓杨的 Lucide 图标（JS 运行时生成 SVG）</h1>
+        <p class="sub">
+            这一页只做一件事：一行 <code>&lt;script&gt;</code> 引入 <code>cdn/lucide.min.js</code>，
+            然后在页面里写 <code>&lt;i data-lucide="heart"&gt;&lt;/i&gt;</code>，
+            JS 在运行时把这个 <code>&lt;i&gt;</code> <strong>替换成一段内联 SVG</strong>。
+            所以刷新一下页面，<code>&lt;i&gt;</code> 就变成 <code>&lt;svg&gt;</code> 了 —— 现在页面上已经找不到那个 i 了。
+        </p>
+
+        <!-- ==================== 一、一行 script ==================== -->
+        <h2>一、一行 script + 一个 data-lucide 属性</h2>
+        <div class="box">
+            <i data-lucide="heart"></i>
+            <i data-lucide="star"></i>
+            <i data-lucide="house"></i>
+            <i data-lucide="settings"></i>
+            <i data-lucide="bell"></i>
+        </div>
+        <pre><code>&lt;!-- 1. 引入 Lucide 的运行库（本地文件） --&gt;
+&lt;script src="cdn/lucide.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 2. 写一个带 data-lucide 的 i，名字就是图标名 --&gt;
+&lt;i data-lucide="heart"&gt;&lt;/i&gt;
+
+&lt;!-- 3. 让 Lucide 去把页面里所有 [data-lucide] 换掉 --&gt;
+&lt;script&gt;lucide.createIcons();&lt;/script&gt;</code></pre>
+        <div class="tip">
+            关键区别：<strong>Font Awesome 是「CSS + 字体」，Lucide 是「JS + 图形」。</strong>
+            上一页的 <code>&lt;i class="fas fa-heart"&gt;</code> 永远不会变成别的东西；
+            这一页的 <code>&lt;i data-lucide="heart"&gt;</code> 在 3 行 JS 之后就没了，原地只剩一个 <code>&lt;svg&gt;</code>。
+        </div>
+
+        <!-- ==================== 二、它替换成了什么 ==================== -->
+        <h2>二、它偷偷把 i 换成了什么</h2>
+        <p class="sub" style="margin-bottom:10px">按 F12 打开开发者工具，选中上面任意一个图标，看到的是这样一段：</p>
+        <pre><code>&lt;svg class="lucide lucide-heart" xmlns="http://www.w3.org/2000/svg"
+     width="24" height="24" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round"&gt;
+  &lt;path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2
+           -1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/&gt;
+&lt;/svg&gt;</code></pre>
+        <p class="sub" style="margin-top:10px">
+            三个信息量很大的属性：<code>viewBox="0 0 24 24"</code>（统一画在 24×24 的格子里）、
+            <code>fill="none" stroke="currentColor"</code>（只有描边、颜色跟着文字颜色）、
+            <code>stroke-width="2"</code>（线宽，可以直接改）。
+        </p>
+
+        <!-- ==================== 三、图标网格 ==================== -->
+        <h2>三、24 个常用图标</h2>
+        <div class="grid">
+            <div class="item"><i data-lucide="house"></i><span>house</span></div>
+            <div class="item"><i data-lucide="user"></i><span>user</span></div>
+            <div class="item"><i data-lucide="users"></i><span>users</span></div>
+            <div class="item"><i data-lucide="settings"></i><span>settings</span></div>
+            <div class="item"><i data-lucide="search"></i><span>search</span></div>
+            <div class="item"><i data-lucide="heart"></i><span>heart</span></div>
+            <div class="item"><i data-lucide="star"></i><span>star</span></div>
+            <div class="item"><i data-lucide="mail"></i><span>mail</span></div>
+            <div class="item"><i data-lucide="phone"></i><span>phone</span></div>
+            <div class="item"><i data-lucide="camera"></i><span>camera</span></div>
+            <div class="item"><i data-lucide="image"></i><span>image</span></div>
+            <div class="item"><i data-lucide="music"></i><span>music</span></div>
+            <div class="item"><i data-lucide="video"></i><span>video</span></div>
+            <div class="item"><i data-lucide="play"></i><span>play</span></div>
+            <div class="item"><i data-lucide="bookmark"></i><span>bookmark</span></div>
+            <div class="item"><i data-lucide="calendar"></i><span>calendar</span></div>
+            <div class="item"><i data-lucide="clock"></i><span>clock</span></div>
+            <div class="item"><i data-lucide="message-circle"></i><span>message-circle</span></div>
+            <div class="item"><i data-lucide="bell"></i><span>bell</span></div>
+            <div class="item"><i data-lucide="shopping-cart"></i><span>shopping-cart</span></div>
+            <div class="item"><i data-lucide="folder"></i><span>folder</span></div>
+            <div class="item"><i data-lucide="wifi"></i><span>wifi</span></div>
+            <div class="item"><i data-lucide="zap"></i><span>zap</span></div>
+            <div class="item"><i data-lucide="check"></i><span>check</span></div>
+        </div>
+
+        <!-- ==================== 四、内联 SVG 的好处 ==================== -->
+        <h2>四、变成内联 SVG 之后，CSS 能控制它每一根线</h2>
+        <div class="ctrl">
+            <div class="c-red">
+                <i data-lucide="heart"></i>
+                <b>改颜色</b>
+                <span>color: #e74c3c</span>
+            </div>
+            <div class="w1">
+                <i data-lucide="heart"></i>
+                <b>线更细</b>
+                <span>stroke-width: 1</span>
+            </div>
+            <div class="w3 c-green">
+                <i data-lucide="heart"></i>
+                <b>线更粗</b>
+                <span>stroke-width: 3</span>
+            </div>
+            <div class="fill-i">
+                <i data-lucide="heart"></i>
+                <b>改成实心</b>
+                <span>fill: #e74c3c</span>
+            </div>
+            <div class="big c-green">
+                <i data-lucide="star"></i>
+                <b>改尺寸</b>
+                <span>width/height: 56px</span>
+            </div>
+            <div>
+                <i data-lucide="zap"></i>
+                <b>默认样式</b>
+                <span>stroke-width: 2</span>
+            </div>
+        </div>
+        <p class="sub" style="margin-top:10px">
+            上面全是普通 CSS 改的：<code>color</code> 改色（因为 <code>stroke="currentColor"</code>）、
+            <code>stroke-width</code> 改线宽、<code>fill</code> 改实心、<code>width/height</code> 改尺寸。
+            用 <code>&lt;img&gt;</code> 引 SVG 文件是做不到这些的。
+        </p>
+
+        <!-- ==================== 五、运行时新增 ==================== -->
+        <h2>五、证据：图标是 JS「当场」造出来的</h2>
+        <p class="sub" style="margin-bottom:10px">
+            下面这个按钮每次点击会往框里插入一个 <code>&lt;i data-lucide="star"&gt;</code>，
+            然后立刻调用一次 <code>lucide.createIcons()</code>。点一下试试：
+        </p>
+        <button class="btn" id="addBtn" type="button">点我加一个图标</button>
+        <div class="drop" id="drop"></div>
+        <pre><code>btn.onclick = function () {
+    var i = document.createElement('i');
+    i.setAttribute('data-lucide', 'star');   // 先插入一个空的 i
+    drop.appendChild(i);
+    lucide.createIcons();                    // 让 Lucide 把它换成 svg
+};</code></pre>
+        <noscript>
+            <div class="tip">
+                注意：这一页的图标是 JavaScript 生成的，你关掉了脚本，图标就一个也不会出现 ——
+                这正是它和上一页（字体图标）最大的区别。
+            </div>
+        </noscript>
+
+        <!-- ==================== 六、对比 ==================== -->
+        <h2>六、和上一页（13-1）对比一下</h2>
+        <table>
+            <tr>
+                <th>对比项</th>
+                <th>13-1 Font Awesome（CSS + 字体）</th>
+                <th>13-2 Lucide（JS + SVG）</th>
+            </tr>
+            <tr>
+                <td>怎么引入</td>
+                <td><code>&lt;link&gt;</code> 一个 CSS</td>
+                <td><code>&lt;script&gt;</code> 一个 JS</td>
+            </tr>
+            <tr>
+                <td>怎么写</td>
+                <td><code>&lt;i class="fas fa-heart"&gt;</code></td>
+                <td><code>&lt;i data-lucide="heart"&gt;</code></td>
+            </tr>
+            <tr>
+                <td>页面上最终是什么</td>
+                <td>还是一个 <code>&lt;i&gt;</code>，图标在 <code>::before</code> 里</td>
+                <td>被换成一段 <code>&lt;svg&gt;&lt;path&gt;</code></td>
+            </tr>
+            <tr>
+                <td>没有 JS 会怎样</td>
+                <td>照常显示（图标是 CSS + 字体）</td>
+                <td><strong>一个都不显示</strong>（SVG 是 JS 造的）</td>
+            </tr>
+            <tr>
+                <td>改线宽</td>
+                <td>只能换字重（400 / 900），没别的档</td>
+                <td><code>stroke-width</code> 想写几就写几</td>
+            </tr>
+            <tr>
+                <td>文件体积</td>
+                <td>整套字体 1 MB 左右，用不用都这么大</td>
+                <td>JS 约 444 KB，图标按需调用</td>
+            </tr>
+            <tr>
+                <td>适合场景</td>
+                <td>图标多、要统一风格、不想要 JS</td>
+                <td>要精细控制线条、要和页面视觉一起调</td>
+            </tr>
+        </table>
+
+        <div class="foot">
+            高级网页设计 · 第十三章 图标与字体库（2/3）· 王梓杨 ｜ Lucide 1.59.0 ｜ 库文件在本地 <code>cdn/lucide.min.js</code>
+        </div>
+    </div>
+
+    <!-- 图标库本体（本地文件，断网可用） -->
+    <script src="cdn/lucide.min.js"></script>
+    <script>
+        // 把页面里所有 <i data-lucide="..."> 换成内联 <svg>
+        lucide.createIcons();
+
+        // 演示：运行时再插一个图标进去
+        var btn = document.getElementById('addBtn');
+        var drop = document.getElementById('drop');
+        var n = 0;
+        btn.onclick = function () {
+            var i = document.createElement('i');
+            i.setAttribute('data-lucide', 'star');
+            drop.appendChild(i);
+            lucide.createIcons();   // 新插入的 i 也要再调用一次才会变成 svg
+            n = n + 1;
+            btn.textContent = '已经加了 ' + n + ' 个，再点一个';
+        };
+    </script>
+</body>
+</html>

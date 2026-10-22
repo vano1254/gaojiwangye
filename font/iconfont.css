@@ -1,0 +1,43 @@
+/* ============================================================
+   iconfont 图标字体（本项目自建，4 个导航图标）
+   由 .tmp13/build-font.js 从 SVG 路径生成，产物：
+     iconfont.woff2 / iconfont.woff / iconfont.ttf
+   用法：<i class="iconfont icon-home"></i>
+   ============================================================ */
+
+@font-face {
+    font-family: "iconfont";
+    src: url("iconfont.woff2") format("woff2"),
+         url("iconfont.woff") format("woff"),
+         url("iconfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    line-height: 1;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 码位：E600 首页 / E601 消息 / E602 发现 / E603 我的 */
+.icon-home::before {
+    content: "\e600";
+}
+
+.icon-message::before {
+    content: "\e601";
+}
+
+.icon-find::before {
+    content: "\e602";
+}
+
+.icon-user::before {
+    content: "\e603";
+}

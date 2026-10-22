@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <font id="iconfont" horiz-adv-x="1024">
+    <font-face font-family="iconfont"
+      units-per-em="1024" ascent="1024"
+      descent="0" />
+    <missing-glyph horiz-adv-x="0" />
+    <glyph glyph-name="home"
+      unicode="&#xE600;"
+      horiz-adv-x="1024" d="M512 928L944 544L782 544L782 128L574 128L574 384L450 384L450 128L242 128L242 544L80 544z" />
+    <glyph glyph-name="message"
+      unicode="&#xE601;"
+      horiz-adv-x="1024" d="M160 832L864 832A96 96 0 0 0 960 736L960 320A96 96 0 0 0 864 224L416 224L224 96L224 224L160 224A96 96 0 0 0 64 320L64 736A96 96 0 0 0 160 832z" />
+    <glyph glyph-name="find"
+      unicode="&#xE602;"
+      horiz-adv-x="1024" d="M512 960A448 448 0 1 1 512 64A448 448 0 1 1 512 960zM512 832A320 320 0 1 0 512 192A320 320 0 1 0 512 832zM512 736L640 512L512 288L384 512z" />
+    <glyph glyph-name="user"
+      unicode="&#xE603;"
+      horiz-adv-x="1024" d="M512 848A176 176 0 1 1 512 496A176 176 0 1 1 512 848zM176 128A336 336 0 0 0 848 128z" />
+  </font>
+</defs>
+</svg>

@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="王梓杨">
-<meta name="description" content="王梓杨的《高级网页设计》课堂实践 —— 第 2~11 章全部网页的导航总览页">
+<meta name="description" content="王梓杨的《高级网页设计》课堂实践 —— 第 2~13 章全部网页的导航总览页">
 <title>王梓杨 ·《高级网页设计》课堂实践</title>
 <!--
   ══════════════════════════════════════════════════════════════════════
   王梓杨的《高级网页设计》课堂实践 —— 页面导航总览
   位置：D:\vscodehtml\index.html
   · 纯原生代码：HTML + 内部 CSS + 原生 JavaScript
-  · 不使用任何 CDN、外部字体、外部图片、第三方库
-  · 主收录：本目录第 2~11 章课堂实践作品（2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4）
+  · 不使用任何在线 CDN、外部字体、外部图片；图标库文件已下载到本目录 cdn/ 下，离线可用
+  · 主收录：本目录第 2~13 章课堂实践作品（2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4 / 12-1 / 12-2 / 13-1 / 13-2 / 13-3）
   · 附收录：原工作区（C 盘）中先前整理的其他网页，使用绝对路径链接
   ══════════════════════════════════════════════════════════════════════
 -->
@@ -164,27 +164,7 @@ section{padding:60px 0}
 .sec-head h2::before{content:"";width:6px;height:26px;border-radius:3px;background:linear-gradient(var(--brand),var(--gold))}
 .sec-head .hint{color:var(--ink-faint);font-size:13.5px;margin-left:auto;font-family:var(--mono)}
 
-/* ─────────── 6. 提示词卡片 ─────────── */
-.prompt-stack{display:flex;flex-direction:column;gap:20px}
-.prompt{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden}
-.prompt-bar{
-  display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px dashed var(--line);
-  background:linear-gradient(90deg,color-mix(in srgb, var(--brand) 8%, transparent),transparent);
-}
-.prompt-bar .lamp{width:11px;height:11px;border-radius:50%;background:var(--seal);opacity:.85}
-.prompt-bar .lamp.y{background:var(--gold)}
-.prompt-bar .lamp.g{background:#4a9d6a}
-.prompt-bar strong{font-size:13px;letter-spacing:.1em;color:var(--ink-soft);margin-left:4px}
-.prompt-body{padding:24px 26px}
-.prompt-body blockquote{
-  margin:0;padding:20px 22px;border-radius:var(--radius-sm);
-  background:color-mix(in srgb, var(--brand) 5%, transparent);
-  border-left:4px solid var(--brand);
-  font-family:var(--serif);font-size:clamp(15px,1.7vw,18px);line-height:2;
-}
-.prompt-body.chase blockquote{border-left-color:var(--gold);background:color-mix(in srgb, var(--gold) 9%, transparent)}
-.prompt-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:18px;font-size:13px;color:var(--ink-faint)}
-.prompt-meta code{font-family:var(--mono);font-size:12.5px;background:color-mix(in srgb, var(--ink) 6%, transparent);padding:2px 6px;border-radius:5px}
+/* ─────────── 6. 按钮 ─────────── */
 .btn{
   display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;
   font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:11px;
@@ -322,7 +302,6 @@ footer code{font-family:var(--mono)}
   .nav{display:none}
   .hero{padding:50px 0 40px}
   section{padding:44px 0}
-  .prompt-body{padding:18px 16px}
   .count{margin-left:0}
 }
 </style>
@@ -343,7 +322,7 @@ footer code{font-family:var(--mono)}
       </span>
     </a>
     <nav class="nav" aria-label="页面导航">
-      <a href="#prompt">提示词</a>
+      <a href="#about">收录说明</a>
       <a href="#works">课堂作品</a>
       <a href="#others">其他页面</a>
       <a href="#notes">使用说明</a>
@@ -363,246 +342,63 @@ footer code{font-family:var(--mono)}
     <span class="eyebrow"><i></i>Course Practice Index</span>
     <h1>王梓杨的<span class="accent">《高级网页设计》</span><br>课堂实践</h1>
     <p class="lede">
-      本页是 <code>D:\vscodehtml</code> 目录的网页总览：汇总第 <b>2~11 章</b>的全部课堂实践作品
-      （<code>2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4</code>，共 20 个页面），
+      本页是 <code>D:\vscodehtml</code> 目录的网页总览：汇总第 <b>2~13 章</b>的全部课堂实践作品
+      （<code>2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4 / 12-1 / 12-2 / 13-1 / 13-2 / 13-3</code>，共 25 个页面），
       并附上先前在原工作区整理过的其他网页。所有链接点击即达，效果一目了然。
-      页面由纯原生 HTML、CSS、JavaScript 手写完成，<b>不引用任何 CDN、外部字体或第三方库</b>。
+      页面由纯原生 HTML、CSS、JavaScript 手写完成，<b>不引用任何在线 CDN、外部字体或第三方库</b>；<code>12-1 / 12-2</code> 用到的 Font Awesome 与 Lucide 图标文件已下载到本目录 <code>cdn/</code> 下，断网也能正常显示。
     </p>
 
     <div class="idcard">
       <span class="chip"><i class="dot"></i><em>姓名</em><b>王梓杨</b></span>
       <span class="chip"><i class="dot g"></i><em>课程</em><b>高级网页设计</b></span>
-      <span class="chip"><i class="dot r"></i><em>范围</em><b>第 2~11 章</b></span>
+      <span class="chip"><i class="dot r"></i><em>范围</em><b>第 2~13 章</b></span>
       <span class="chip"><em>目录</em><b><code>D:\vscodehtml</code></b></span>
       <span class="chip"><em>学号</em><b>411</b></span>
       <span class="chip"><em>班级</em><b>24004</b></span>
     </div>
 
     <div class="stats">
-      <div class="stat"><b id="statTotal">29</b><span>收录网页总数</span></div>
-      <div class="stat"><b>20</b><span>课堂实践作品</span></div>
+      <div class="stat"><b id="statTotal">34</b><span>收录网页总数</span></div>
+      <div class="stat"><b>25</b><span>课堂实践作品</span></div>
       <div class="stat"><b>9</b><span>其他已收录页面</span></div>
       <div class="stat"><b>0</b><span>外部依赖数量</span></div>
     </div>
   </div>
 </div>
 
-<!-- ══════════ 提示词 ══════════ -->
-<section id="prompt">
+<!-- ══════════ 收录说明 ══════════ -->
+<section id="about">
   <div class="wrap">
     <div class="sec-head">
-      <h2>本页生成提示词</h2>
-      <span class="hint">建页需求 + 本次追加需求 · 原文收录</span>
+      <h2>本页收录说明</h2>
+      <span class="hint">收录范围 · 本次改动</span>
     </div>
 
-    <div class="prompt-stack">
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 01 建页需求</strong>
-          <span class="meta" id="len1" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p1">“创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为王梓杨的《高级网页设计》课堂实践，美化页面，页面中包括本提示词。”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p1">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>建页要求：原生代码、不用 CDN、文件名 <code>index.html</code>、页面中包含本提示词。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 02 本次追加需求</strong>
-          <span class="meta" id="len2" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p2">“看 index 那个，把 4-1 往后的都传上去。”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p2">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：把 <code>4-1</code> 之后的六个课堂作品（第 5~7 章：<code>5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2</code>）补进「课堂实践作品」板块，
-              编号顺延为 <b>06~11</b>，原「其他页面」9 条编号同步改为 <b>12~20</b>，章节标题、统计数字与目录清单一并更新。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 03 本次追加需求</strong>
-          <span class="meta" id="len3" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p3">“现在该 8-1 了，帮我把这个补全。”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p3">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：照老师屏幕上的 <code>.box</code>（150×150、白底细边框、<code>flex</code> 水平垂直居中、<code>transition: all 0.6s</code>、<code>box-sizing: border-box</code>）做 <code>8-1.html</code>：
-              整页只有一组 12 个格子，一行 7 个、第二行 5 个，页面上除格子里的数字外没有任何文字；按老师代码用 <code>:nth-of-type</code>，并做完两个拓展（偶数格 hover 自定义变化、第 12 格 <code>::after</code> 黑底白字名字徽章）；
-              首页新增「第八章 · CSS3 选择器」分组与卡片（编号 <b>12</b>），
-              原「其他页面」9 条编号同步改为 <b>13~21</b>（第九章追加后顺延为 14~22），统计数字与目录清单一并更新。</span>
-          </div>
-        </div>
-      </article>
-
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 04 本次追加需求</strong>
-          <span class="meta" id="len4" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p4">“现在该9-1了 能看到吗” → “你去随便找点” → “不要圆角的” → “继续整合到我之前的index里”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p4">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：照老师投影上的「9-1 transition」做 <code>9-1.html</code>（署名统一改成「王梓杨」）：
-              九张图片卡片、九个<b>各不相同</b>的 <code>transition</code> 悬停效果（含必须有的<b>放大</b>）；
-              按「不要圆角的」把 <code>border-radius</code> 全部去掉；
-              配图换成新找的 <code>images/9-1/p1~p9.jpg</code>（公开图库随机风景照，已本地化，可离线打开）。
-              首页新增「第九章 · transition 过渡」分组与卡片（编号 <b>13</b>），
-              原「其他页面」9 条编号同步改为 <b>14~22</b>，统计数字、目录清单与提示词留档一并更新。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 05 本次追加需求</strong>
-          <span class="meta" id="len5" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p5">“设置规则：后续所有的x-x系列都按照原来index的格式上传到index里” → “1. 补 2. 仅在需要署名的地方进行署名，不必过于严谨，无需处处添加 <code>wang</code>，因为 index 原格式是在上传到 index 时使用的；<code>wang</code> 仅在需要署名的场景下署名即可。3. 同时在 prompt 中记录下每一次使用的提示词。”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p5">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：按「x-x 系列一律按 index 原格式收录」的规则，把第十章四个页面补进「课堂实践作品」——
-              新增「第十章 · CSS3 动画与媒体查询」分组与 4 张卡片（编号 <b>14~17</b>），原「其他页面」9 条编号同步改为 <b>18~26</b>；
-              章节范围、统计数字（<b>17</b> 个课堂作品 / 共 <b>26</b> 个页面）、目录清单、页脚与提示词留档一并更新。
-              规则口径同步调整：<code>wang</code> 只在<b>需要署名</b>处使用，不再要求所有类名 / id / 变量加前缀。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 06 本次追加需求</strong>
-          <span class="meta" id="len6" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p6">“编写一个11-2关于css动画的html”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p6">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：新建 <code>11-2.html</code>（CSS 动画合集：<code>@keyframes</code> + <code>animation</code> 做九个纯 CSS 效果 ——
-              旋转 / 心跳 / 弹跳 / 呼吸 / 加载圆环 / 三点波浪 / 进度条 / 打字机 / 3D 翻转，卡片悬停暂停 + <code>prefers-reduced-motion</code> 降级），
-              并按「x-x 系列一律按 index 原格式收录」的规则收录进首页：新增「第十一章 · CSS3 动画」分组与卡片（编号 <b>18</b>），
-              原「其他页面」9 条编号同步改为 <b>19~27</b>；章节范围、统计数字（<b>18</b> 个课堂作品 / 共 <b>27</b> 个页面）、目录清单与页脚一并更新。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 07 本次追加需求</strong>
-          <span class="meta" id="len7" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p7">“编写一个11-3关于css 3d动画的html”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p7">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：新建 <code>11-3.html</code>，展示旋转立方体、双面翻牌、3D 卡片转盘、立体圆环、翻书封面与 Z 轴穿梭六个动画。
-              纯 HTML + CSS，支持暂停与减少动态效果，并附核心代码；按首页原格式加入第十一章，编号 <b>19</b>，
-              其他页面编号顺延为 <b>20~28</b>。当前共 <b>19</b> 个课堂作品 + <b>9</b> 个其他页面 = <b>28</b> 条。
-              提示词同时追加到 <code>wang prompt.md</code>。</span>
-          </div>
-        </div>
-      </article>
-
-      <article class="prompt reveal">
-        <div class="prompt-bar">
-          <span class="lamp"></span><span class="lamp y"></span><span class="lamp g"></span>
-          <strong>PROMPT · 08 本次追加需求</strong>
-          <span class="meta" id="len8" style="margin-left:auto"></span>
-        </div>
-        <div class="prompt-body">
-          <blockquote id="p8">“自己按照之前的做个例子上传一下试一下”</blockquote>
-          <div class="prompt-meta">
-            <button class="btn primary copy-btn" type="button" data-target="p8">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/>
-              </svg>
-              复制提示词
-            </button>
-            <span>执行结果：新建 <code>11-4.html</code>（动画节奏对比：同一段关键帧配七种 <code>animation-timing-function</code>），
-              按首页原格式加入第十一章，编号 <b>20</b>，其他页面编号顺延为 <b>21~29</b>；
-              当前共 <b>20</b> 个课堂作品 + <b>9</b> 个其他页面 = <b>29</b> 条。
-              随后用项目级 <code>git-commit</code> 技能完成预检、提交与推送，验证技能可用。</span>
-          </div>
-        </div>
-      </article>
-    </div>
-
-    <div class="notes" style="margin-top:22px">
+    <div class="notes">
       <div class="note reveal">
         <h4>这次整合做了什么</h4>
         <ul>
-          <li><b>新增本目录 20 个课堂作品</b>：<code>2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4</code>，按章节分十组呈现。</li>
+          <li><b>本目录 25 个课堂作品</b>：<code>2-1 / 2-2 / 3-1 / 3-2 / 4-1 / 5-1 / 5-2 / 6-1 / 6-2 / 7-1 / 7-2 / 8-1 / 9-1 / 10-1 / 10-2 / 10-3 / 10-4 / 11-2 / 11-3 / 11-4 / 12-1 / 12-2 / 13-1 / 13-2 / 13-3</code>，按章节分十二组呈现。</li>
           <li><b>本次追加</b>：补上第八章 <code>8-1.html</code>（CSS3 选择器：结构伪类 / 属性选择器 / 伪元素 / 状态伪类），编号顺延为 12，原「其他页面」9 条编号改为 13~21。</li>
           <li><b>本次追加（第九章）</b>：新增 <code>9-1.html</code>（transition 过渡：九张图片卡片、九种不同的悬停过渡效果，含必须有的放大），编号顺延为 13，原「其他页面」9 条编号改为 14~22；按老师投影把署名统一改成「王梓杨」，并按「不要圆角的」去掉全部 <code>border-radius</code>。</li>
           <li><b>本次追加（第十章）</b>：新增 <code>10-1 / 10-2 / 10-3 / 10-4</code>（CSS3 动画与媒体查询：<code>@keyframes</code> 关键帧动画、css animation 位置动画幻灯片、媒体查询背景色 + rem 缩放、媒体查询响应式栅格 + screen/print/speech 三种媒体类型），编号顺延为 14~17，原「其他页面」9 条编号改为 18~26。</li>
           <li><b>本次追加（第十一章）</b>：新增 <code>11-2.html</code>（CSS 动画合集：<code>@keyframes</code> + <code>animation</code> 九个效果 —— 旋转 / 心跳 / 弹跳 / 呼吸 / 加载圆环 / 三点波浪 / 进度条 / 打字机 / 3D 翻转），编号顺延为 18，原「其他页面」9 条编号改为 19~27。</li>
           <li><b>本次追加（11-3）</b>：新增 <code>11-3.html</code>（CSS 3D 动画实验室：立方体 / 翻牌 / 转盘 / 圆环 / 翻书 / Z 轴穿梭），编号 19，第十一章现有 2 个页面，其他页面顺延为 20~28。</li>
-          <li><b>本次追加（11-4）</b>：新增 <code>11-4.html</code>（动画节奏对比：同一段关键帧配七种 <code>animation-timing-function</code> —— linear / ease / ease-in / ease-out / ease-in-out / cubic-bezier 回弹 / steps 阶梯），编号 20，第十一章现有 3 个页面，其他页面顺延为 21~29。</li>
+          <li><b>本次追加（11-4）</b>：新增 <code>11-4.html</code>（动画节奏对比：同一段关键帧配七种 <code>animation-timing-function</code> —— linear / ease / ease-in / ease-out / ease-in-out / cubic-bezier 回弹 / steps 阶梯），编号 20，第十一章现有 3 个页面，其他页面顺延为 21~29（第十二章已再顺延为 23~31）。</li>
+          <li><b>本次追加（第十二章）</b>：新增 <code>12-1.html</code>（Font Awesome 字体图标：<code>@font-face</code> + 私用区码位，solid 49 / regular 18 / brands 20，含尺寸、颜色、旋转动画、<code>fa-stack</code> 堆叠、<code>fa-ul</code> 列表演示与原理拆解）与 <code>12-2.html</code>（Lucide SVG 图标：48 个外链 <code>&lt;img&gt;</code> + 8 个内联 <code>&lt;svg&gt;</code> 改色改粗细演示 + 两种图标方案对比表），编号 21~22，第十二章现有 2 个页面，其他页面顺延为 26~34。</li>
+          <li><b>本次追加（第十三章）</b>：新增 <code>13-1.html</code>（Font Awesome 字体图标 · <code>&lt;link&gt;</code> 引入 <code>cdn/all.min.css</code>，之后全靠类名：<code>fas</code> / <code>far</code> / <code>fab</code> 三种前缀、24 个实心图标、8 个品牌图标、字号 / 颜色 / <code>fa-spin</code> 演示，并拆解 <code>@font-face</code> → woff2 → <code>--fa</code> → <code>::before</code> 的加载链路）、<code>13-2.html</code>（Lucide SVG 图标 · <code>&lt;script&gt;</code> 引入 <code>cdn/lucide.min.js</code>，页面只写 <code>&lt;i data-lucide="heart"&gt;</code>，JavaScript 运行时把它换成内联 <code>&lt;svg&gt;</code>，换成 SVG 后 <code>color</code> / <code>stroke-width</code> / <code>fill</code> / 尺寸全能用 CSS 控制，还带一个「现场再生成图标」的按钮与两页对比表）、<code>13-3.html</code>（移动端底部导航 · <code>position:fixed</code> + <code>flex:1</code> 四等分自适应，4 个导航项用自建图标字体 <code>font/iconfont.woff2</code>，消息项右上角数字徽章、发现项红点，纯 CSS 切换高亮），编号 23~25，第十三章现有 3 个页面，其他页面顺延为 26~34。</li>
           <li><b>修正链接基准</b>：本页已移动到 <code>D:\vscodehtml\</code>，课堂作品改用同目录相对路径，直接点开即可。</li>
           <li><b>保留旧收录</b>：原工作区的 9 个页面移到「其他页面」板块，改写成 <code>file:///</code> 绝对路径，不会因移动而失效。</li>
-          <li><b>提示词双份留档</b>：建页需求与本次追加需求都原文保存在页面中。</li>
+          <li><b>提示词单独留档</b>：所有生成提示词只保存在项目根目录的 <code>wang prompt.md</code> 中，网页里不再展示。</li>
         </ul>
       </div>
       <div class="note reveal">
         <h4>关于「本目录下的所有网页」</h4>
         <p>
-          本目录 <code>D:\vscodehtml</code> 下的网页共 21 个：20 个课堂作品，外加本页自身
-          <code>index.html</code>。本页是目录索引，因此不对自己再做一次超链接，其余 20 个全部收录；
+          本目录 <code>D:\vscodehtml</code> 下的网页共 26 个：25 个课堂作品，外加本页自身
+          <code>index.html</code>。本页是目录索引，因此不对自己再做一次超链接，其余 25 个全部收录；
           另有 <code>images/</code> 子目录，存放 <code>2-2.html</code> 用到的图片素材，
-          以及 <code>7-1 / 7-2</code> 引用的 4 张横幅图 <code>banner1~4.jpg</code>。
+          以及 <code>7-1 / 7-2</code> 引用的 4 张横幅图 <code>banner1~4.jpg</code>；另有 <code>cdn/</code> 子目录，存放 Font Awesome 样式与字体（<code>all.min.css</code> + <code>webfonts/</code> 8 个字体文件）、48 个 Lucide <code>.svg</code> 与 <code>lucide.min.js</code>；还有 <code>font/</code> 子目录，存放 <code>13-3.html</code> 用的自建图标字体 <code>iconfont</code>（<code>iconfont.css</code> + woff2 / woff / ttf / svg）。
         </p>
       </div>
     </div>
@@ -613,8 +409,8 @@ footer code{font-family:var(--mono)}
 <section id="works">
   <div class="wrap">
     <div class="sec-head">
-      <h2>课堂实践作品 · 第 2~11 章</h2>
-      <span class="hint">D:\vscodehtml · 共 20 个页面</span>
+      <h2>课堂实践作品 · 第 2~13 章</h2>
+      <span class="hint">D:\vscodehtml · 共 25 个页面</span>
     </div>
 
     <!-- 工具栏 -->
@@ -632,7 +428,7 @@ footer code{font-family:var(--mono)}
         <button class="filter" type="button" data-filter="online" aria-pressed="false">需联网</button>
         <button class="filter" type="button" data-filter="build" aria-pressed="false">工程模板</button>
       </div>
-      <span class="count" id="countLabel">显示 29 / 29</span>
+      <span class="count" id="countLabel">显示 34 / 34</span>
     </div>
 
     <!-- ── 第二章 ── -->
@@ -1402,6 +1198,198 @@ footer code{font-family:var(--mono)}
       </div>
     </div>
 
+    <!-- ── 第十二章 ── -->
+    <div class="group" data-group>
+      <div class="group-head">
+        <h3>第十二章 · 字体图标与 SVG 图标</h3>
+        <code>@font-face · 私用区码位 · Font Awesome · Lucide · &lt;svg&gt;</code>
+        <span class="n">2 个页面</span>
+      </div>
+      <div class="cards">
+
+        <article class="card reveal"
+                 data-item
+                 data-tags="course offline"
+                 data-key="12-1 fontawesome 字体图标 font-face 私用区 码位 solid regular brands 尺寸 fa-2x 颜色 currentcolor 旋转 fa-spin fa-rotate fa-stack 堆叠 fa-ul 列表 cdn 王梓杨">
+          <div class="card-top">
+            <span class="num">21</span>
+            <div>
+              <h4><a href="12-1.html" target="_blank" rel="noopener">Font Awesome 字体图标</a></h4>
+              <div class="sub">12-1.html · 王梓杨</div>
+            </div>
+          </div>
+          <p class="desc">
+            <b>知识点：</b>用 <code>@font-face</code> 把整套图标装进一个字体文件，再用<b>私用区码位</b>当字符打出来 ——
+            所以「图标」本质就是一个 <code>&lt;i&gt;</code> 标签。一页演示四类字体图标：solid <b>49</b> 个、regular <b>18</b> 个、brands <b>20</b> 个，
+            以及字体图标独有的好处（<code>fa-2x / fa-5x</code> 改字号、<code>color</code> 改颜色、<code>fa-rotate-90</code> / <code>fa-spin</code> / <code>fa-beat</code> / <code>fa-bounce</code> 做动画、
+            <code>fa-stack</code> 两个图标叠成一个、<code>fa-ul</code> 当列表符号）。最后拆解原理：<code>.fa-house{--fa:"\f015"}</code> + 伪元素 <code>content:var(--fa)</code>。
+            字体与 CSS 全部离线存放在 <code>cdn/</code>（<code>all.min.css</code> + <code>webfonts/</code>）。
+          </p>
+          <div class="path"><span>路径：</span>D:\vscodehtml\12-1.html</div>
+          <div class="tags">
+            <span class="tag course">课堂实践</span>
+            <span class="tag">字体图标</span>
+            <span class="tag offline">可离线打开</span>
+          </div>
+          <div class="card-foot">
+            <span class="meta">20.9 KB · 2026/10/19</span>
+            <a class="open" href="12-1.html" target="_blank" rel="noopener">
+              打开页面
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal"
+                 data-item
+                 data-tags="course offline"
+                 data-key="12-2 lucide svg 图标 img 外链 内联 viewbox stroke currentcolor stroke-width fill 改色 改粗细 尺寸 旋转 对比 字体图标 cdn 王梓杨">
+          <div class="card-top">
+            <span class="num">22</span>
+            <div>
+              <h4><a href="12-2.html" target="_blank" rel="noopener">Lucide SVG 图标</a></h4>
+              <div class="sub">12-2.html · 王梓杨</div>
+            </div>
+          </div>
+          <p class="desc">
+            <b>知识点：</b>和图标的另一种做法对比 —— <b>每个图标就是一个独立的 <code>.svg</code> 文件</b>，不是字体。
+            页面用 <code>&lt;img&gt;</code> 外链 <b>48</b> 个图标文件，再内联 <b>8</b> 个 <code>&lt;svg&gt;</code> 演示「内联之后能被 CSS 完全控制」：
+            <code>color</code> 改描边色、<code>stroke-width</code> 改线条粗细（1 / 2 / 3）、<code>fill</code> 改成实心、<code>transform</code> 旋转、<code>width/height</code> 改尺寸。
+            每个图标都是 24×24 的 <code>viewBox</code>、<code>stroke="currentColor"</code>、<code>fill="none"</code>。
+            最后用一张对比表把「字体图标 vs SVG 图标」的 8 个维度列清楚。图标文件全部离线存放在 <code>cdn/lucide/</code>。
+          </p>
+          <div class="path"><span>路径：</span>D:\vscodehtml\12-2.html</div>
+          <div class="tags">
+            <span class="tag course">课堂实践</span>
+            <span class="tag">SVG 图标</span>
+            <span class="tag offline">可离线打开</span>
+          </div>
+          <div class="card-foot">
+            <span class="meta">20.4 KB · 2026/10/19</span>
+            <a class="open" href="12-2.html" target="_blank" rel="noopener">
+              打开页面
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- ── 第十三章 ── -->
+    <div class="group" data-group>
+      <div class="group-head">
+        <h3>第十三章 · 图标库与移动端导航</h3>
+        <code>&lt;link&gt; · &lt;script&gt; · data-lucide · iconfont</code>
+        <span class="n">3 个页面</span>
+      </div>
+      <div class="cards">
+
+        <article class="card reveal"
+                 data-item
+                 data-tags="course offline"
+                 data-key="13-1 fontawesome 字体图标 link all.min.css webfonts woff2 font-face 私用区 码位 fas far fab solid regular brands 尺寸 颜色 fa-spin 加载链路 王梓杨">
+          <div class="card-top">
+            <span class="num">23</span>
+            <div>
+              <h4><a href="13-1.html" target="_blank" rel="noopener">Font Awesome 图标（link 引入）</a></h4>
+              <div class="sub">13-1.html · 王梓杨</div>
+            </div>
+          </div>
+          <p class="desc">
+            <b>知识点：</b>整个图标库只需要<b>一行 <code>&lt;link&gt;</code></b> 把 <code>cdn/all.min.css</code> 引进来，
+            之后写的全是<b>类名</b> —— <code>&lt;i class="fas fa-heart"&gt;&lt;/i&gt;</code> 就是一个图标。
+            页面依次演示：三种前缀对照（<code>fas</code> 实心 / <code>far</code> 线性 / <code>fab</code> 品牌）、24 个常用实心图标、8 个品牌图标，
+            以及字体图标独有的好处（<code>fa-2x</code> 改字号、<code>style="color:…"</code> 改颜色、<code>fa-spin</code> 直接转）。
+            最后拆解加载链路：<code>&lt;link&gt;</code> → <code>@font-face</code> → <code>cdn/webfonts/fa-solid-900.woff2</code>
+            → <code>.fa-house{--fa:"\f015"}</code> → <code>::before{content:var(--fa)}</code>。全页 <b>46</b> 个图标元素。
+          </p>
+          <div class="path"><span>路径：</span>D:\vscodehtml\13-1.html</div>
+          <div class="tags">
+            <span class="tag course">课堂实践</span>
+            <span class="tag">字体图标</span>
+            <span class="tag offline">可离线打开</span>
+          </div>
+          <div class="card-foot">
+            <span class="meta">12.3 KB · 2026/10/19</span>
+            <a class="open" href="13-1.html" target="_blank" rel="noopener">
+              打开页面
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal"
+                 data-item
+                 data-tags="course offline"
+                 data-key="13-2 lucide script lucide.min.js data-lucide createicons 运行时 生成 svg 内联 viewbox stroke currentcolor stroke-width fill 改色 改粗细 尺寸 对比 王梓杨">
+          <div class="card-top">
+            <span class="num">24</span>
+            <div>
+              <h4><a href="13-2.html" target="_blank" rel="noopener">Lucide 图标（JS 运行时生成 SVG）</a></h4>
+              <div class="sub">13-2.html · 王梓杨</div>
+            </div>
+          </div>
+          <p class="desc">
+            <b>知识点：</b>和上一页的做法完全不同 —— 只写<b>一行 <code>&lt;script&gt;</code></b> 引入 <code>cdn/lucide.min.js</code>，
+            然后在页面里写 <code>&lt;i data-lucide="heart"&gt;&lt;/i&gt;</code>，<b>JavaScript 在浏览器里把它换成一整段内联 <code>&lt;svg&gt;</code></b>，
+            所以刷新之后 <code>&lt;i&gt;</code> 就不见了（全页生成 <b>35</b> 个 svg）。
+            变成内联 SVG 之后，<code>color</code> 改描边色、<code>stroke-width</code> 改线条粗细（1 / 2 / 3）、<code>fill</code> 改实心、
+            <code>width/height</code> 改尺寸全都能用 CSS 控制；页面还放了一个按钮，每点一次就现场再生成一个图标，
+            证明图标确实是 JS「当场造」出来的，最后与 13-1 用一张 7 行对比表收尾。
+          </p>
+          <div class="path"><span>路径：</span>D:\vscodehtml\13-2.html</div>
+          <div class="tags">
+            <span class="tag course">课堂实践</span>
+            <span class="tag">SVG 图标</span>
+            <span class="tag offline">可离线打开</span>
+          </div>
+          <div class="card-foot">
+            <span class="meta">16.2 KB · 2026/10/19</span>
+            <a class="open" href="13-2.html" target="_blank" rel="noopener">
+              打开页面
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="card reveal"
+                 data-item
+                 data-tags="course offline"
+                 data-key="13-3 移动端 底部导航 tabbar fixed flex 等宽 自适应 480 安全区 badge 数字徽章 dot 红点 iconfont 字体图标 font radio checked 王梓杨">
+          <div class="card-top">
+            <span class="num">25</span>
+            <div>
+              <h4><a href="13-3.html" target="_blank" rel="noopener">移动端底部导航（固定 + 自适应）</a></h4>
+              <div class="sub">13-3.html · 王梓杨</div>
+            </div>
+          </div>
+          <p class="desc">
+            <b>知识点：</b><b>移动端固定的自适应宽度底部导航</b>。导航条 <code>position:fixed; bottom:0</code> 钉在屏幕底部，
+            里面 4 个 <code>.tab</code> 各 <code>flex:1</code>，所以屏幕多宽就四等分多宽（320px 时每项 80px、375px 时 94px、414px 时 104px，
+            768px 以上导航条固定 480px 并居中），内容区留 <code>padding-bottom</code> 所以不会被挡住。
+            图标用的是<b>自建图标字体</b>：<code>font/iconfont.woff2</code> 里画了 home / message / find / user 四个字形（码位 E600~E603）。
+            「消息」项右上角是<b>数字徽章</b>，「发现」项右上角是<b>红点</b>，都用绝对定位贴在图标的右上角；
+            切换高亮用 4 个隐藏的单选框 + <code>input:checked + .tab</code>，纯 CSS，没有 JavaScript。
+          </p>
+          <div class="path"><span>路径：</span>D:\vscodehtml\13-3.html</div>
+          <div class="tags">
+            <span class="tag course">课堂实践</span>
+            <span class="tag">移动端</span>
+            <span class="tag offline">可离线打开</span>
+          </div>
+          <div class="card-foot">
+            <span class="meta">8.3 KB · 2026/10/19</span>
+            <a class="open" href="13-3.html" target="_blank" rel="noopener">
+              打开页面
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1431,7 +1419,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="online"
            data-key="星槎 太空探索博物馆 stellar voyager museum demo1 深色 太空"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/demo/web-design-demo/demo1.html" target="_blank" rel="noopener">
-          <span class="idx">21</span>
+          <span class="idx">26</span>
           <span class="main">
             <b>星槎 · 太空探索博物馆</b>
             <code>…/demo/web-design-demo/demo1.html · 48.9 KB · 单文件</code>
@@ -1443,7 +1431,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="online"
            data-key="stellar 星海博物馆 人类太空探索 档案与现场 demo1-with-skill"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/demo/web-design-demo/demo1-with-skill.html" target="_blank" rel="noopener">
-          <span class="idx">22</span>
+          <span class="idx">27</span>
           <span class="main">
             <b>STELLARIA · 星海博物馆</b>
             <code>…/web-design-demo/demo1-with-skill.html · 77.6 KB · 增强版对照</code>
@@ -1455,7 +1443,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="online"
            data-key="lin yue 林月 photography 摄影 作品集 demo2"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/demo/web-design-demo/demo2/index.html" target="_blank" rel="noopener">
-          <span class="idx">23</span>
+          <span class="idx">28</span>
           <span class="main">
             <b>LIN YUE · 林月 — 摄影作品集</b>
             <code>…/web-design-demo/demo2/index.html · 12.5 KB</code>
@@ -1467,7 +1455,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="online"
            data-key="mira 摄影 北方影像 photographs quiet north demo2-with-skill"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/demo/web-design-demo/demo2-with-skill.html" target="_blank" rel="noopener">
-          <span class="idx">24</span>
+          <span class="idx">29</span>
           <span class="main">
             <b>Mira Høst — 北方影像</b>
             <code>…/web-design-demo/demo2-with-skill.html · 65.4 KB · 增强版对照</code>
@@ -1490,7 +1478,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="build"
            data-key="beautiful article 长文排版 模板 scaffold tufte"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/skills/beautiful-article/assets/scaffold-template/index.html" target="_blank" rel="noopener">
-          <span class="idx">25</span>
+          <span class="idx">30</span>
           <span class="main">
             <b>Beautiful Article · 长文排版模板</b>
             <code>…/beautiful-article/assets/scaffold-template/index.html · 755 B</code>
@@ -1502,7 +1490,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="build"
            data-key="presentation 网页演示 视频讲稿 模板 web-video-presentation"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/skills/web-video-presentation/templates/index.html" target="_blank" rel="noopener">
-          <span class="idx">26</span>
+          <span class="idx">31</span>
           <span class="main">
             <b>Presentation · 网页演示模板</b>
             <code>…/web-video-presentation/templates/index.html · 302 B</code>
@@ -1514,7 +1502,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="build"
            data-key="gpt-image 视觉生产模型 案例合集 gpt-image2-website"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/website/gpt-image2-website/index.html" target="_blank" rel="noopener">
-          <span class="idx">27</span>
+          <span class="idx">32</span>
           <span class="main">
             <b>GPT-IMAGE 2 · 视觉生产模型</b>
             <code>…/website/gpt-image2-website/index.html · 824 B</code>
@@ -1526,7 +1514,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="build"
            data-key="claude design skill 视频演示 站点 web-design-website"
            href="file:///C:/Users/27982/Desktop/workspace/skill%E8%B0%83%E7%A0%94/garden-skills-main/website/web-design-website/index.html" target="_blank" rel="noopener">
-          <span class="idx">28</span>
+          <span class="idx">33</span>
           <span class="main">
             <b>Claude Design Skill · 视频演示站</b>
             <code>…/website/web-design-website/index.html · 387 B</code>
@@ -1549,7 +1537,7 @@ footer code{font-family:var(--mono)}
         <a class="row reveal" data-item data-tags="offline"
            data-key="4-1 css2 进阶 早期版本 网页作业 sid yname level know"
            href="file:///C:/Users/27982/Desktop/workspace/%E7%BD%91%E9%A1%B5%E4%BD%9C%E4%B8%9A/4-1%20css2.html" target="_blank" rel="noopener">
-          <span class="idx">29</span>
+          <span class="idx">34</span>
           <span class="main">
             <b>4-1 CSS 进阶（早期版本）</b>
             <code>网页作业/4-1 css2.html · 2.9 KB · 与本目录 4-1.html 同题不同写法</code>
@@ -1587,7 +1575,7 @@ footer code{font-family:var(--mono)}
       <div class="note reveal">
         <h4>二、标记含义</h4>
         <ul>
-          <li><span class="tag course">课堂实践</span> 本目录第 2~11 章的课堂作品，全部可离线打开。</li>
+          <li><span class="tag course">课堂实践</span> 本目录第 2~13 章的课堂作品，全部可离线打开。</li>
           <li><span class="tag offline">可离线打开</span> 无任何外部资源，断网也能正常渲染。</li>
           <li><span class="tag online">需联网</span> 引用了在线字体或在线图片，断网时字体与图片会降级。</li>
           <li><span class="tag build">需构建</span> 前端工程（Vite / React）的入口骨架，双击只能看到空白页，
@@ -1603,7 +1591,7 @@ footer code{font-family:var(--mono)}
               用 CSS 自定义属性做主题令牌，一键切换深浅色。</li>
           <li>图形：装饰元素由 <b>CSS 渐变 / 内联 SVG</b> 绘制，不加载任何图片文件。</li>
           <li>字体：只用系统自带字体栈（黑体系 + 宋体系 + 等宽系），因此无需 CDN。</li>
-          <li>交互：原生 JavaScript 实现检索、筛选、复制提示词、滚动入场动画；
+          <li>交互：原生 JavaScript 实现检索、筛选、深浅主题切换、滚动入场动画；
               关闭脚本时页面依然完整可读、链接依然可用。</li>
         </ul>
       </div>
@@ -1632,9 +1620,16 @@ footer code{font-family:var(--mono)}
           <li><code>11-2.html</code>　第十一章 · CSS3 动画合集（<code>@keyframes</code> 九个效果：旋转 / 心跳 / 弹跳 / 呼吸 / 加载圆环 / 三点波浪 / 进度条 / 打字机 / 3D 翻转）</li>
           <li><code>11-3.html</code>　第十一章 · CSS 3D 动画实验室（perspective / preserve-3d / rotateX / rotateY / translateZ，六个立体动画）</li>
           <li><code>11-4.html</code>　第十一章 · 动画节奏对比（animation-timing-function：linear / ease / ease-in / ease-out / ease-in-out / cubic-bezier 回弹 / steps 阶梯）</li>
+          <li><code>12-1.html</code>　第十二章 · Font Awesome 字体图标（<code>@font-face</code> 字体图标：solid 49 / regular 18 / brands 20，尺寸 / 颜色 / 旋转动画 / <code>fa-stack</code> 堆叠 / <code>fa-ul</code> 列表，字体与 CSS 在 <code>cdn/</code>）</li>
+          <li><code>12-2.html</code>　第十二章 · Lucide SVG 图标（48 个外链 <code>&lt;img&gt;</code> + 8 个内联 <code>&lt;svg&gt;</code> 改色改粗细，图标文件在 <code>cdn/lucide/</code>）</li>
+          <li><code>13-1.html</code>　第十三章 · Font Awesome 字体图标（<code>&lt;link&gt;</code> 引入 <code>cdn/all.min.css</code>，<code>fas</code> / <code>far</code> / <code>fab</code> 三种前缀、24 个实心图标、8 个品牌图标，字体在 <code>cdn/webfonts/</code>）</li>
+          <li><code>13-2.html</code>　第十三章 · Lucide 图标（<code>&lt;script&gt;</code> 引入 <code>cdn/lucide.min.js</code>，<code>&lt;i data-lucide&gt;</code> 由 JS 运行时换成内联 <code>&lt;svg&gt;</code>）</li>
+          <li><code>13-3.html</code>　第十三章 · 移动端底部导航（<code>position:fixed</code> + <code>flex:1</code> 四等分自适应，数字徽章与红点，图标来自 <code>font/</code> 自建图标字体）</li>
           <li><code>images/</code>　图片素材：<code>2-2.html</code> 用的 qq.png、tw1.png，以及
               <code>7-1 / 7-2</code> 用的 banner1~4.jpg，以及 <code>images/9-1/</code> 里的 p1~p9.jpg（9-1 九张卡片的配图）</li>
           <li><code>img/</code>　图片素材：<code>10-2.html</code> 幻灯片用的 1.jpg ~ 3.jpg</li>
+          <li><code>cdn/</code>　图标资源：<code>all.min.css</code> + <code>webfonts/</code> 里 8 个字体文件、<code>lucide/</code> 里 48 个 svg、<code>lucide.min.js</code>（全部离线）</li>
+          <li><code>font/</code>　图标字体：<code>13-3.html</code> 用的自建 <code>iconfont.css</code> + <code>iconfont.woff2 / .woff / .ttf / .svg</code>（4 个字形，码位 E600~E603）</li>
         </ul>
       </div>
 
@@ -1646,11 +1641,11 @@ footer code{font-family:var(--mono)}
 <footer>
   <div class="wrap foot-grid">
     <p>
-      <strong>王梓杨的《高级网页设计》课堂实践</strong> · 第 2~11 章页面导航总览<br>
+      <strong>王梓杨的《高级网页设计》课堂实践</strong> · 第 2~13 章页面导航总览<br>
       原生 HTML + CSS + JavaScript 手写 · 无 CDN · 无外部依赖
     </p>
     <p style="text-align:right">
-      本目录 20 个课堂作品 + 其他 9 个已收录页面<br>
+      本目录 25 个课堂作品 + 其他 9 个已收录页面<br>
       位置：<code>D:\vscodehtml\index.html</code>
     </p>
   </div>
@@ -1677,47 +1672,7 @@ footer code{font-family:var(--mono)}
     });
   }
 
-  /* ── 2. 提示词字数统计 ── */
-  [["p1", "len1"], ["p2", "len2"], ["p3", "len3"], ["p4", "len4"], ["p5", "len5"], ["p6", "len6"], ["p7", "len7"], ["p8", "len8"]].forEach(function (pair) {
-    var src = document.getElementById(pair[0]);
-    var out = document.getElementById(pair[1]);
-    if (src && out) { out.textContent = src.textContent.trim().length + " 字"; }
-  });
-
-  /* ── 3. 复制提示词（支持多个按钮） ── */
-  Array.prototype.forEach.call(document.querySelectorAll(".copy-btn"), function (btn) {
-    btn.addEventListener("click", function () {
-      var src = document.getElementById(btn.getAttribute("data-target"));
-      if (!src) { return; }
-      var text = src.textContent.trim();
-      var done = function () {
-        var old = btn.innerHTML;
-        btn.classList.add("ok");
-        btn.textContent = "已复制到剪贴板 ✓";
-        setTimeout(function () {
-          btn.classList.remove("ok");
-          btn.innerHTML = old;
-        }, 1600);
-      };
-      var fallback = function () {
-        var ta = document.createElement("textarea");
-        ta.value = text;
-        ta.setAttribute("readonly", "");
-        ta.style.position = "fixed";
-        ta.style.top = "-1000px";
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand("copy"); done(); }
-        catch (e) { window.prompt("请手动复制下面的提示词：", text); }
-        document.body.removeChild(ta);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, fallback);
-      } else { fallback(); }
-    });
-  });
-
-  /* ── 4. 检索 + 筛选 ── */
+  /* ── 2. 检索 + 筛选 ── */
   var items = Array.prototype.slice.call(document.querySelectorAll("[data-item]"));
   var groups = Array.prototype.slice.call(document.querySelectorAll("[data-group]"));
   var input = document.getElementById("searchInput");
