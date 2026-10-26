@@ -8,3 +8,6 @@ outputs/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 本地报告/截图生成产物（临时脚本与校验图），非课程交付内容
+_report_tmp/

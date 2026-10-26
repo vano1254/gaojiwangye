@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-10-26 13:41，使用模型：DeepSeek-V4.1-Flash，功能名称：逢七过 - 一百个盒子按数七规则显示数字或空盒 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计 15-1：一百个盒子，按「逢七过」规则（7 的倍数、含 7 的数字）显示空盒，其余显示数字。">
+    <title>15-1 · 王梓杨的逢七过</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 26px 20px 40px;
+            line-height: 1.7;
+        }
+
+        .wzy_wrap {
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        .wzy_sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 规则面板 ===== */
+        .wzy_panel {
+            margin-top: 18px;
+            padding: 16px 18px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_panel h2 {
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #2c3e50;
+        }
+
+        .wzy_rules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 12px;
+            list-style: none;
+        }
+
+        .wzy_rules li {
+            padding: 4px 12px;
+            font-size: 13px;
+            color: #235f85;
+            background-color: #eaf3fb;
+            border: 1px solid #cfe3f5;
+            border-radius: 999px;
+        }
+
+        .wzy_rules li b {
+            color: #1b4d8f;
+        }
+
+        .wzy_note {
+            margin: 0;
+            font-size: 13px;
+            color: #7b8794;
+        }
+
+        .wzy_stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 26px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed #e2e8ee;
+            font-size: 13px;
+            color: #5b6f80;
+        }
+
+        .wzy_stats span b {
+            margin-right: 3px;
+            font: 700 18px/1 Consolas, "Courier New", monospace;
+            color: #2876c6;
+        }
+
+        /* ===== 一百个盒子：十列十行 ===== */
+        .wzy_grid {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .wzy_box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1;
+            font: 600 15px/1 Consolas, "Courier New", monospace;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #dbe4ec;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        .wzy_box:hover {
+            transform: translateY(-3px);
+            border-color: #8fb9e3;
+            box-shadow: 0 6px 14px rgba(40, 118, 198, .16);
+        }
+
+        /* 满足「逢七过」的盒子：留空，只用一个浅色底把位置标出来 */
+        .wzy_box--pass {
+            background-color: #e7f1fa;
+            border-color: #c3dbf1;
+            box-shadow: inset 0 0 0 1px #ffffff;
+        }
+
+        /* ===== 页脚 ===== */
+        .wzy_foot {
+            margin-top: 26px;
+            padding-top: 12px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        .wzy_noscript {
+            margin-top: 18px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+        }
+
+        /* ===== 窄屏：一行五个，盒子变小但保持方形 ===== */
+        @media (max-width: 560px) {
+            body { padding: 20px 14px 32px; }
+            .wzy_grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+            .wzy_box { font-size: 13px; }
+            .wzy_stats { gap: 8px 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+    <h1>王梓杨的逢七过</h1>
+    <p class="wzy_sub">
+        一百个盒子，按「数七」的规则判断：<b>该过的留空，不该过的显示数字</b>。
+    </p>
+
+    <div class="wzy_panel">
+        <h2>判断规则（满足任意一条就留空）</h2>
+        <ul class="wzy_rules">
+            <li><b>①</b> 是 7 的倍数</li>
+            <li><b>②</b> 个位数是 7</li>
+            <li><b>③</b> 十位数是 7</li>
+        </ul>
+        <p class="wzy_note">
+            ②③ 合起来就是「数字里带 7」，所以实际判断条件是
+            <code>n % 7 === 0</code> 或 <code>String(n).includes("7")</code>；
+            其中 7、70、77 三条同时满足。
+        </p>
+        <div class="wzy_stats">
+            <span><b id="wzy_total">0</b>个盒子</span>
+            <span><b id="wzy_pass">0</b>个留空（该过）</span>
+            <span><b id="wzy_keep">0</b>个显示数字</span>
+        </div>
+    </div>
+
+    <noscript>
+        <p class="wzy_noscript">这一页用 JavaScript 生成一百个盒子，当前浏览器关闭了脚本，所以下面是空的。</p>
+    </noscript>
+
+    <div class="wzy_grid" id="wzy_board" role="list" aria-label="1 到 100 的盒子"></div>
+
+    <p class="wzy_foot">高级网页设计 · 第十五章 · 王梓杨</p>
+
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    var wzy_board = document.getElementById("wzy_board");
+    var wzy_total_out = document.getElementById("wzy_total");
+    var wzy_pass_out = document.getElementById("wzy_pass");
+    var wzy_keep_out = document.getElementById("wzy_keep");
+
+    /* 数七规则：7 的倍数，或者数字里带 7（个位 7 / 十位 7 都算） */
+    function wzy_is_pass(wzy_num) {
+        return wzy_num % 7 === 0 || String(wzy_num).indexOf("7") !== -1;
+    }
+
+    var wzy_frag = document.createDocumentFragment();
+    var wzy_pass_count = 0;
+    var wzy_i;
+
+    for (wzy_i = 1; wzy_i <= 100; wzy_i++) {
+        var wzy_box = document.createElement("div");
+        wzy_box.setAttribute("role", "listitem");
+
+        if (wzy_is_pass(wzy_i)) {
+            wzy_box.className = "wzy_box wzy_box--pass";
+            wzy_box.setAttribute("aria-label", wzy_i + "，该过，留空");
+            wzy_pass_count++;
+        } else {
+            wzy_box.className = "wzy_box";
+            wzy_box.textContent = String(wzy_i);
+            wzy_box.setAttribute("aria-label", String(wzy_i));
+        }
+
+        wzy_frag.appendChild(wzy_box);
+    }
+
+    wzy_board.appendChild(wzy_frag);
+
+    wzy_total_out.textContent = "100";
+    wzy_pass_out.textContent = String(wzy_pass_count);
+    wzy_keep_out.textContent = String(100 - wzy_pass_count);
+})();
+</script>
+</body>
+</html>
