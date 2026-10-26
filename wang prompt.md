@@ -370,3 +370,8 @@
   - 新增远端 `github` = https://github.com/vano1254/gaojiwangye.git；`master` 已跟踪 `github/main`。
   - 提交邮箱改为 `vano1254@users.noreply.github.com`，让提交在 GitHub 上归属到本人账号（姓名仍为「王梓杨」）。
 - **仓库地址**：https://github.com/vano1254/gaojiwangye
+## 2026-10-26 14:45 · DeepSeek-V4.1-Flash
+
+**提示词**：完成 15-2.html，展示 JavaScript 顺序结构、循环、条件。
+
+**要求**：新建第十五章第二页，用可交互的演示讲清三种基本控制结构（顺序 / 条件 / 循环）；沿用项目规则——wzy_ 前缀、页面顶部四项注释、纯原生实现、不把提示词写进网页。

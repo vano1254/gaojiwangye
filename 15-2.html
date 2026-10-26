@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-10-26 14:52，使用模型：DeepSeek-V4.1-Flash，功能名称：JavaScript 控制结构 - 顺序、条件、循环三种结构的可交互演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计 15-2：JavaScript 的三种基本控制结构 —— 顺序结构（自上而下逐句执行）、条件结构（if / else if / else / switch）、循环结构（for / while / 嵌套循环），每一部分都能点按钮现场运行。">
+    <title>15-2 · 王梓杨的 JavaScript 控制结构</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 26px 20px 40px;
+            line-height: 1.7;
+        }
+
+        .wzy_wrap {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        .wzy_sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 三种结构速览 ===== */
+        .wzy_chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0 0;
+            list-style: none;
+        }
+
+        .wzy_chips li {
+            padding: 5px 14px;
+            font-size: 13px;
+            color: #235f85;
+            background-color: #eaf3fb;
+            border: 1px solid #cfe3f5;
+            border-radius: 999px;
+        }
+
+        .wzy_chips li b {
+            margin-right: 4px;
+            color: #1b4d8f;
+        }
+
+        /* ===== 每个结构一块面板 ===== */
+        .wzy_panel {
+            margin-top: 18px;
+            padding: 16px 18px 18px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_panel h2 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .wzy_no {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            font: 700 13px/1 Consolas, "Courier New", monospace;
+            color: #fff;
+            background-color: #2876c6;
+            border-radius: 2px;
+        }
+
+        .wzy_note {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #7b8794;
+        }
+
+        .wzy_note b {
+            color: #5b6f80;
+        }
+
+        .wzy_h3 {
+            margin-top: 16px;
+            padding-top: 12px;
+            font-size: 13px;
+            color: #2c3e50;
+            border-top: 1px dashed #e2e8ee;
+        }
+
+        .wzy_h3 code {
+            font-size: 12px;
+        }
+
+        /* ===== 左边代码 / 右边输出 ===== */
+        .wzy_split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .wzy_code {
+            padding: 10px 0;
+            overflow-x: auto;
+            font: 13px/1.9 Consolas, "Courier New", monospace;
+            color: #2c3e50;
+            background-color: #f7f9fb;
+            border: 1px solid #e2e8ee;
+            border-left: 3px solid #c3dbf1;
+        }
+
+        /* 一行代码：data-n 是行号，执行到哪一行就点亮哪一行 */
+        .wzy_line {
+            position: relative;
+            display: block;
+            padding: 0 12px 0 30px;
+            white-space: pre;
+            transition: background-color .15s ease, color .15s ease;
+        }
+
+        .wzy_line::before {
+            content: attr(data-n);
+            position: absolute;
+            left: 8px;
+            color: #b3c0cd;
+        }
+
+        .wzy_line--on {
+            font-weight: 700;
+            color: #123a63;
+            background-color: #e3f0fc;
+        }
+
+        .wzy_line--on::before {
+            color: #2876c6;
+        }
+
+        .wzy_cmt {
+            color: #96a5b4;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        .wzy_out {
+            min-height: 120px;
+            max-height: 210px;
+            padding: 10px 12px;
+            overflow-y: auto;
+            font: 13px/1.9 Consolas, "Courier New", monospace;
+            color: #3c4f6d;
+            background-color: #fffdf8;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_out p {
+            white-space: pre-wrap;
+        }
+
+        .wzy_dim {
+            color: #9aa9b8;
+        }
+
+        .wzy_hi {
+            font-weight: 700;
+            color: #1b4d8f;
+        }
+
+        .wzy_ok {
+            font-weight: 700;
+            color: #1f7a4d;
+        }
+
+        .wzy_bad {
+            font-weight: 700;
+            color: #b5382f;
+        }
+
+        /* ===== 按钮与输入 ===== */
+        .wzy_bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .wzy_btn {
+            padding: 7px 16px;
+            font: inherit;
+            font-size: 13px;
+            color: #fff;
+            background-color: #2876c6;
+            border: 1px solid #2876c6;
+            cursor: pointer;
+            transition: background-color .15s ease, border-color .15s ease;
+        }
+
+        .wzy_btn:hover {
+            background-color: #1b5da0;
+            border-color: #1b5da0;
+        }
+
+        .wzy_btn:disabled {
+            background-color: #9bb8d2;
+            border-color: #9bb8d2;
+            cursor: not-allowed;
+        }
+
+        .wzy_input,
+        .wzy_sel {
+            padding: 6px 10px;
+            font: inherit;
+            font-size: 13px;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #dbe4ec;
+        }
+
+        .wzy_input {
+            width: 92px;
+        }
+
+        .wzy_label {
+            font-size: 13px;
+            color: #5b6f80;
+        }
+
+        /* ===== 循环进度条 ===== */
+        .wzy_progress {
+            height: 8px;
+            margin-top: 12px;
+            background-color: #eef3f8;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_progress i {
+            display: block;
+            width: 0;
+            height: 100%;
+            background-color: #2876c6;
+            transition: width .12s linear;
+        }
+
+        /* ===== 九九乘法表 ===== */
+        .wzy_mul {
+            margin-top: 12px;
+            font: 12px/1.5 Consolas, "Courier New", monospace;
+            border-collapse: collapse;
+        }
+
+        .wzy_mul td {
+            padding: 3px 9px;
+            white-space: nowrap;
+            color: #3c4f6d;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_mul td b {
+            color: #1b4d8f;
+        }
+
+        /* ===== 质数列表 ===== */
+        .wzy_list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .wzy_list span {
+            padding: 2px 10px;
+            font: 13px/1.6 Consolas, "Courier New", monospace;
+            color: #1b4d8f;
+            background-color: #eaf3fb;
+            border: 1px solid #cfe3f5;
+        }
+
+        /* ===== 小结表格 ===== */
+        .wzy_sum {
+            width: 100%;
+            margin-top: 12px;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+
+        .wzy_sum th,
+        .wzy_sum td {
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_sum thead th {
+            color: #2c3e50;
+            background-color: #f4f8fb;
+        }
+
+        .wzy_sum td:first-child {
+            font-weight: 700;
+            color: #1b4d8f;
+            white-space: nowrap;
+        }
+
+        /* ===== 页脚 / 无脚本提示 ===== */
+        .wzy_foot {
+            margin-top: 26px;
+            padding-top: 12px;
+            font-size: 13px;
+            color: #8b98a8;
+            border-top: 1px solid #d5dbe3;
+        }
+
+        .wzy_noscript {
+            margin-top: 18px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+        }
+
+        /* ===== 窄屏：代码与输出改成上下排列 ===== */
+        @media (max-width: 680px) {
+            body { padding: 20px 14px 32px; }
+            h1 { font-size: 24px; }
+            .wzy_split { grid-template-columns: minmax(0, 1fr); }
+            .wzy_out { max-height: 180px; }
+            .wzy_sum { display: block; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+    <h1>JavaScript 的三种控制结构</h1>
+    <p class="wzy_sub">
+        顺序、条件、循环 —— 再长的脚本，拆开看也只是这三种结构在<b>排列和嵌套</b>。
+    </p>
+
+    <ul class="wzy_chips">
+        <li><b>顺序</b>从上到下一句一句走</li>
+        <li><b>条件</b>真假不同走不同的路</li>
+        <li><b>循环</b>条件成立就重复做</li>
+    </ul>
+
+    <!-- ══════════ 1 顺序结构 ══════════ -->
+    <div class="wzy_panel">
+        <h2><span class="wzy_no">1</span>顺序结构</h2>
+        <p class="wzy_note">
+            没有分支、没有跳转的时候，引擎就<b>从上到下一句一句执行，每句只执行一次</b>。
+            下面五行代码的编号就是执行顺序：第 ③ 句用到第 ①② 句算好的值，第 ④ 句再用 ③ 的结果，
+            最后第 ⑤ 句把结果输出。这就是顺序结构 —— <b>不回头、不跳步</b>。
+        </p>
+
+        <div class="wzy_split">
+            <div class="wzy_code" id="wzy_seq_code">
+<span class="wzy_line" data-n="①">var wzy_price = 12;                   <span class="wzy_cmt">// 单价 12 元</span></span>
+<span class="wzy_line" data-n="②">var wzy_count = 4;                    <span class="wzy_cmt">// 数量 4 件</span></span>
+<span class="wzy_line" data-n="③">var wzy_total = wzy_price * wzy_count; <span class="wzy_cmt">// 小计 48 元</span></span>
+<span class="wzy_line" data-n="④">var wzy_pay = wzy_total - 8;           <span class="wzy_cmt">// 用 8 元优惠券 → 40</span></span>
+<span class="wzy_line" data-n="⑤">console.log(wzy_pay);                 <span class="wzy_cmt">// 输出 40</span></span>
+            </div>
+            <div class="wzy_out" id="wzy_seq_out">
+                <p class="wzy_dim">点击下面的「逐步执行」，右边的日志会一行一行往下写。</p>
+            </div>
+        </div>
+
+        <div class="wzy_bar">
+            <button class="wzy_btn" id="wzy_seq_run" type="button">逐步执行</button>
+            <span class="wzy_label">每 0.6 秒走一句，注意它从来不会倒回去。</span>
+        </div>
+    </div>
+
+    <!-- ══════════ 2 条件结构 ══════════ -->
+    <div class="wzy_panel">
+        <h2><span class="wzy_no">2</span>条件结构</h2>
+        <p class="wzy_note">
+            条件让代码<b>分岔</b>：条件为真走一条路，为假走另一条。常见的两种写法是
+            <code>if / else if / else</code>（按顺序往下问，问到一个「是」就停）和
+            <code>switch</code>（按值直接分派，靠 <code>break</code> 跳出）。
+        </p>
+
+        <h3 class="wzy_h3"><code>if / else if / else</code> —— 多条路里选一条</h3>
+
+        <div class="wzy_split">
+            <div class="wzy_code" id="wzy_grade_code">
+<span class="wzy_line" data-n="1">if (wzy_s &gt;= 90) {          <span class="wzy_cmt">// 90 及以上 → 优秀</span></span>
+<span class="wzy_line" data-n="2">} else if (wzy_s &gt;= 80) {    <span class="wzy_cmt">// 80~89 → 良好</span></span>
+<span class="wzy_line" data-n="3">} else if (wzy_s &gt;= 60) {    <span class="wzy_cmt">// 60~79 → 及格</span></span>
+<span class="wzy_line" data-n="4">} else {                     <span class="wzy_cmt">// 60 以下 → 不及格</span></span>
+<span class="wzy_line" data-n="5">}</span>
+            </div>
+            <div class="wzy_out" id="wzy_grade_out">
+                <p class="wzy_dim">输入一个分数，点「判断等级」。</p>
+            </div>
+        </div>
+
+        <div class="wzy_bar">
+            <label class="wzy_label" for="wzy_score">分数</label>
+            <input class="wzy_input" id="wzy_score" type="number" value="87" min="0" max="100" step="1">
+            <button class="wzy_btn" id="wzy_grade_run" type="button">判断等级</button>
+            <span class="wzy_label">问到一个「是」就停，后面的 <code>else if</code> 根本不会执行。</span>
+        </div>
+
+        <h3 class="wzy_h3"><code>switch</code> —— 按值分派，靠 <code>break</code> 跳出</h3>
+
+        <div class="wzy_split">
+            <div class="wzy_code">
+<span class="wzy_line" data-n="1">switch (wzy_d) {</span>
+<span class="wzy_line" data-n="2">    case 1: case 2: case 3: case 4: case 5:</span>
+<span class="wzy_line" data-n="3">        wzy_name = "工作日"; break;   <span class="wzy_cmt">// 五个 case 共用</span></span>
+<span class="wzy_line" data-n="4">    case 6: case 7:</span>
+<span class="wzy_line" data-n="5">        wzy_name = "周末"; break;</span>
+<span class="wzy_line" data-n="6">    default:</span>
+<span class="wzy_line" data-n="7">        wzy_name = "无效的星期";</span>
+<span class="wzy_line" data-n="8">}</span>
+            </div>
+            <div class="wzy_out" id="wzy_day_out">
+                <p class="wzy_dim">选一个数字，点「查星期」。</p>
+            </div>
+        </div>
+
+        <div class="wzy_bar">
+            <label class="wzy_label" for="wzy_day">星期</label>
+            <select class="wzy_sel" id="wzy_day">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="9">9（超出范围）</option>
+            </select>
+            <button class="wzy_btn" id="wzy_day_run" type="button">查星期</button>
+            <span class="wzy_label">去掉 <code>break</code> 就会「穿」到下一个 case，这叫 fallthrough。</span>
+        </div>
+
+        <p class="wzy_note">
+            只判断「行 / 不行」的时候，还可以用三元运算符写成一行：
+            <code>var wzy_tip = wzy_s &gt;= 60 ? "及格" : "不及格";</code>
+        </p>
+    </div>
+
+    <!-- ══════════ 3 循环结构 ══════════ -->
+    <div class="wzy_panel">
+        <h2><span class="wzy_no">3</span>循环结构</h2>
+        <p class="wzy_note">
+            循环让代码<b>重复</b>：条件成立就一直做，条件不成立就退出。
+            三种常见写法 —— <code>for</code>（次数已知）、<code>while</code>（先判断再进）、
+            <code>do…while</code>（先做一次再判断）；循环里面还能再套循环。
+        </p>
+
+        <h3 class="wzy_h3"><code>for</code> —— 按次数重复：累加 1 ~ n</h3>
+
+        <div class="wzy_bar">
+            <label class="wzy_label" for="wzy_n">n =</label>
+            <input class="wzy_input" id="wzy_n" type="number" value="100" min="1" max="10000" step="1">
+            <button class="wzy_btn" id="wzy_sum_run" type="button">累加 1 ~ n</button>
+            <span class="wzy_label"><code>for (i = 1; i &lt;= n; i++)</code> 会实实在在跑 n 次。</span>
+        </div>
+
+        <div class="wzy_progress"><i id="wzy_sum_bar"></i></div>
+
+        <div class="wzy_out" id="wzy_sum_out">
+            <p class="wzy_dim">点「累加 1 ~ n」，看循环一轮一轮往下推。</p>
+        </div>
+
+        <h3 class="wzy_h3"><code>while</code> —— 先判断，再进循环：倒计时</h3>
+
+        <div class="wzy_bar">
+            <button class="wzy_btn" id="wzy_cnt_run" type="button">while 倒计时</button>
+            <span class="wzy_label">条件 <code>wzy_n &gt; 0</code> 一旦不成立，循环立刻结束。</span>
+        </div>
+
+        <div class="wzy_out" id="wzy_cnt_out">
+            <p class="wzy_dim">点按钮，从 5 数到 1。</p>
+        </div>
+
+        <h3 class="wzy_h3">嵌套循环 —— 九九乘法表</h3>
+
+        <div class="wzy_bar">
+            <button class="wzy_btn" id="wzy_mul_run" type="button">生成九九乘法表</button>
+            <span class="wzy_label">外层 9 行、内层 1~i 列，<code>j &lt;= i</code> 才形成一个三角形。</span>
+        </div>
+
+        <div id="wzy_mul_box"></div>
+    </div>
+
+    <!-- ══════════ 4 三种结构叠在一起 ══════════ -->
+    <div class="wzy_panel">
+        <h2><span class="wzy_no">4</span>合起来用：找质数</h2>
+        <p class="wzy_note">
+            实际写代码时三种结构是<b>叠在一起</b>的：外层 <code>for</code> 逐个试数（循环），
+            内层 <code>for</code> 做除法（循环套循环），<code>if</code> 一发现能整除就
+            <code>break</code> 提前结束内层（条件），最后再按结果收集。
+        </p>
+
+        <div class="wzy_bar">
+            <label class="wzy_label" for="wzy_prime_n">n =</label>
+            <input class="wzy_input" id="wzy_prime_n" type="number" value="50" min="2" max="500" step="1">
+            <button class="wzy_btn" id="wzy_prime_run" type="button">找出 1 ~ n 的质数</button>
+            <span class="wzy_label">内层只试到 <code>d * d &lt;= n</code>，超出就没必要再试。</span>
+        </div>
+
+        <div class="wzy_list" id="wzy_prime_box"></div>
+
+        <div class="wzy_out" id="wzy_prime_out">
+            <p class="wzy_dim">点「找出 1 ~ n 的质数」。</p>
+        </div>
+    </div>
+
+    <!-- ══════════ 小结 ══════════ -->
+    <div class="wzy_panel">
+        <h2><span class="wzy_no">✓</span>三种结构小结</h2>
+        <table class="wzy_sum">
+            <thead>
+                <tr>
+                    <th>结构</th>
+                    <th>关键字</th>
+                    <th>怎么走</th>
+                    <th>本页演示</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>顺序</td>
+                    <td>没有关键字（就是默认）</td>
+                    <td>自上而下，一句一句，每句执行一次</td>
+                    <td>① 购物小计：①→⑤ 依次执行，不回头</td>
+                </tr>
+                <tr>
+                    <td>条件</td>
+                    <td><code>if</code> / <code>else if</code> / <code>else</code> / <code>switch</code> / <code>? :</code></td>
+                    <td>按条件的真假，只走其中一条路</td>
+                    <td>② 分数等级、星期查询</td>
+                </tr>
+                <tr>
+                    <td>循环</td>
+                    <td><code>for</code> / <code>while</code> / <code>do…while</code></td>
+                    <td>条件成立就重复，直到条件不成立</td>
+                    <td>③ 累加 1~n、倒计时、九九乘法表</td>
+                </tr>
+                <tr>
+                    <td>组合</td>
+                    <td>循环里套条件、循环里套循环</td>
+                    <td>外层遍历、内层筛选，命中就 <code>break</code></td>
+                    <td>④ 找质数</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="wzy_note">
+            记住一句话：<b>顺序是默认，条件负责选，循环负责重复</b>；三者按需要嵌套，就是一段完整的程序逻辑。
+        </p>
+    </div>
+
+    <noscript>
+        <p class="wzy_noscript">这一页的演示全靠 JavaScript 运行，当前浏览器关闭了脚本，所以按钮都不会有反应。</p>
+    </noscript>
+
+    <p class="wzy_foot">高级网页设计 · 第十五章 · 王梓杨</p>
+
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    /* ─────────── 0. 公共小工具 ─────────── */
+    function wzy_el(wzy_id) {
+        return document.getElementById(wzy_id);
+    }
+
+    /* 往输出框里追加一行 */
+    function wzy_add(wzy_box, wzy_text, wzy_cls) {
+        var wzy_p = document.createElement("p");
+        if (wzy_cls) {
+            wzy_p.className = wzy_cls;
+        }
+        wzy_p.textContent = wzy_text;
+        wzy_box.appendChild(wzy_p);
+        wzy_box.scrollTop = wzy_box.scrollHeight;
+        return wzy_p;
+    }
+
+    /* 清空输出框 */
+    function wzy_clear(wzy_box) {
+        while (wzy_box.firstChild) {
+            wzy_box.removeChild(wzy_box.firstChild);
+        }
+    }
+
+    /* 点亮代码里的某一行 / 熄灭全部 */
+    function wzy_light(wzy_code, wzy_index) {
+        var wzy_lines = wzy_code.getElementsByClassName("wzy_line");
+        var wzy_k;
+        for (wzy_k = 0; wzy_k < wzy_lines.length; wzy_k++) {
+            if (wzy_k === wzy_index) {
+                wzy_lines[wzy_k].classList.add("wzy_line--on");
+            } else {
+                wzy_lines[wzy_k].classList.remove("wzy_line--on");
+            }
+        }
+    }
+
+    function wzy_off(wzy_code) {
+        var wzy_lines = wzy_code.getElementsByClassName("wzy_line");
+        var wzy_k;
+        for (wzy_k = 0; wzy_k < wzy_lines.length; wzy_k++) {
+            wzy_lines[wzy_k].classList.remove("wzy_line--on");
+        }
+    }
+
+    /* ─────────── 1. 顺序结构 ─────────── */
+    var wzy_seq_run = wzy_el("wzy_seq_run");
+
+    if (wzy_seq_run) {
+        var wzy_seq_code = wzy_el("wzy_seq_code");
+        var wzy_seq_out = wzy_el("wzy_seq_out");
+
+        /* 每一句代码执行后，变量变成多少 */
+        var wzy_steps = [
+            { wzy_line: 0, wzy_text: "① wzy_price = 12", wzy_cls: "" },
+            { wzy_line: 1, wzy_text: "② wzy_count = 4", wzy_cls: "" },
+            { wzy_line: 2, wzy_text: "③ wzy_total = 12 × 4 = 48", wzy_cls: "" },
+            { wzy_line: 3, wzy_text: "④ wzy_pay = 48 − 8 = 40", wzy_cls: "" },
+            { wzy_line: 4, wzy_text: "⑤ 输出 wzy_pay → 40", wzy_cls: "wzy_hi" }
+        ];
+
+        var wzy_run_seq = function () {
+            var wzy_i = 0;
+            wzy_clear(wzy_seq_out);
+            wzy_off(wzy_seq_code);
+            wzy_seq_run.disabled = true;
+
+            var wzy_next = function () {
+                if (wzy_i >= wzy_steps.length) {
+                    wzy_add(wzy_seq_out, "执行完毕：5 句代码，从上到下各执行一次，没有回头、没有跳步。", "wzy_ok");
+                    wzy_seq_run.disabled = false;
+                    return;
+                }
+                wzy_light(wzy_seq_code, wzy_steps[wzy_i].wzy_line);
+                wzy_add(wzy_seq_out, wzy_steps[wzy_i].wzy_text, wzy_steps[wzy_i].wzy_cls);
+                wzy_i++;
+                setTimeout(wzy_next, 620);
+            };
+
+            wzy_next();
+        };
+
+        wzy_seq_run.onclick = wzy_run_seq;
+    }
+
+    /* ─────────── 2.1 条件：if / else if / else ─────────── */
+    var wzy_grade_run = wzy_el("wzy_grade_run");
+
+    if (wzy_grade_run) {
+        var wzy_score = wzy_el("wzy_score");
+        var wzy_grade_code = wzy_el("wzy_grade_code");
+        var wzy_grade_out = wzy_el("wzy_grade_out");
+
+        var wzy_run_grade = function () {
+            var wzy_s = parseInt(wzy_score.value, 10);
+
+            /* 输入兜底：不是数字按 0 算，超出 0~100 就夹住 */
+            if (isNaN(wzy_s)) { wzy_s = 0; }
+            if (wzy_s < 0) { wzy_s = 0; }
+            if (wzy_s > 100) { wzy_s = 100; }
+            wzy_score.value = String(wzy_s);
+
+            wzy_clear(wzy_grade_out);
+            wzy_add(wzy_grade_out, "wzy_s = " + wzy_s, "wzy_dim");
+
+            var wzy_grade, wzy_hit;
+
+            /* 真正的 if / else if / else 链：从上往下问，问到一个「是」就停 */
+            if (wzy_s >= 90) {
+                wzy_grade = "优秀";
+                wzy_hit = 0;
+                wzy_add(wzy_grade_out, "① " + wzy_s + " >= 90 → true", "wzy_hi");
+            } else if (wzy_s >= 80) {
+                wzy_grade = "良好";
+                wzy_hit = 1;
+                wzy_add(wzy_grade_out, "① " + wzy_s + " >= 90 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "② " + wzy_s + " >= 80 → true", "wzy_hi");
+            } else if (wzy_s >= 60) {
+                wzy_grade = "及格";
+                wzy_hit = 2;
+                wzy_add(wzy_grade_out, "① " + wzy_s + " >= 90 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "② " + wzy_s + " >= 80 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "③ " + wzy_s + " >= 60 → true", "wzy_hi");
+            } else {
+                wzy_grade = "不及格";
+                wzy_hit = 3;
+                wzy_add(wzy_grade_out, "① " + wzy_s + " >= 90 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "② " + wzy_s + " >= 80 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "③ " + wzy_s + " >= 60 → false，跳过", "wzy_dim");
+                wzy_add(wzy_grade_out, "④ 前面都不成立 → 走最后的 else", "wzy_hi");
+            }
+
+            wzy_light(wzy_grade_code, wzy_hit);
+            wzy_add(wzy_grade_out, "结果：" + wzy_s + " 分 → " + wzy_grade, "wzy_ok");
+        };
+
+        wzy_grade_run.onclick = wzy_run_grade;
+
+        /* 打开页面先算一次，右侧就不是空的 */
+        wzy_run_grade();
+    }
+
+    /* ─────────── 2.2 条件：switch ─────────── */
+    var wzy_day_run = wzy_el("wzy_day_run");
+
+    if (wzy_day_run) {
+        var wzy_day = wzy_el("wzy_day");
+        var wzy_day_out = wzy_el("wzy_day_out");
+
+        wzy_day_run.onclick = function () {
+            var wzy_d = parseInt(wzy_day.value, 10);
+            var wzy_name;
+
+            wzy_clear(wzy_day_out);
+            wzy_add(wzy_day_out, "switch (wzy_d = " + wzy_d + ")", "wzy_dim");
+
+            switch (wzy_d) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    wzy_name = "工作日";
+                    wzy_add(wzy_day_out, "落到 case " + wzy_d + " → 没有 break，继续往下「穿」", null);
+                    wzy_add(wzy_day_out, "… 一直执行到 case 5 后面的 break 才跳出", null);
+                    break;
+                case 6:
+                case 7:
+                    wzy_name = "周末";
+                    wzy_add(wzy_day_out, "落到 case " + wzy_d + " → 没有 break，继续往下「穿」", null);
+                    wzy_add(wzy_day_out, "… 执行到 case 7 后面的 break 才跳出", null);
+                    break;
+                default:
+                    wzy_name = "无效的星期";
+                    wzy_add(wzy_day_out, "一个 case 都没匹配上 → 走 default", null);
+            }
+
+            wzy_add(wzy_day_out, "结果：" + wzy_name, "wzy_ok");
+        };
+
+        wzy_day_run.onclick();
+    }
+
+    /* ─────────── 3.1 循环：for 累加 ─────────── */
+    var wzy_sum_run = wzy_el("wzy_sum_run");
+
+    if (wzy_sum_run) {
+        var wzy_n = wzy_el("wzy_n");
+        var wzy_sum_bar = wzy_el("wzy_sum_bar");
+        var wzy_sum_out = wzy_el("wzy_sum_out");
+
+        wzy_sum_run.onclick = function () {
+            var wzy_max = parseInt(wzy_n.value, 10);
+
+            if (isNaN(wzy_max) || wzy_max < 1) { wzy_max = 1; }
+            if (wzy_max > 10000) { wzy_max = 10000; }
+            wzy_n.value = String(wzy_max);
+
+            /* 先真跑一遍 for 循环，把每一轮的累计值存下来 */
+            var wzy_sums = [];
+            var wzy_acc = 0;
+            var wzy_k;
+
+            for (wzy_k = 1; wzy_k <= wzy_max; wzy_k++) {
+                wzy_acc += wzy_k;
+                wzy_sums.push(wzy_acc);
+            }
+
+            /* 再把过程分段播出来（n 很大时没必要一行一行刷） */
+            var wzy_show = [];
+            var wzy_gap = Math.ceil(wzy_max / 16);
+
+            for (wzy_k = 0; wzy_k < wzy_max; wzy_k += wzy_gap) {
+                wzy_show.push(wzy_k);
+            }
+            if (wzy_show[wzy_show.length - 1] !== wzy_max - 1) {
+                wzy_show.push(wzy_max - 1);
+            }
+
+            wzy_clear(wzy_sum_out);
+            wzy_sum_bar.style.width = "0%";
+            wzy_sum_run.disabled = true;
+
+            var wzy_pos = 0;
+
+            var wzy_tick = function () {
+                if (wzy_pos >= wzy_show.length) {
+                    wzy_sum_bar.style.width = "100%";
+                    wzy_add(wzy_sum_out, "循环结束：1 + 2 + … + " + wzy_max + " = " + wzy_acc, "wzy_ok");
+                    wzy_add(wzy_sum_out, "共循环 " + wzy_max + " 次，每轮加一次，加完就往下走。", "wzy_dim");
+                    wzy_sum_run.disabled = false;
+                    return;
+                }
+
+                var wzy_idx = wzy_show[wzy_pos];
+                wzy_sum_bar.style.width = String(Math.round((wzy_idx + 1) / wzy_max * 100)) + "%";
+                wzy_add(wzy_sum_out, "第 " + (wzy_idx + 1) + " 轮：wzy_acc = " + wzy_sums[wzy_idx], null);
+                wzy_pos++;
+                setTimeout(wzy_tick, 70);
+            };
+
+            wzy_tick();
+        };
+    }
+
+    /* ─────────── 3.2 循环：while 倒计时 ─────────── */
+    var wzy_cnt_run = wzy_el("wzy_cnt_run");
+
+    if (wzy_cnt_run) {
+        var wzy_cnt_out = wzy_el("wzy_cnt_out");
+
+        wzy_cnt_run.onclick = function () {
+            var wzy_left = 5;
+            var wzy_round = 0;
+
+            wzy_clear(wzy_cnt_out);
+            wzy_cnt_run.disabled = true;
+            wzy_add(wzy_cnt_out, "初始化：wzy_n = 5，条件 wzy_n > 0 成立 → 进入循环", "wzy_dim");
+
+            var wzy_tick = function () {
+                if (wzy_left > 0) {
+                    wzy_round++;
+                    wzy_add(wzy_cnt_out, "第 " + wzy_round + " 轮：输出 " + wzy_left + "，然后 wzy_n-- → " + (wzy_left - 1), null);
+                    wzy_left--;
+                    setTimeout(wzy_tick, 420);
+                } else {
+                    wzy_add(wzy_cnt_out, "条件 wzy_n > 0 不再成立 → 跳出循环", "wzy_dim");
+                    wzy_add(wzy_cnt_out, "发射！", "wzy_ok");
+                    wzy_cnt_run.disabled = false;
+                }
+            };
+
+            wzy_tick();
+        };
+    }
+
+    /* ─────────── 3.3 循环：嵌套 for 生成九九表 ─────────── */
+    var wzy_mul_run = wzy_el("wzy_mul_run");
+
+    if (wzy_mul_run) {
+        var wzy_mul_box = wzy_el("wzy_mul_box");
+
+        wzy_mul_run.onclick = function () {
+            wzy_clear(wzy_mul_box);
+
+            var wzy_table = document.createElement("table");
+            wzy_table.className = "wzy_mul";
+
+            var wzy_i, wzy_j, wzy_tr, wzy_td;
+
+            for (wzy_i = 1; wzy_i <= 9; wzy_i++) {
+                wzy_tr = document.createElement("tr");
+
+                for (wzy_j = 1; wzy_j <= wzy_i; wzy_j++) {
+                    wzy_td = document.createElement("td");
+                    wzy_td.textContent = wzy_j + " × " + wzy_i + " = " + (wzy_j * wzy_i);
+                    wzy_tr.appendChild(wzy_td);
+                }
+
+                wzy_table.appendChild(wzy_tr);
+            }
+
+            wzy_mul_box.appendChild(wzy_table);
+        };
+
+        wzy_mul_run.onclick();
+    }
+
+    /* ─────────── 4. 组合：循环 + 条件找质数 ─────────── */
+    var wzy_prime_run = wzy_el("wzy_prime_run");
+
+    if (wzy_prime_run) {
+        var wzy_prime_n = wzy_el("wzy_prime_n");
+        var wzy_prime_box = wzy_el("wzy_prime_box");
+        var wzy_prime_out = wzy_el("wzy_prime_out");
+
+        wzy_prime_run.onclick = function () {
+            var wzy_top = parseInt(wzy_prime_n.value, 10);
+
+            if (isNaN(wzy_top) || wzy_top < 2) { wzy_top = 2; }
+            if (wzy_top > 500) { wzy_top = 500; }
+            wzy_prime_n.value = String(wzy_top);
+
+            wzy_clear(wzy_prime_box);
+            wzy_clear(wzy_prime_out);
+
+            var wzy_found = [];
+            var wzy_num, wzy_d, wzy_is_prime, wzy_frag;
+
+            /* 外层循环：从 2 试到 n */
+            for (wzy_num = 2; wzy_num <= wzy_top; wzy_num++) {
+                wzy_is_prime = true;
+
+                /* 内层循环：试到 d * d <= num 就够，条件成立就 break 提前退出 */
+                for (wzy_d = 2; wzy_d * wzy_d <= wzy_num; wzy_d++) {
+                    if (wzy_num % wzy_d === 0) {
+                        wzy_is_prime = false;
+                        break;
+                    }
+                }
+
+                if (wzy_is_prime) {
+                    wzy_found.push(wzy_num);
+                }
+            }
+
+            /* 把结果一个个塞进页面 */
+            wzy_frag = document.createDocumentFragment();
+
+            for (wzy_num = 0; wzy_num < wzy_found.length; wzy_num++) {
+                var wzy_span = document.createElement("span");
+                wzy_span.textContent = String(wzy_found[wzy_num]);
+                wzy_frag.appendChild(wzy_span);
+            }
+
+            wzy_prime_box.appendChild(wzy_frag);
+
+            wzy_add(wzy_prime_out, "1 ~ " + wzy_top + " 共 " + wzy_found.length + " 个质数", "wzy_ok");
+            wzy_add(wzy_prime_out, "外层循环试每个数，内层循环做除法，一发现能整除就 break —— 循环里套着条件。", "wzy_dim");
+        };
+
+        wzy_prime_run.onclick();
+    }
+
+    /* ─────────── 5. 输入框回车也能触发 ─────────── */
+    var wzy_enter = function (wzy_input, wzy_btn) {
+        if (!wzy_input || !wzy_btn) { return; }
+        wzy_input.addEventListener("keydown", function (wzy_e) {
+            if (wzy_e.key === "Enter") {
+                wzy_e.preventDefault();
+                wzy_btn.click();
+            }
+        });
+    };
+
+    wzy_enter(wzy_el("wzy_score"), wzy_grade_run);
+    wzy_enter(wzy_el("wzy_n"), wzy_sum_run);
+    wzy_enter(wzy_el("wzy_prime_n"), wzy_prime_run);
+})();
+</script>
+</body>
+</html>
