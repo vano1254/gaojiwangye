@@ -363,3 +363,10 @@
 - **提示词内容**：
 
   > 把这个文件夹上传到我GitHub的gaojiwangye这个上边来
+- **执行结果**：把整个目录推送到了 GitHub 仓库 `vano1254/gaojiwangye`（本地 `master` → 远端 `main`）。
+  - 入库 118 个文件、约 15 MB：原有 114 个 + `14-1.html`、`15-1.html`、`AGENTS.md`，再加仓库自带 `README.md`。
+  - 本地提交 `c08b9e3`（新增 14-1 / 15-1 并收录进首页、加入 AGENTS.md）与仓库初始 `Initial commit` 合并为 `9bd0081`，**非强制推送、无内容丢失**，README 保留。
+  - `.gitignore` 增补 `_report_tmp/`（本地报告与截图产物：115 个文件、12.6 MB），不入库。
+  - 新增远端 `github` = https://github.com/vano1254/gaojiwangye.git；`master` 已跟踪 `github/main`。
+  - 提交邮箱改为 `vano1254@users.noreply.github.com`，让提交在 GitHub 上归属到本人账号（姓名仍为「王梓杨」）。
+- **仓库地址**：https://github.com/vano1254/gaojiwangye
