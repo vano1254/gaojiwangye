@@ -1,11 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- 姓名：王梓杨，建立时间：2026-10-29 14:38，使用模型：DeepSeek-V4.1-Flash（初稿）、GPT-6（Codex，复刻修订），功能名称：新闻排行 - 按参考图复刻点击排行与评论排行选项卡列表 -->
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计第十四章：参考图片中的新闻排行榜复刻，包含点击排行、评论排行、蓝色选项卡、十条新闻、粉色计数及虚线分隔，纯原生 HTML 与 CSS，支持离线浏览。">
+    <title>14-1 · 新闻排行 · 王梓杨</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #fff;
+            color: #333;
+            font: 12px/1.5 Arial, "Microsoft YaHei", "微软雅黑", sans-serif;
+        }
+        .wzy_rank {
+            width: calc(100% - 40px);
+            max-width: 300px;
+            margin: 18px 20px;
+        }
+        /* 保留原生单选框的键盘操作：Tab 聚焦、方向键切换。 */
+        .wzy_radio {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+        .wzy_tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            height: 30px;
+            border-bottom: 1px solid #a8d6f1;
+        }
+        .wzy_tab {
+            display: grid;
+            place-items: center;
+            height: 30px;
+            border: 1px solid transparent;
+            border-bottom-color: #a8d6f1;
+            background: #d9eafb;
+            color: #222;
+            cursor: pointer;
+            user-select: none;
+        }
+        #wzy_click:checked ~ .wzy_tabs .wzy_tab_click,
+        #wzy_comment:checked ~ .wzy_tabs .wzy_tab_comment {
+            border-color: #a8d6f1;
+            border-bottom-color: #fff;
+            background: #fff;
+            font-weight: bold;
+        }
+        #wzy_click:focus-visible ~ .wzy_tabs .wzy_tab_click,
+        #wzy_comment:focus-visible ~ .wzy_tabs .wzy_tab_comment {
+            outline: 2px solid #4797c6;
+            outline-offset: -4px;
+        }
+        .wzy_list {
+            display: none;
+            padding: 0;
+            margin: 9px 0 0;
+            list-style: none;
+        }
+        #wzy_click:checked ~ .wzy_list_click,
+        #wzy_comment:checked ~ .wzy_list_comment { display: block; }
+        .wzy_item {
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr) 38px;
+            align-items: center;
+            column-gap: 8px;
+            height: 36px;
+            border-bottom: 1px dotted #dedede;
+        }
+        .wzy_item:last-child { border-bottom: 0; }
+        .wzy_num {
+            color: #555;
+            font: 12px/1.5 "Times New Roman", serif;
+        }
+        .wzy_item:nth-child(-n+3) .wzy_num { color: #76b4d5; }
+        .wzy_title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: clip;
+        }
+        .wzy_count {
+            color: #f03b64;
+            font: 12px/1.5 "Times New Roman", serif;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        @media (prefers-contrast: more) {
+            .wzy_item:nth-child(-n+3) .wzy_num { color: #216489; }
+            .wzy_count { color: #bd1640; }
+        }
+    </style>
 </head>
 <body>
-    <h2>wzy</h2>
+    <main class="wzy_rank" aria-label="新闻排行榜">
+        <input class="wzy_radio" type="radio" name="wzy_ranking" id="wzy_click" aria-label="点击排行" checked>
+        <input class="wzy_radio" type="radio" name="wzy_ranking" id="wzy_comment" aria-label="评论排行">
+        <div class="wzy_tabs">
+            <label class="wzy_tab wzy_tab_click" for="wzy_click">点击排行</label>
+            <label class="wzy_tab wzy_tab_comment" for="wzy_comment">评论排行</label>
+        </div>
+
+        <!-- 按参考图保留历史新闻标题和点击数，长标题在固定列宽内裁切。 -->
+        <ol class="wzy_list wzy_list_click" aria-label="点击排行新闻">
+            <li class="wzy_item"><span class="wzy_num">1</span><span class="wzy_title" title="中国各城市房子还要卖多少年 (详细数据)">中国各城市房子还要卖多少年 (详细数据)</span><span class="wzy_count">187706</span></li>
+            <li class="wzy_item"><span class="wzy_num">2</span><span class="wzy_title" title="任志强：60多年来 我不知道国企给了我们什么">任志强：60多年来 我不知道国企给了我们什么</span><span class="wzy_count">171180</span></li>
+            <li class="wzy_item"><span class="wzy_num">3</span><span class="wzy_title" title="三精制药跳楼老总被查因华润贿赂案 省食药监介入">三精制药跳楼老总被查因华润贿赂案 省食药监介入</span><span class="wzy_count">127631</span></li>
+            <li class="wzy_item"><span class="wzy_num">4</span><span class="wzy_title" title="内地17省铺开不动产统一登记职责整合工作">内地17省铺开不动产统一登记职责整合工作</span><span class="wzy_count">113865</span></li>
+            <li class="wzy_item"><span class="wzy_num">5</span><span class="wzy_title" title="山西煤老板抛售整栋99套二手房 8年投资翻番">山西煤老板抛售整栋99套二手房 8年投资翻番</span><span class="wzy_count">72770</span></li>
+            <li class="wzy_item"><span class="wzy_num">6</span><span class="wzy_title" title="北京城南楼市“沦陷” 变相降价措施加码">北京城南楼市“沦陷” 变相降价措施加码</span><span class="wzy_count">62971</span></li>
+            <li class="wzy_item"><span class="wzy_num">7</span><span class="wzy_title" title="中国3D打印技术取得重大突破 近1200人连夜参观">中国3D打印技术取得重大突破 近1200人连夜参观</span><span class="wzy_count">27456</span></li>
+            <li class="wzy_item"><span class="wzy_num">8</span><span class="wzy_title" title="重磅利空突至致全球暴跌 A股或黑周五无悬念">重磅利空突至致全球暴跌 A股或黑周五无悬念</span><span class="wzy_count">25322</span></li>
+            <li class="wzy_item"><span class="wzy_num">9</span><span class="wzy_title" title="七匹狼早盘上演高跷一幕：单笔4手卖单刷屏">七匹狼早盘上演高跷一幕：单笔4手卖单刷屏</span><span class="wzy_count">20912</span></li>
+            <li class="wzy_item"><span class="wzy_num">10</span><span class="wzy_title" title="长油小股东主导股东大会 当场爆料董事长">长油小股东主导股东大会 当场爆料董事长</span><span class="wzy_count">11667</span></li>
+        </ol>
+
+        <!-- 参考图只提供了点击榜；评论榜采用独立的课堂演示数据。 -->
+        <ol class="wzy_list wzy_list_comment" aria-label="评论排行新闻（演示数据）">
+            <li class="wzy_item"><span class="wzy_num">1</span><span class="wzy_title" title="任志强：60多年来 我不知道国企给了我们什么">任志强：60多年来 我不知道国企给了我们什么</span><span class="wzy_count">9842</span></li>
+            <li class="wzy_item"><span class="wzy_num">2</span><span class="wzy_title" title="中国各城市房子还要卖多少年 (详细数据)">中国各城市房子还要卖多少年 (详细数据)</span><span class="wzy_count">8760</span></li>
+            <li class="wzy_item"><span class="wzy_num">3</span><span class="wzy_title" title="内地17省铺开不动产统一登记职责整合工作">内地17省铺开不动产统一登记职责整合工作</span><span class="wzy_count">7631</span></li>
+            <li class="wzy_item"><span class="wzy_num">4</span><span class="wzy_title" title="北京城南楼市“沦陷” 变相降价措施加码">北京城南楼市“沦陷” 变相降价措施加码</span><span class="wzy_count">6905</span></li>
+            <li class="wzy_item"><span class="wzy_num">5</span><span class="wzy_title" title="山西煤老板抛售整栋99套二手房 8年投资翻番">山西煤老板抛售整栋99套二手房 8年投资翻番</span><span class="wzy_count">5847</span></li>
+            <li class="wzy_item"><span class="wzy_num">6</span><span class="wzy_title" title="三精制药跳楼老总被查因华润贿赂案 省食药监介入">三精制药跳楼老总被查因华润贿赂案 省食药监介入</span><span class="wzy_count">5120</span></li>
+            <li class="wzy_item"><span class="wzy_num">7</span><span class="wzy_title" title="七匹狼早盘上演高跷一幕：单笔4手卖单刷屏">七匹狼早盘上演高跷一幕：单笔4手卖单刷屏</span><span class="wzy_count">4388</span></li>
+            <li class="wzy_item"><span class="wzy_num">8</span><span class="wzy_title" title="重磅利空突至致全球暴跌 A股或黑周五无悬念">重磅利空突至致全球暴跌 A股或黑周五无悬念</span><span class="wzy_count">3712</span></li>
+            <li class="wzy_item"><span class="wzy_num">9</span><span class="wzy_title" title="中国3D打印技术取得重大突破 近1200人连夜参观">中国3D打印技术取得重大突破 近1200人连夜参观</span><span class="wzy_count">2964</span></li>
+            <li class="wzy_item"><span class="wzy_num">10</span><span class="wzy_title" title="长油小股东主导股东大会 当场爆料董事长">长油小股东主导股东大会 当场爆料董事长</span><span class="wzy_count">2105</span></li>
+        </ol>
+    </main>
 </body>
 </html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-10-29 13:57，使用模型：DeepSeek-V4.1-Flash，功能名称：对象演示 - 属性的增删改查与遍历的可交互演示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计 16-2：JavaScript 对象演示，属性的增删改查、遍历、this、原型链与 JSON 的可交互演示。">
+    <title>16-2 · 王梓杨的对象演示</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 26px 20px 40px;
+            line-height: 1.7;
+        }
+
+        .wzy_wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        .wzy_sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .wzy_tip {
+            margin-top: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 面板 ===== */
+        .wzy_panel {
+            margin-top: 20px;
+            padding: 18px 20px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_panel-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .wzy_panel-head h2 {
+            font-size: 17px;
+            color: #2c3e50;
+        }
+
+        .wzy_reset {
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #cfdce7;
+            cursor: pointer;
+        }
+
+        .wzy_reset:hover {
+            background-color: #f2f8fd;
+            border-color: #8fb9e3;
+        }
+
+        /* ===== 对象展示：左边 JSON，右边属性表 ===== */
+        .wzy_split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .wzy_box-title {
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #7b8794;
+            letter-spacing: .5px;
+        }
+
+        .wzy_json {
+            margin: 0;
+            padding: 12px 14px;
+            min-height: 150px;
+            overflow-x: auto;
+            color: #1b4d8f;
+            background-color: #f7fafc;
+            border: 1px solid #e0e9ef;
+            font: 13px/1.7 Consolas, "Courier New", monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .wzy_props {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .wzy_props th,
+        .wzy_props td {
+            padding: 6px 9px;
+            text-align: left;
+            border: 1px solid #e8eef3;
+        }
+
+        .wzy_props th {
+            color: #5b6f80;
+            background-color: #f6f9fb;
+            font-weight: 700;
+        }
+
+        .wzy_props td {
+            font-family: Consolas, "Courier New", monospace;
+            color: #2c3e50;
+        }
+
+        .wzy_props td:last-child {
+            color: #8b98a8;
+        }
+
+        .wzy_empty {
+            padding: 14px;
+            font-size: 13px;
+            color: #9aa9b7;
+            text-align: center;
+            border: 1px dashed #e0e9ef;
+        }
+
+        /* ===== 按钮 ===== */
+        .wzy_btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0 4px;
+        }
+
+        .wzy_btns h3 {
+            width: 100%;
+            margin-bottom: 2px;
+            font-size: 13px;
+            color: #5b6f80;
+        }
+
+        .wzy_btn {
+            padding: 6px 12px;
+            font: 13px/1.4 Consolas, "Courier New", monospace;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #cfdce7;
+            cursor: pointer;
+            transition: background-color .15s ease, border-color .15s ease, transform .12s ease;
+        }
+
+        .wzy_btn:hover {
+            transform: translateY(-1px);
+            background-color: #f2f8fd;
+            border-color: #8fb9e3;
+        }
+
+        .wzy_btn:active {
+            transform: translateY(0);
+        }
+
+        .wzy_btn:focus-visible {
+            outline: 2px solid #2876c6;
+            outline-offset: 2px;
+        }
+
+        .wzy_btn--write {
+            color: #a1511c;
+            background-color: #fffaf5;
+            border-color: #f0cdb2;
+        }
+
+        .wzy_btn--write:hover {
+            background-color: #fdf0e5;
+            border-color: #dda172;
+        }
+
+        .wzy_btn--read {
+            color: #17695a;
+            background-color: #f5fbf9;
+            border-color: #bfe0d8;
+        }
+
+        .wzy_btn--read:hover {
+            background-color: #e9f6f2;
+            border-color: #86c3b6;
+        }
+
+        /* ===== 日志 ===== */
+        .wzy_log {
+            margin-top: 14px;
+            border-top: 1px solid #eef2f6;
+        }
+
+        .wzy_log-empty {
+            padding: 16px 0;
+            font-size: 13px;
+            color: #9aa9b7;
+        }
+
+        .wzy_log-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            padding: 9px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #f2f5f8;
+        }
+
+        .wzy_log-op {
+            min-width: 168px;
+            padding: 2px 7px;
+            font: 12px/1.5 Consolas, monospace;
+            color: #2c3e50;
+            background-color: #eef3f7;
+        }
+
+        .wzy_log-ret {
+            color: #5b6f80;
+        }
+
+        .wzy_log-ret b {
+            color: #2876c6;
+            font-family: Consolas, monospace;
+        }
+
+        .wzy_badge {
+            padding: 1px 8px;
+            font-size: 11.5px;
+            border-radius: 999px;
+        }
+
+        .wzy_badge--write {
+            color: #a1511c;
+            background-color: #fdf0e5;
+            border: 1px solid #f0cdb2;
+        }
+
+        .wzy_badge--read {
+            color: #17695a;
+            background-color: #e9f6f2;
+            border: 1px solid #bfe0d8;
+        }
+
+        /* ===== 章节 ===== */
+        .wzy_section {
+            margin-top: 26px;
+        }
+
+        .wzy_section > h2 {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            font-size: 19px;
+            color: #2c3e50;
+            border-left: 5px solid #2980b9;
+        }
+
+        .wzy_table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .wzy_table th,
+        .wzy_table td {
+            padding: 8px 10px;
+            text-align: left;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_table th {
+            color: #2c3e50;
+            background-color: #f6f9fb;
+            font-weight: 700;
+        }
+
+        pre {
+            margin-top: 12px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            color: #284d67;
+            background-color: #f1f6fa;
+            border: 1px solid #e0e9ef;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+            font: inherit;
+        }
+
+        .wzy_note {
+            margin-top: 12px;
+            padding: 16px 20px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_note li {
+            margin: 7px 0 7px 20px;
+            font-size: 14.5px;
+        }
+
+        .wzy_meta {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #7b8794;
+        }
+
+        .wzy_foot {
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        /* ===== 窄屏 ===== */
+        @media (max-width: 720px) {
+            .wzy_split { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 620px) {
+            body { padding: 20px 14px 32px; }
+            .wzy_log-op { min-width: 0; }
+            .wzy_table { font-size: 12.5px; }
+            .wzy_table th, .wzy_table td { padding: 6px 7px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+    <h1>王梓杨的对象演示</h1>
+    <p class="wzy_sub">
+        一个真实的「学生对象」摆在眼前，点按钮改它的属性、读它的属性、遍历它 ——
+        <b>左边是 JSON，右边是自有属性表</b>，两边会一起变。
+    </p>
+    <p class="wzy_tip">
+        橙色按钮会改动这个对象，绿色按钮只读不改。点「重置」回到初始状态。
+    </p>
+
+    <!-- ========== 操作台 ========== -->
+    <section class="wzy_panel">
+        <div class="wzy_panel-head">
+            <h2>对象检查器</h2>
+            <button class="wzy_reset" id="wzy_reset" type="button">重置</button>
+        </div>
+
+        <div class="wzy_split">
+            <div>
+                <p class="wzy_box-title">JSON.stringify(wzy_student, null, 2)</p>
+                <pre class="wzy_json" id="wzy_json"></pre>
+            </div>
+            <div>
+                <p class="wzy_box-title">Object.entries(wzy_student)</p>
+                <div id="wzy_props"></div>
+            </div>
+        </div>
+
+        <div class="wzy_btns">
+            <h3>① 改对象（增 / 改 / 删 / 拷贝）</h3>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="add">加属性 score = 92</button>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="update">改 age + 1</button>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="bracket">用方括号改 "name"</button>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="remove">delete major</button>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="assign">Object.assign 合并</button>
+            <button class="wzy_btn wzy_btn--write" type="button" data-wzy-op="spread">展开 { ...obj }</button>
+        </div>
+
+        <div class="wzy_btns">
+            <h3>② 读对象（只读，不改）</h3>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="keys">Object.keys()</button>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="values">Object.values()</button>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="entries">Object.entries()</button>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="hasOwn">hasOwnProperty("name")</button>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="optional">可选链 obj?.school</button>
+            <button class="wzy_btn wzy_btn--read" type="button" data-wzy-op="json">JSON.stringify()</button>
+        </div>
+
+        <div class="wzy_log" id="wzy_log" aria-live="polite"></div>
+    </section>
+
+    <!-- ========== 创建对象 ========== -->
+    <section class="wzy_section">
+        <h2>一、创建对象的四种方式</h2>
+        <pre><code>// 1. 字面量：最常用
+var wzy_student = { name: "王梓杨", age: 20, major: "数字媒体" };
+
+// 2. 构造函数：首字母大写，用 new 调用
+function wzy_Student(name, age) {
+    this.name = name;
+    this.age = age;
+}
+var wzy_s1 = new wzy_Student("王梓杨", 20);
+
+// 3. Object.create()：指定原型，常用于继承
+var wzy_base = { intro: function () { return this.name; } };
+var wzy_s2 = Object.create(wzy_base);
+wzy_s2.name = "王梓杨";
+
+// 4. class：ES6 语法糖，本质还是原型
+class wzy_Person {
+    constructor(name) { this.name = name; }
+    intro() { return "我是" + this.name; }
+}
+var wzy_s3 = new wzy_Person("王梓杨");</code></pre>
+        <p class="wzy_meta">
+            四种写法造出来的都是普通对象，区别在于<b>原型链挂在哪</b>：字面量挂在 <code>Object.prototype</code>，
+            <code>Object.create()</code> 挂在你指定的对象上，<code>new</code> 挂在构造函数的 <code>prototype</code> 上。
+        </p>
+    </section>
+
+    <!-- ========== 访问属性 ========== -->
+    <section class="wzy_section">
+        <h2>二、访问属性的四种写法</h2>
+        <table class="wzy_table">
+            <thead>
+                <tr>
+                    <th>写法</th>
+                    <th>示例</th>
+                    <th>什么时候用</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>点号</td>
+                    <td><code>wzy_student.name</code></td>
+                    <td>属性名是固定的、合法的标识符</td>
+                </tr>
+                <tr>
+                    <td>方括号</td>
+                    <td><code>wzy_student["name"]</code></td>
+                    <td>属性名存在变量里、含空格或连字符时</td>
+                </tr>
+                <tr>
+                    <td>可选链</td>
+                    <td><code>wzy_student.school?.name</code></td>
+                    <td>不确定中间那层存不存在，避免报错</td>
+                </tr>
+                <tr>
+                    <td>解构</td>
+                    <td><code>var { name, age } = wzy_student;</code></td>
+                    <td>一次取出多个属性，写起来更短</td>
+                </tr>
+            </tbody>
+        </table>
+        <pre><code>// 方括号的杀手锏：属性名可以是变量
+var wzy_key = "major";
+console.log(wzy_student[wzy_key]);     // "数字媒体" —— 点号做不到这一点
+
+// 可选链：没有 school 也不会报错，只会返回 undefined
+console.log(wzy_student.school?.name); // undefined（不加 ? 会直接抛 TypeError）
+
+// 解构 + 默认值 + 改名
+var { name: wzy_n, age = 18, city = "未知" } = wzy_student;</code></pre>
+    </section>
+
+    <!-- ========== 遍历 ========== -->
+    <section class="wzy_section">
+        <h2>三、遍历对象的三种姿势</h2>
+        <table class="wzy_table">
+            <thead>
+                <tr>
+                    <th>方法</th>
+                    <th>拿到什么</th>
+                    <th>适合做什么</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>for...in</code></td>
+                    <td>键名（会连原型上的可枚举属性一起遍历）</td>
+                    <td>简单遍历，但要配 <code>hasOwnProperty</code> 过滤</td>
+                </tr>
+                <tr>
+                    <td><code>Object.keys()</code></td>
+                    <td>键名数组</td>
+                    <td>只想拿键，或者要 <code>map</code> / <code>forEach</code></td>
+                </tr>
+                <tr>
+                    <td><code>Object.values()</code></td>
+                    <td>值数组</td>
+                    <td>求和、找最大值这类只关心值的场景</td>
+                </tr>
+                <tr>
+                    <td><code>Object.entries()</code></td>
+                    <td><code>[键, 值]</code> 二维数组</td>
+                    <td>键值都要用，配 <code>for...of</code> 解构最顺手</td>
+                </tr>
+            </tbody>
+        </table>
+        <pre><code>for (var wzy_k in wzy_student) {
+    if (wzy_student.hasOwnProperty(wzy_k)) {
+        console.log(wzy_k, wzy_student[wzy_k]);
+    }
+}
+
+Object.keys(wzy_student).forEach(function (wzy_k) {
+    console.log(wzy_k + " = " + wzy_student[wzy_k]);
+});
+
+for (var [wzy_k2, wzy_v] of Object.entries(wzy_student)) {
+    console.log(wzy_k2, wzy_v);
+}</code></pre>
+    </section>
+
+    <!-- ========== this ========== -->
+    <section class="wzy_section">
+        <h2>四、对象方法里的 this：箭头函数会翻车</h2>
+        <pre><code>var wzy_user = {
+    name: "王梓杨",
+
+    // 普通函数：this 指向「调用它的那个对象」
+    sayHi: function () {
+        return "你好，" + this.name;
+    },
+
+    // 箭头函数：this 继承外层作用域，这里外层是 window，没有 name
+    sayHiBad: () => "你好，" + this.name
+};
+
+console.log(wzy_user.sayHi());      // "你好，王梓杨"
+console.log(wzy_user.sayHiBad());   // "你好，undefined"</code></pre>
+        <p class="wzy_meta">
+            结论：<b>对象的方法用普通函数写</b>。箭头函数没有自己的 <code>this</code>，
+            它只会往外层找，放在对象字面量里基本都拿不到这个对象。
+        </p>
+    </section>
+
+    <!-- ========== 原型链 ========== -->
+    <section class="wzy_section">
+        <h2>五、原型链：方法为什么不占自己的内存</h2>
+        <pre><code>function wzy_Student(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+// 方法挂在 prototype 上，所有实例共用同一份
+wzy_Student.prototype.intro = function () {
+    return "我是" + this.name + "，今年" + this.age + "岁";
+};
+
+var wzy_s = new wzy_Student("王梓杨", 20);
+
+wzy_s.intro();                      // "我是王梓杨，今年20岁"
+wzy_s.hasOwnProperty("name");       // true  —— 自己的属性
+wzy_s.hasOwnProperty("intro");      // false —— 方法在原型上，不在自己身上
+"intro" in wzy_s;                   // true  —— in 会顺着原型链找
+
+Object.getPrototypeOf(wzy_s) === wzy_Student.prototype;   // true</code></pre>
+        <p class="wzy_meta">
+            查找顺序：<b>先找自己 → 找不到顺着 <code>__proto__</code> 往上找 → 一直到 <code>Object.prototype</code> → 还没有就是 <code>undefined</code></b>。
+            这就是原型链。
+        </p>
+    </section>
+
+    <!-- ========== JSON ========== -->
+    <section class="wzy_section">
+        <h2>六、对象与 JSON 的互转</h2>
+        <pre><code>var wzy_json = JSON.stringify(wzy_student);          // 对象 → 字符串
+var wzy_json2 = JSON.stringify(wzy_student, null, 2); // 带缩进，方便看
+var wzy_back = JSON.parse(wzy_json2);                 // 字符串 → 对象
+
+// 两个坑：
+JSON.stringify({ f: function () {} });   // "{}"        —— 函数会被丢掉
+JSON.stringify({ u: undefined });        // "{}"        —— undefined 也会被丢掉
+JSON.stringify({ d: new Date() });       // 日期会变成字符串
+
+// 深拷贝的常用写法（对象里没有函数 / undefined / 循环引用时够用）
+var wzy_copy = JSON.parse(JSON.stringify(wzy_student));</code></pre>
+    </section>
+
+    <!-- ========== 要点 ========== -->
+    <section class="wzy_section">
+        <h2>七、要点说明</h2>
+        <ol class="wzy_note">
+            <li>对象是<b>键值对</b>的集合，键一定是字符串（或 Symbol），写数字键也会被转成字符串。</li>
+            <li><code>obj.name</code> 和 <code>obj["name"]</code> 等价，但<b>方括号里的键可以是变量</b>，点号不行。</li>
+            <li><code>delete</code> 只能删自己的属性，删不掉原型上的；删完再访问得到 <code>undefined</code>。</li>
+            <li><code>Object.assign(target, source)</code> 改的是第一个参数，返回的也是它 —— <b>不是</b>新对象。</li>
+            <li>展开 <code>{ ...obj }</code> 是<b>浅拷贝</b>：只复制第一层，嵌套对象还是同一个引用。</li>
+            <li><code>in</code> 会查原型链，<code>hasOwnProperty</code> 只查自己，这是两者最关键的差别。</li>
+            <li>对象的方法别用箭头函数写，否则 <code>this</code> 拿不到当前对象。</li>
+            <li>本页所有操作都在真实对象上跑，左边 JSON 和右边属性表会同步变化，多试几次就摸清了。</li>
+        </ol>
+    </section>
+
+    <p class="wzy_foot">高级网页设计 · 第十六章 · 王梓杨</p>
+
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    var wzy_init = { name: "王梓杨", age: 20, major: "数字媒体" };
+    var wzy_student = Object.assign({}, wzy_init);
+    var wzy_logs = [];
+
+    var wzy_json_box = document.getElementById("wzy_json");
+    var wzy_props_box = document.getElementById("wzy_props");
+    var wzy_log_box = document.getElementById("wzy_log");
+    var wzy_reset_btn = document.getElementById("wzy_reset");
+
+    function wzy_fmt(wzy_v) {
+        if (Array.isArray(wzy_v)) {
+            return "[" + wzy_v.map(function (wzy_x) {
+                return Array.isArray(wzy_x) ? "[" + wzy_x.join(", ") + "]" : String(wzy_x);
+            }).join(", ") + "]";
+        }
+        if (typeof wzy_v === "string") { return "\"" + wzy_v + "\""; }
+        if (wzy_v === null) { return "null"; }
+        if (typeof wzy_v === "object") { return JSON.stringify(wzy_v); }
+        return String(wzy_v);
+    }
+
+    function wzy_render_object() {
+        wzy_json_box.textContent = JSON.stringify(wzy_student, null, 2);
+
+        wzy_props_box.textContent = "";
+        var wzy_keys = Object.keys(wzy_student);
+
+        if (wzy_keys.length === 0) {
+            var wzy_empty = document.createElement("p");
+            wzy_empty.className = "wzy_empty";
+            wzy_empty.textContent = "这个对象现在是空的，没有任何自有属性。";
+            wzy_props_box.appendChild(wzy_empty);
+            return;
+        }
+
+        var wzy_table = document.createElement("table");
+        wzy_table.className = "wzy_props";
+
+        var wzy_head = document.createElement("thead");
+        var wzy_tr = document.createElement("tr");
+        ["键", "值", "类型"].forEach(function (wzy_t) {
+            var wzy_th = document.createElement("th");
+            wzy_th.textContent = wzy_t;
+            wzy_tr.appendChild(wzy_th);
+        });
+        wzy_head.appendChild(wzy_tr);
+        wzy_table.appendChild(wzy_head);
+
+        var wzy_body = document.createElement("tbody");
+        wzy_keys.forEach(function (wzy_k) {
+            var wzy_row = document.createElement("tr");
+            [wzy_k, wzy_fmt(wzy_student[wzy_k]), typeof wzy_student[wzy_k]].forEach(function (wzy_t) {
+                var wzy_td = document.createElement("td");
+                wzy_td.textContent = wzy_t;
+                wzy_row.appendChild(wzy_td);
+            });
+            wzy_body.appendChild(wzy_row);
+        });
+        wzy_table.appendChild(wzy_body);
+        wzy_props_box.appendChild(wzy_table);
+    }
+
+    function wzy_render_log() {
+        wzy_log_box.textContent = "";
+        if (wzy_logs.length === 0) {
+            var wzy_empty = document.createElement("p");
+            wzy_empty.className = "wzy_log-empty";
+            wzy_empty.textContent = "还没有操作 —— 点上面任意一个按钮，这里会记下返回值，以及对象有没有被改。";
+            wzy_log_box.appendChild(wzy_empty);
+            return;
+        }
+        wzy_logs.forEach(function (wzy_item) {
+            var wzy_row = document.createElement("div");
+            wzy_row.className = "wzy_log-row";
+
+            var wzy_op = document.createElement("code");
+            wzy_op.className = "wzy_log-op";
+            wzy_op.textContent = wzy_item.op;
+
+            var wzy_ret = document.createElement("span");
+            wzy_ret.className = "wzy_log-ret";
+            wzy_ret.textContent = "返回 ";
+            var wzy_b = document.createElement("b");
+            wzy_b.textContent = wzy_item.ret;
+            wzy_ret.appendChild(wzy_b);
+
+            var wzy_badge = document.createElement("span");
+            wzy_badge.className = "wzy_badge " + (wzy_item.changed ? "wzy_badge--write" : "wzy_badge--read");
+            wzy_badge.textContent = wzy_item.changed ? "对象被改了" : "只读，没改";
+
+            wzy_row.appendChild(wzy_op);
+            wzy_row.appendChild(wzy_ret);
+            wzy_row.appendChild(wzy_badge);
+            wzy_log_box.appendChild(wzy_row);
+        });
+    }
+
+    var wzy_ops = {
+        add: function () {
+            wzy_student.score = 92;
+            return wzy_student.score;
+        },
+        update: function () {
+            wzy_student.age = wzy_student.age + 1;
+            return wzy_student.age;
+        },
+        bracket: function () {
+            wzy_student["name"] = "王梓杨（已改）";
+            return wzy_student["name"];
+        },
+        remove: function () {
+            var wzy_had = wzy_student.hasOwnProperty("major");
+            delete wzy_student.major;
+            return wzy_had ? "已删除 major" : "没有 major 可删";
+        },
+        assign: function () {
+            Object.assign(wzy_student, { school: "某某大学", grade: "大二" });
+            return "{ school, grade }";
+        },
+        spread: function () {
+            var wzy_copy = Object.assign({}, wzy_student);
+            return "新对象有 " + Object.keys(wzy_copy).length + " 个属性（原对象不受影响）";
+        },
+        keys: function () {
+            return Object.keys(wzy_student);
+        },
+        values: function () {
+            return Object.values(wzy_student);
+        },
+        entries: function () {
+            return Object.entries(wzy_student);
+        },
+        hasOwn: function () {
+            return wzy_student.hasOwnProperty("name");
+        },
+        optional: function () {
+            return wzy_student.school?.name;
+        },
+        json: function () {
+            return JSON.stringify(wzy_student);
+        }
+    };
+
+    var wzy_labels = {
+        add: "obj.score = 92", update: "obj.age = obj.age + 1",
+        bracket: "obj[\"name\"] = \"…\"", remove: "delete obj.major",
+        assign: "Object.assign(obj, {...})", spread: "{ ...obj }",
+        keys: "Object.keys(obj)", values: "Object.values(obj)",
+        entries: "Object.entries(obj)", hasOwn: "obj.hasOwnProperty(\"name\")",
+        optional: "obj?.school", json: "JSON.stringify(obj)"
+    };
+
+    var wzy_writers = ["add", "update", "bracket", "remove", "assign", "spread"];
+
+    function wzy_run(wzy_name) {
+        var wzy_before = JSON.stringify(wzy_student);
+        var wzy_ret = wzy_ops[wzy_name]();
+        var wzy_changed = JSON.stringify(wzy_student) !== wzy_before;
+
+        wzy_logs.unshift({
+            op: wzy_labels[wzy_name],
+            ret: wzy_fmt(wzy_ret),
+            changed: wzy_changed
+        });
+        if (wzy_logs.length > 8) { wzy_logs.pop(); }
+
+        wzy_render_object();
+        wzy_render_log();
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-wzy-op]"), function (wzy_btn) {
+        wzy_btn.addEventListener("click", function () {
+            wzy_run(wzy_btn.getAttribute("data-wzy-op"));
+        });
+    });
+
+    wzy_reset_btn.addEventListener("click", function () {
+        wzy_student = Object.assign({}, wzy_init);
+        wzy_logs = [];
+        wzy_render_object();
+        wzy_render_log();
+    });
+
+    wzy_render_object();
+    wzy_render_log();
+})();
+</script>
+</body>
+</html>

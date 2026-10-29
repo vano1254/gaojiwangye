@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-10-29 13:56，使用模型：DeepSeek-V4.1-Flash，功能名称：数组演示 - 22 个数组方法的可交互操作台 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计 16-1：JavaScript 数组演示，22 个数组方法的可交互操作台，区分会改原数组与不改原数组。">
+    <title>16-1 · 王梓杨的数组演示</title>
+    <style>
+        /* ===== 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            padding: 26px 20px 40px;
+            line-height: 1.7;
+        }
+
+        .wzy_wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 30px;
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .wzy_sub {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .wzy_tip {
+            margin-top: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #7a5c00;
+            background-color: #fff8e1;
+            border-left: 4px solid #f39c12;
+        }
+
+        code {
+            padding: 1px 5px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 13px;
+            background-color: #e8edf2;
+            color: #b5382f;
+        }
+
+        /* ===== 面板 ===== */
+        .wzy_panel {
+            margin-top: 20px;
+            padding: 18px 20px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .wzy_panel-head h2 {
+            font-size: 17px;
+        }
+
+        /* ===== 当前数组 ===== */
+        .wzy_array {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            min-height: 42px;
+            padding: 10px 12px;
+            background-color: #f7fafc;
+            border: 1px dashed #cfdce7;
+        }
+
+        .wzy_array::before {
+            content: "[";
+            font: 700 15px/1 Consolas, monospace;
+            color: #9aa9b7;
+        }
+
+        .wzy_array::after {
+            content: "]";
+            font: 700 15px/1 Consolas, monospace;
+            color: #9aa9b7;
+        }
+
+        .wzy_chip {
+            min-width: 30px;
+            padding: 3px 8px;
+            font: 600 14px/1.4 Consolas, "Courier New", monospace;
+            text-align: center;
+            color: #1b4d8f;
+            background-color: #e3effb;
+            border: 1px solid #c3dbf1;
+        }
+
+        .wzy_meta {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #7b8794;
+        }
+
+        /* ===== 按钮 ===== */
+        .wzy_btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0 16px;
+        }
+
+        .wzy_btns h3 {
+            width: 100%;
+            margin-bottom: 2px;
+            font-size: 13px;
+            color: #5b6f80;
+        }
+
+        .wzy_btn {
+            padding: 6px 12px;
+            font: 13px/1.4 Consolas, "Courier New", monospace;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #cfdce7;
+            cursor: pointer;
+            transition: background-color .15s ease, border-color .15s ease, transform .12s ease;
+        }
+
+        .wzy_btn:hover {
+            transform: translateY(-1px);
+            border-color: #8fb9e3;
+            background-color: #f2f8fd;
+        }
+
+        .wzy_btn:active {
+            transform: translateY(0);
+        }
+
+        .wzy_btn:focus-visible {
+            outline: 2px solid #2876c6;
+            outline-offset: 2px;
+        }
+
+        .wzy_btn--mut {
+            color: #a1511c;
+            border-color: #f0cdb2;
+            background-color: #fffaf5;
+        }
+
+        .wzy_btn--mut:hover {
+            background-color: #fdf0e5;
+            border-color: #dda172;
+        }
+
+        .wzy_btn--safe {
+            color: #17695a;
+            border-color: #bfe0d8;
+            background-color: #f5fbf9;
+        }
+
+        .wzy_btn--safe:hover {
+            background-color: #e9f6f2;
+            border-color: #86c3b6;
+        }
+
+        .wzy_reset {
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #2c3e50;
+            background-color: #fff;
+            border: 1px solid #cfdce7;
+            cursor: pointer;
+        }
+
+        .wzy_reset:hover {
+            background-color: #f2f8fd;
+            border-color: #8fb9e3;
+        }
+
+        /* ===== 日志 ===== */
+        .wzy_log {
+            margin-top: 4px;
+            border-top: 1px solid #eef2f6;
+        }
+
+        .wzy_log-empty {
+            padding: 16px 0;
+            font-size: 13px;
+            color: #9aa9b7;
+        }
+
+        .wzy_log-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 12px;
+            padding: 9px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #f2f5f8;
+        }
+
+        .wzy_log-op {
+            min-width: 132px;
+            padding: 2px 7px;
+            font: 12px/1.5 Consolas, monospace;
+            color: #2c3e50;
+            background-color: #eef3f7;
+        }
+
+        .wzy_log-ret {
+            color: #5b6f80;
+        }
+
+        .wzy_log-ret b {
+            color: #2876c6;
+            font-family: Consolas, monospace;
+        }
+
+        .wzy_badge {
+            padding: 1px 8px;
+            font-size: 11.5px;
+            border-radius: 999px;
+        }
+
+        .wzy_badge--mut {
+            color: #a1511c;
+            background-color: #fdf0e5;
+            border: 1px solid #f0cdb2;
+        }
+
+        .wzy_badge--safe {
+            color: #17695a;
+            background-color: #e9f6f2;
+            border: 1px solid #bfe0d8;
+        }
+
+        .wzy_log-after {
+            margin-left: auto;
+            font: 12px/1.5 Consolas, monospace;
+            color: #7b8794;
+        }
+
+        /* ===== 说明表格 ===== */
+        .wzy_table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .wzy_table th,
+        .wzy_table td {
+            padding: 8px 10px;
+            text-align: left;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_table th {
+            color: #2c3e50;
+            background-color: #f6f9fb;
+            font-weight: 700;
+        }
+
+        .wzy_table td code {
+            font-size: 12.5px;
+        }
+
+        .wzy_section {
+            margin-top: 26px;
+        }
+
+        .wzy_section > h2 {
+            margin-bottom: 10px;
+            padding-left: 10px;
+            font-size: 19px;
+            border-left: 5px solid #2980b9;
+        }
+
+        .wzy_note {
+            margin-top: 12px;
+            padding: 16px 20px;
+            background-color: #fff;
+            border: 1px solid #e2e8ee;
+        }
+
+        .wzy_note li {
+            margin: 7px 0 7px 20px;
+            font-size: 14.5px;
+        }
+
+        pre {
+            margin-top: 12px;
+            padding: 14px 16px;
+            overflow-x: auto;
+            color: #284d67;
+            background-color: #f1f6fa;
+            border: 1px solid #e0e9ef;
+            font: 13px/1.8 Consolas, "Courier New", monospace;
+        }
+
+        pre code {
+            padding: 0;
+            color: inherit;
+            background: none;
+            font: inherit;
+        }
+
+        .wzy_foot {
+            margin-top: 28px;
+            padding-top: 12px;
+            border-top: 1px solid #d5dbe3;
+            font-size: 13px;
+            color: #8b98a8;
+        }
+
+        /* ===== 窄屏 ===== */
+        @media (max-width: 620px) {
+            body { padding: 20px 14px 32px; }
+            .wzy_log-op { min-width: 0; }
+            .wzy_log-after { width: 100%; margin-left: 0; }
+            .wzy_table { font-size: 12.5px; }
+            .wzy_table th, .wzy_table td { padding: 6px 7px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+    <h1>王梓杨的数组演示</h1>
+    <p class="wzy_sub">
+        点按钮，在<b>真实数组</b>上跑方法；下面会记下返回值，以及<b>原数组有没有被改</b>。
+    </p>
+    <p class="wzy_tip">
+        橙色按钮会改动原数组，绿色按钮不会。想回到初始状态就点「重置」。
+    </p>
+
+    <!-- ========== 操作台 ========== -->
+    <section class="wzy_panel">
+        <div class="wzy_panel-head">
+            <h2>操作台</h2>
+            <button class="wzy_reset" id="wzy_reset" type="button">重置</button>
+        </div>
+
+        <div class="wzy_array" id="wzy_array" aria-live="polite"></div>
+        <p class="wzy_meta" id="wzy_meta"></p>
+
+        <div class="wzy_btns">
+            <h3>① 会改原数组（mutating）</h3>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="push">push(6)</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="pop">pop()</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="unshift">unshift(0)</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="shift">shift()</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="splice">splice(1, 2)</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="sort">sort((a,b) =&gt; a - b)</button>
+            <button class="wzy_btn wzy_btn--mut" type="button" data-wzy-op="reverse">reverse()</button>
+        </div>
+
+        <div class="wzy_btns">
+            <h3>② 查找与判断（不改原数组）</h3>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="indexOf">indexOf(4)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="includes">includes(9)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="find">find(x =&gt; x &gt; 4)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="findIndex">findIndex(x =&gt; x &gt; 4)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="some">some(x =&gt; x &gt; 8)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="every">every(x =&gt; x &gt; 0)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="at">at(-1)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="isArray">Array.isArray()</button>
+        </div>
+
+        <div class="wzy_btns">
+            <h3>③ 生成新数组 / 新值（不改原数组）</h3>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="slice">slice(1, 4)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="concat">concat([7, 8])</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="join">join(" - ")</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="map">map(x =&gt; x * 2)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="filter">filter(x =&gt; x % 2 === 0)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="reduce">reduce((a,b) =&gt; a + b, 0)</button>
+            <button class="wzy_btn wzy_btn--safe" type="button" data-wzy-op="flat">[arr, [7, 8]].flat()</button>
+        </div>
+
+        <div class="wzy_log" id="wzy_log" aria-live="polite"></div>
+    </section>
+
+    <!-- ========== 会改 vs 不改 ========== -->
+    <section class="wzy_section">
+        <h2>一、哪些会改原数组，哪些不会</h2>
+        <p class="wzy_sub">
+            这是数组最容易出错的地方：<b>改原数组的方法返回的不是新数组</b>，
+            而是长度、被删掉的元素或者原数组本身；<b>不改的方法一定返回新值</b>，原数组纹丝不动。
+        </p>
+
+        <table class="wzy_table">
+            <thead>
+                <tr>
+                    <th>会改原数组（7 个）</th>
+                    <th>返回值</th>
+                    <th>不改原数组（15 个）</th>
+                    <th>返回值</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>push()</code> 末尾加</td>
+                    <td>新长度</td>
+                    <td><code>indexOf()</code> / <code>findIndex()</code></td>
+                    <td>下标（找不到 -1）</td>
+                </tr>
+                <tr>
+                    <td><code>pop()</code> 末尾删</td>
+                    <td>被删的元素</td>
+                    <td><code>includes()</code> / <code>some()</code> / <code>every()</code></td>
+                    <td>true / false</td>
+                </tr>
+                <tr>
+                    <td><code>unshift()</code> 开头加</td>
+                    <td>新长度</td>
+                    <td><code>find()</code> / <code>at()</code></td>
+                    <td>找到的元素</td>
+                </tr>
+                <tr>
+                    <td><code>shift()</code> 开头删</td>
+                    <td>被删的元素</td>
+                    <td><code>slice()</code> / <code>concat()</code> / <code>flat()</code></td>
+                    <td>新数组</td>
+                </tr>
+                <tr>
+                    <td><code>splice()</code> 任意位置删 / 插</td>
+                    <td>被删元素组成的新数组</td>
+                    <td><code>map()</code> / <code>filter()</code></td>
+                    <td>新数组</td>
+                </tr>
+                <tr>
+                    <td><code>sort()</code> 排序</td>
+                    <td>原数组本身（已排好）</td>
+                    <td><code>reduce()</code></td>
+                    <td>累加出来的单个值</td>
+                </tr>
+                <tr>
+                    <td><code>reverse()</code> 反转</td>
+                    <td>原数组本身（已反转）</td>
+                    <td><code>join()</code> / <code>Array.isArray()</code></td>
+                    <td>字符串 / 布尔值</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="wzy_meta">
+            记忆口诀：<b>push / pop / shift / unshift / splice / sort / reverse</b> 这七个是「动手派」，
+            其余都是「看一眼就走」。
+        </p>
+    </section>
+
+    <!-- ========== 创建数组 ========== -->
+    <section class="wzy_section">
+        <h2>二、创建数组的五种写法</h2>
+        <pre><code>// 1. 字面量：最常用，方括号里直接写元素
+var wzy_a = [1, 2, 3];
+
+// 2. 构造函数：只有一个数字参数时是「长度」，不是元素
+var wzy_b = new Array(3);          // [空 × 3]，长度 3，不是 [3]
+var wzy_c = new Array(1, 2, 3);    // [1, 2, 3]
+
+// 3. Array.of()：解决上面那个坑，一个数字就是一个元素
+var wzy_d = Array.of(3);           // [3]
+
+// 4. Array.from()：把类数组 / 可迭代对象变成真数组
+var wzy_e = Array.from("abc");                  // ["a", "b", "c"]
+var wzy_f = Array.from({ length: 5 }, function (_, i) { return i * 2; });  // [0,2,4,6,8]
+
+// 5. 展开运算符：复制一个数组（浅拷贝）
+var wzy_g = [...wzy_a];            // [1, 2, 3]，改 wzy_g 不影响 wzy_a</code></pre>
+        <p class="wzy_meta">
+            <code>new Array(3)</code> 得到的是长度 3 的空数组，这个坑几乎每个人都踩过，所以有了 <code>Array.of()</code>。
+        </p>
+    </section>
+
+    <!-- ========== 链式调用 ========== -->
+    <section class="wzy_section">
+        <h2>三、链式调用：一行算完「偶数翻倍再求和」</h2>
+        <p class="wzy_sub">
+            不改原数组的方法都返回新值，所以可以一个接一个往下接 —— 这叫链式调用。
+        </p>
+        <pre><code>var wzy_scores = [72, 85, 91, 64, 88, 95];
+
+var wzy_total = wzy_scores
+    .filter(function (n) { return n &gt;= 80; })   // 先筛出及格的：[85, 91, 88, 95]
+    .map(function (n) { return n - 80; })       // 再每人减 80：[5, 11, 8, 15]
+    .reduce(function (a, b) { return a + b; }, 0);  // 最后求和：39
+
+console.log(wzy_total);        // 39
+console.log(wzy_scores);       // [72, 85, 91, 64, 88, 95] —— 原数组没变</code></pre>
+        <p class="wzy_meta">
+            注意 <code>reduce</code> 的第二个参数 <code>0</code> 是初始值，不给它的话，空数组会直接报错。
+        </p>
+    </section>
+
+    <!-- ========== 要点 ========== -->
+    <section class="wzy_section">
+        <h2>四、要点说明</h2>
+        <ol class="wzy_note">
+            <li>数组下标<b>从 0 开始</b>，最后一个元素是 <code>arr[arr.length - 1]</code>，或者更省事的 <code>arr.at(-1)</code>。</li>
+            <li><code>sort()</code> 默认按<b>字符串</b>比较，所以 <code>[10, 9, 2].sort()</code> 会得到 <code>[10, 2, 9]</code>。排数字必须给比较函数 <code>(a, b) =&gt; a - b</code>。</li>
+            <li><code>splice()</code> 会改原数组，<code>slice()</code> 不会 —— 只差一个字母，行为完全相反。</li>
+            <li><code>find()</code> 找<b>第一个</b>满足条件的元素，<code>filter()</code> 找<b>所有</b>满足条件的元素。</li>
+            <li><code>forEach()</code> 没有返回值（永远是 <code>undefined</code>），想拿结果要用 <code>map()</code>。</li>
+            <li><code>map()</code> 返回的数组长度一定和原数组一样，<code>filter()</code> 可能变短。</li>
+            <li>展开运算符 <code>[...arr]</code> 和 <code>slice()</code> 都是<b>浅拷贝</b>：元素是对象时，复制的是引用。</li>
+            <li>本页 22 个方法全部在真实数组上跑，日志里会标出「改了原数组」还是「没改」，多试点几次就有感觉了。</li>
+        </ol>
+    </section>
+
+    <p class="wzy_foot">高级网页设计 · 第十六章 · 王梓杨</p>
+
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    var wzy_init = [3, 1, 4, 1, 5, 9, 2, 6];
+    var wzy_data = wzy_init.slice();
+    var wzy_logs = [];
+
+    var wzy_array_box = document.getElementById("wzy_array");
+    var wzy_meta_box = document.getElementById("wzy_meta");
+    var wzy_log_box = document.getElementById("wzy_log");
+    var wzy_reset_btn = document.getElementById("wzy_reset");
+
+    /* 把返回值格式化成看得懂的样子 */
+    function wzy_fmt(wzy_v) {
+        if (Array.isArray(wzy_v)) {
+            return "[" + wzy_v.join(", ") + "]";
+        }
+        if (typeof wzy_v === "string") {
+            return "\"" + wzy_v + "\"";
+        }
+        return String(wzy_v);
+    }
+
+    /* 22 个方法：mut 为 true 表示会改原数组 */
+    var wzy_ops = {
+        push:      { mut: true,  run: function (a) { return a.push(6); } },
+        pop:       { mut: true,  run: function (a) { return a.pop(); } },
+        unshift:   { mut: true,  run: function (a) { return a.unshift(0); } },
+        shift:     { mut: true,  run: function (a) { return a.shift(); } },
+        splice:    { mut: true,  run: function (a) { return a.splice(1, 2); } },
+        sort:      { mut: true,  run: function (a) { return a.sort(function (x, y) { return x - y; }); } },
+        reverse:   { mut: true,  run: function (a) { return a.reverse(); } },
+
+        indexOf:   { mut: false, run: function (a) { return a.indexOf(4); } },
+        includes:  { mut: false, run: function (a) { return a.includes(9); } },
+        find:      { mut: false, run: function (a) { return a.find(function (x) { return x > 4; }); } },
+        findIndex: { mut: false, run: function (a) { return a.findIndex(function (x) { return x > 4; }); } },
+        some:      { mut: false, run: function (a) { return a.some(function (x) { return x > 8; }); } },
+        every:     { mut: false, run: function (a) { return a.every(function (x) { return x > 0; }); } },
+        at:        { mut: false, run: function (a) { return a.at(-1); } },
+        isArray:   { mut: false, run: function (a) { return Array.isArray(a); } },
+
+        slice:     { mut: false, run: function (a) { return a.slice(1, 4); } },
+        concat:    { mut: false, run: function (a) { return a.concat([7, 8]); } },
+        join:      { mut: false, run: function (a) { return a.join(" - "); } },
+        map:       { mut: false, run: function (a) { return a.map(function (x) { return x * 2; }); } },
+        filter:    { mut: false, run: function (a) { return a.filter(function (x) { return x % 2 === 0; }); } },
+        reduce:    { mut: false, run: function (a) { return a.reduce(function (x, y) { return x + y; }, 0); } },
+        flat:      { mut: false, run: function (a) { return [a, [7, 8]].flat(); } }
+    };
+
+    /* 按钮上写的调用形式，日志里直接用 */
+    var wzy_labels = {
+        push: "push(6)", pop: "pop()", unshift: "unshift(0)", shift: "shift()",
+        splice: "splice(1, 2)", sort: "sort((a,b) => a - b)", reverse: "reverse()",
+        indexOf: "indexOf(4)", includes: "includes(9)", find: "find(x => x > 4)",
+        findIndex: "findIndex(x => x > 4)", some: "some(x => x > 8)", every: "every(x => x > 0)",
+        at: "at(-1)", isArray: "Array.isArray()", slice: "slice(1, 4)", concat: "concat([7, 8])",
+        join: "join(\" - \")", map: "map(x => x * 2)", filter: "filter(x => x % 2 === 0)",
+        reduce: "reduce((a,b) => a + b, 0)", flat: "[arr, [7, 8]].flat()"
+    };
+
+    function wzy_render_array() {
+        wzy_array_box.textContent = "";
+        wzy_data.forEach(function (wzy_n) {
+            var wzy_chip = document.createElement("span");
+            wzy_chip.className = "wzy_chip";
+            wzy_chip.textContent = String(wzy_n);
+            wzy_array_box.appendChild(wzy_chip);
+        });
+        wzy_meta_box.textContent = "length = " + wzy_data.length;
+    }
+
+    function wzy_render_log() {
+        wzy_log_box.textContent = "";
+        if (wzy_logs.length === 0) {
+            var wzy_empty = document.createElement("p");
+            wzy_empty.className = "wzy_log-empty";
+            wzy_empty.textContent = "还没有操作 —— 点上面任意一个按钮，这里会记下返回值、是否改了原数组，以及改完的数组。";
+            wzy_log_box.appendChild(wzy_empty);
+            return;
+        }
+        wzy_logs.forEach(function (wzy_item) {
+            var wzy_row = document.createElement("div");
+            wzy_row.className = "wzy_log-row";
+
+            var wzy_op = document.createElement("code");
+            wzy_op.className = "wzy_log-op";
+            wzy_op.textContent = wzy_item.op;
+
+            var wzy_ret = document.createElement("span");
+            wzy_ret.className = "wzy_log-ret";
+            wzy_ret.textContent = "返回 ";
+            var wzy_b = document.createElement("b");
+            wzy_b.textContent = wzy_item.ret;
+            wzy_ret.appendChild(wzy_b);
+
+            var wzy_badge = document.createElement("span");
+            wzy_badge.className = "wzy_badge " + (wzy_item.mutated ? "wzy_badge--mut" : "wzy_badge--safe");
+            wzy_badge.textContent = wzy_item.mutated ? "改了原数组" : "原数组没变";
+
+            var wzy_after = document.createElement("code");
+            wzy_after.className = "wzy_log-after";
+            wzy_after.textContent = wzy_item.after;
+
+            wzy_row.appendChild(wzy_op);
+            wzy_row.appendChild(wzy_ret);
+            wzy_row.appendChild(wzy_badge);
+            wzy_row.appendChild(wzy_after);
+            wzy_log_box.appendChild(wzy_row);
+        });
+    }
+
+    function wzy_run(wzy_name) {
+        var wzy_op = wzy_ops[wzy_name];
+        if (!wzy_op) { return; }
+
+        var wzy_before = wzy_data.slice();
+        var wzy_ret = wzy_op.run(wzy_data);
+        var wzy_mutated = JSON.stringify(wzy_before) !== JSON.stringify(wzy_data);
+
+        wzy_logs.unshift({
+            op: wzy_labels[wzy_name],
+            ret: wzy_fmt(wzy_ret),
+            mutated: wzy_mutated,
+            after: "[" + wzy_data.join(", ") + "]"
+        });
+        if (wzy_logs.length > 8) { wzy_logs.pop(); }
+
+        wzy_render_array();
+        wzy_render_log();
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-wzy-op]"), function (wzy_btn) {
+        wzy_btn.addEventListener("click", function () {
+            wzy_run(wzy_btn.getAttribute("data-wzy-op"));
+        });
+    });
+
+    wzy_reset_btn.addEventListener("click", function () {
+        wzy_data = wzy_init.slice();
+        wzy_logs = [];
+        wzy_render_array();
+        wzy_render_log();
+    });
+
+    wzy_render_array();
+    wzy_render_log();
+})();
+</script>
+</body>
+</html>
