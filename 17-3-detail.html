@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-02 13:57，使用模型：GPT-6（Codex），功能名称：商品详情 - 根据地址中的商品 ID 使用 fetch 获取并展示独立商品详情 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计17-3商品详情页：读取URL中的id参数，使用原生fetch跨域获取DummyJSON单个商品，展示图片、价格、描述、库存等详情，支持加载反馈、错误重试和返回列表。">
+    <title>17-3 · 商品详情 · 王梓杨</title>
+    <style>
+        * { box-sizing:border-box; }
+        :root { color-scheme:light; --wzy_ink:#203149; --wzy_muted:#66758a; --wzy_line:#dce3ec; --wzy_blue:#2855bf; }
+        body { margin:0; background:#f4f6fa; color:var(--wzy_ink); font:15px/1.75 "Microsoft YaHei",Arial,sans-serif; }
+        a { color:var(--wzy_blue); text-underline-offset:4px; }
+        button { min-height:40px; padding:8px 15px; border:1px solid var(--wzy_blue); background:var(--wzy_blue); color:white; cursor:pointer; font:inherit; }
+        button:hover { background:#20479e; }
+        button:disabled { opacity:.6; cursor:default; }
+        :focus-visible { outline:3px solid #7299ee; outline-offset:3px; }
+        h1,h2,p { margin:0; }
+        h1 { margin:9px 0; font-size:clamp(26px,4vw,38px); line-height:1.4; letter-spacing:-1px; overflow-wrap:anywhere; }
+        h2 { font-size:19px; }
+        code,pre { font-family:Consolas,"Courier New",monospace; }
+        code { color:var(--wzy_blue); overflow-wrap:anywhere; }
+        .wzy_wrap { width:calc(100% - 40px); max-width:1120px; margin:auto; }
+        .wzy_nav { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:19px 0; border-bottom:1px solid var(--wzy_line); font-size:13px; }
+        .wzy_nav a { text-decoration:none; }
+        .wzy_nav_links { display:flex; flex-wrap:wrap; gap:20px; }
+        .wzy_hero { padding:28px 0 25px; }
+        .wzy_back { display:inline-block; margin-bottom:22px; font-size:13px; text-decoration:none; }
+        .wzy_kicker { color:var(--wzy_blue); font-size:12px; font-weight:bold; letter-spacing:2px; }
+        .wzy_sub { color:var(--wzy_muted); font-size:14px; }
+        .wzy_request { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:17px 20px; background:white; border:1px solid var(--wzy_line); }
+        .wzy_method { padding:2px 8px; background:#e8f5ed; color:#16714d; font:bold 12px/1.8 Consolas,monospace; }
+        .wzy_endpoint { flex:1; min-width:160px; font-size:13px; }
+        .wzy_status { margin:12px 0 22px; padding:11px 14px; font-size:13px; border-left:3px solid #71839d; background:#eaf0fa; overflow-wrap:anywhere; }
+        .wzy_status[data-state="success"] { color:#14684f; background:#edf8f3; border-color:#168469; }
+        .wzy_status[data-state="error"] { color:#9f2929; background:#fff1f0; border-color:#c53d3d; }
+        .wzy_detail { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); border:1px solid var(--wzy_line); background:white; }
+        .wzy_media { display:grid; place-items:center; min-height:390px; padding:35px; background:#eef1f6; }
+        .wzy_image { display:block; width:100%; max-width:400px; height:360px; object-fit:contain; }
+        .wzy_fallback { padding:20px; color:var(--wzy_muted); }
+        .wzy_info { min-width:0; padding:30px; }
+        .wzy_category { color:var(--wzy_blue); font:12px/1.8 Consolas,monospace; letter-spacing:1px; text-transform:uppercase; }
+        .wzy_price { margin:10px 0 20px; font:600 36px/1.5 Consolas,monospace; }
+        .wzy_price small { margin-left:10px; font-size:12px; color:var(--wzy_muted); font-weight:400; }
+        .wzy_description { margin:10px 0 22px; color:var(--wzy_muted); overflow-wrap:anywhere; }
+        .wzy_fields { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; margin:0; }
+        .wzy_field { min-width:0; padding:11px 0; border-top:1px solid #e7ebf2; }
+        dt { font-size:12px; color:var(--wzy_muted); }
+        dd { margin:3px 0 0; font-size:14px; overflow-wrap:anywhere; }
+        .wzy_panel { min-width:0; margin:24px 0; padding:22px; border:1px solid var(--wzy_line); background:white; }
+        summary { cursor:pointer; font-weight:bold; }
+        .wzy_raw { margin:14px 0 0; max-height:370px; overflow:auto; padding:17px; background:#17263f; color:#e2edff; font:13px/1.8 Consolas,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+        .wzy_explain { padding:0 0 24px; color:var(--wzy_muted); font-size:13px; }
+        .wzy_explain p { margin-top:8px; }
+        .wzy_foot { padding:20px 0 28px; border-top:1px solid var(--wzy_line); color:var(--wzy_muted); font-size:12px; }
+        [hidden] { display:none !important; }
+        @media(max-width:760px) { .wzy_detail { grid-template-columns:1fr; } .wzy_media { min-height:260px; padding:22px; } .wzy_image { height:260px; } .wzy_info { padding:22px; } }
+        @media(max-width:450px) { .wzy_wrap { width:calc(100% - 28px); } .wzy_nav_links { gap:12px; } .wzy_fields { grid-template-columns:1fr; } .wzy_request { padding:14px; } }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+    <nav class="wzy_nav" aria-label="课程导航"><a href="index.html">王梓杨 · 高级网页设计</a><div class="wzy_nav_links"><a href="17-2.html">17-2 接口数据</a><a href="17-3.html">17-3 商品列表</a></div></nav>
+    <header class="wzy_hero">
+        <a class="wzy_back" href="17-3.html">← 返回商品列表</a>
+        <p class="wzy_kicker">CHAPTER 17 / PRODUCT DETAIL</p>
+        <h1 id="wzy_title">商品详情</h1>
+        <p class="wzy_sub" id="wzy_id_note">读取当前地址中的商品 ID，获取对应详情。</p>
+    </header>
+    <main>
+        <div class="wzy_request"><span class="wzy_method">GET</span><code class="wzy_endpoint" id="wzy_endpoint">等待商品 ID</code><button type="button" id="wzy_retry">重新获取</button></div>
+        <p class="wzy_status" id="wzy_status" role="status" aria-live="polite">正在准备详情请求……</p>
+        <article class="wzy_detail" id="wzy_detail" aria-label="商品详情" aria-busy="false" hidden>
+            <div class="wzy_media" id="wzy_media"></div>
+            <div class="wzy_info"><p class="wzy_category" id="wzy_category"></p><p class="wzy_price"><span id="wzy_price"></span><small>USD 美元</small></p><h2>商品信息</h2><p class="wzy_description" id="wzy_description"></p><dl class="wzy_fields" id="wzy_fields"></dl></div>
+        </article>
+        <details class="wzy_panel" id="wzy_raw_panel" hidden><summary>查看此商品的 JSON 原文</summary><pre class="wzy_raw" id="wzy_raw"></pre></details>
+        <section class="wzy_explain" aria-label="页面说明"><h2>一个 ID，对应一个商品</h2><p>列表页的链接形如 <code>17-3-detail.html?id=1</code>；本页用 <code>URLSearchParams</code> 读取 ID，再请求 <code>https://dummyjson.com/products/1</code>。刷新页面仍会获取同一件商品。</p><p>未指定 ID 时展示示例商品 1；无效 ID 会给出提示。商品来自公开的模拟数据接口，页面与图片需要联网。</p></section>
+        <noscript><p>请启用 JavaScript 以获取商品详情，或<a href="17-3.html">返回商品列表</a>。</p></noscript>
+    </main>
+    <footer class="wzy_foot">第十七章 · JSON 与接口数据 / 17-3-detail　王梓杨　·　原生 HTML + CSS + JavaScript</footer>
+</div>
+<script>
+    "use strict";
+    const wzy_params = new URLSearchParams(window.location.search);
+    const wzy_id_text = wzy_params.has("id") ? wzy_params.get("id") : "1";
+    const wzy_id = Number(wzy_id_text);
+    const wzy_valid = /^[1-9]\d*$/.test(wzy_id_text) && Number.isSafeInteger(wzy_id);
+    const wzy_status = document.getElementById("wzy_status");
+    const wzy_retry = document.getElementById("wzy_retry");
+    const wzy_detail = document.getElementById("wzy_detail");
+    const wzy_api = "https://dummyjson.com/products/" + encodeURIComponent(wzy_id_text);
+    const wzy_currency = new Intl.NumberFormat("en-US", {style:"currency",currency:"USD"});
+    function wzy_render(wzy_product) {
+        document.title = wzy_product.title + " · 17-3 商品详情 · 王梓杨";
+        document.getElementById("wzy_title").textContent = wzy_product.title;
+        document.getElementById("wzy_category").textContent = wzy_product.category || "未分类";
+        document.getElementById("wzy_price").textContent = wzy_currency.format(wzy_product.price);
+        document.getElementById("wzy_description").textContent = wzy_product.description || "暂无商品描述。";
+        const wzy_media = document.getElementById("wzy_media");
+        wzy_media.replaceChildren();
+        const wzy_image = document.createElement("img");
+        wzy_image.className = "wzy_image";
+        wzy_image.alt = wzy_product.title;
+        wzy_image.referrerPolicy = "no-referrer";
+        const wzy_fallback = function() {
+            const wzy_message = document.createElement("p");
+            wzy_message.className = "wzy_fallback";
+            wzy_message.textContent = "商品图片暂不可用";
+            wzy_media.replaceChildren(wzy_message);
+        };
+        try {
+            const wzy_url = new URL(wzy_product.thumbnail);
+            if (wzy_url.protocol !== "https:") throw new Error("图片地址无效");
+            wzy_image.addEventListener("error", wzy_fallback, {once:true});
+            wzy_image.src = wzy_url.href;
+            wzy_media.append(wzy_image);
+        } catch (wzy_error) { wzy_fallback(); }
+        const wzy_pairs = [["商品 ID",wzy_product.id],["品牌",wzy_product.brand],["评分",wzy_product.rating == null ? null : wzy_product.rating + " / 5"],["库存",wzy_product.stock == null ? null : wzy_product.stock + " 件"],["分类",wzy_product.category],["SKU",wzy_product.sku],["配送说明",wzy_product.shippingInformation],["保修说明",wzy_product.warrantyInformation]];
+        const wzy_fragment = document.createDocumentFragment();
+        wzy_pairs.forEach(function(wzy_pair) {
+            const wzy_field = document.createElement("div");
+            wzy_field.className = "wzy_field";
+            const wzy_term = document.createElement("dt");
+            const wzy_value = document.createElement("dd");
+            wzy_term.textContent = wzy_pair[0];
+            wzy_value.textContent = wzy_pair[1] == null || wzy_pair[1] === "" ? "未提供" : wzy_pair[1];
+            wzy_field.append(wzy_term,wzy_value);
+            wzy_fragment.append(wzy_field);
+        });
+        document.getElementById("wzy_fields").replaceChildren(wzy_fragment);
+        document.getElementById("wzy_raw").textContent = JSON.stringify(wzy_product,null,2);
+    }
+    async function wzy_load_detail() {
+        if (!wzy_valid) {
+            document.getElementById("wzy_endpoint").textContent = "未发起请求：商品 ID 无效";
+            document.getElementById("wzy_id_note").textContent = "商品 ID 应为正整数。";
+            wzy_status.dataset.state = "error";
+            wzy_status.textContent = "商品 ID 无效，请返回商品列表重新选择。";
+            wzy_retry.disabled = true;
+            wzy_retry.textContent = "参数无效";
+            return;
+        }
+        const wzy_controller = new AbortController();
+        const wzy_timer = setTimeout(function() { wzy_controller.abort(); },15000);
+        let wzy_not_found = false;
+        wzy_retry.disabled = true;
+        wzy_retry.textContent = "获取中……";
+        wzy_detail.hidden = true;
+        wzy_detail.setAttribute("aria-busy","true");
+        document.getElementById("wzy_raw_panel").hidden = true;
+        document.getElementById("wzy_endpoint").textContent = wzy_api;
+        document.getElementById("wzy_id_note").textContent = wzy_params.has("id") ? "当前商品 ID：" + wzy_id : "未指定 ID，当前展示示例商品 1。";
+        wzy_status.dataset.state = "loading";
+        wzy_status.textContent = "正在获取商品 " + wzy_id + " 的详情，请稍候……";
+        try {
+            const wzy_response = await fetch(wzy_api,{method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"},signal:wzy_controller.signal});
+            if (wzy_response.status === 404) { wzy_not_found = true; throw new Error("商品不存在"); }
+            if (!wzy_response.ok) throw new Error("HTTP " + wzy_response.status);
+            const wzy_product = await wzy_response.json();
+            if (!wzy_product || wzy_product.id !== wzy_id || typeof wzy_product.title !== "string" || typeof wzy_product.price !== "number") throw new Error("商品详情格式不正确");
+            wzy_render(wzy_product);
+            wzy_detail.hidden = false;
+            document.getElementById("wzy_raw_panel").hidden = false;
+            wzy_status.dataset.state = "success";
+            wzy_status.textContent = "详情获取成功 · HTTP " + wzy_response.status + " · 商品 ID " + wzy_product.id;
+        } catch (wzy_error) {
+            wzy_status.dataset.state = "error";
+            wzy_status.textContent = wzy_not_found ? "没有找到 ID 为 " + wzy_id + " 的商品（HTTP 404），请返回列表重新选择。" : wzy_error.name === "AbortError" ? "详情请求超时（15 秒），请检查网络后重试。" : "详情获取失败：" + wzy_error.message + "。请检查网络后重试。";
+        } finally {
+            clearTimeout(wzy_timer);
+            wzy_retry.disabled = false;
+            wzy_retry.textContent = wzy_status.dataset.state === "error" ? "重试获取" : "重新获取";
+            wzy_detail.setAttribute("aria-busy","false");
+        }
+    }
+    wzy_retry.addEventListener("click",wzy_load_detail);
+    wzy_load_detail();
+</script>
+</body>
+</html>

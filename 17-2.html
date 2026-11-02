@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-02 13:46，使用模型：GPT-6（Codex），功能名称：接口数据展示 - 使用原生 fetch 跨域获取商品列表与商品详情并展示 -->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="王梓杨">
+    <meta name="description" content="高级网页设计第十七章：按接口文档使用原生 fetch 跨域请求 DummyJSON 商品列表和详情，展示商品图片、价格与库存，支持筛选、加载反馈、错误重试和 JSON 原文查看。">
+    <title>17-2 · fetch 接口数据展示 · 王梓杨</title>
+    <style>
+        * { box-sizing:border-box; }
+        :root { color-scheme:light; --wzy_ink:#203149; --wzy_muted:#66758a; --wzy_line:#dce3ec; --wzy_blue:#2855bf; }
+        body { margin:0; background:#f4f6fa; color:var(--wzy_ink); font:15px/1.75 "Microsoft YaHei",Arial,sans-serif; }
+        a { color:var(--wzy_blue); text-underline-offset:4px; }
+        button,input,select { font:inherit; }
+        button { min-height:40px; padding:8px 15px; border:1px solid var(--wzy_line); background:white; color:var(--wzy_ink); cursor:pointer; }
+        button:hover { border-color:var(--wzy_blue); color:var(--wzy_blue); }
+        button:disabled { opacity:.65; cursor:wait; }
+        :focus-visible { outline:3px solid #7299ee; outline-offset:3px; }
+        h1,h2,h3,p { margin:0; }
+        h1 { font-size:clamp(26px,4vw,38px); line-height:1.4; letter-spacing:-1px; margin:9px 0; }
+        h2 { font-size:18px; } h3 { font-size:15px; }
+        code,pre { font-family:Consolas,"Courier New",monospace; }
+        code { color:var(--wzy_blue); overflow-wrap:anywhere; }
+        .wzy_wrap { width:calc(100% - 40px); max-width:1120px; margin:auto; }
+        .wzy_nav { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:19px 0; border-bottom:1px solid var(--wzy_line); font-size:13px; }
+        .wzy_nav a { text-decoration:none; }
+        .wzy_nav_links { display:flex; flex-wrap:wrap; gap:20px; }
+        .wzy_hero { padding:33px 0 26px; }
+        .wzy_kicker { color:var(--wzy_blue); font-size:12px; font-weight:bold; letter-spacing:2px; }
+        .wzy_sub { color:var(--wzy_muted); max-width:820px; }
+        .wzy_request { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:17px 20px; background:white; border:1px solid var(--wzy_line); }
+        .wzy_method { padding:2px 8px; background:#e8f5ed; color:#16714d; font:bold 12px/1.8 Consolas,monospace; }
+        .wzy_endpoint { flex:1; min-width:180px; font-size:13px; }
+        .wzy_primary { background:var(--wzy_blue); border-color:var(--wzy_blue); color:white; }
+        .wzy_primary:hover { background:#20479e; color:white; }
+        .wzy_status { margin:12px 0 22px; padding:11px 14px; font-size:13px; border-left:3px solid #71839d; background:#eaf0fa; overflow-wrap:anywhere; }
+        .wzy_status[data-state="success"] { color:#14684f; background:#edf8f3; border-color:#168469; }
+        .wzy_status[data-state="error"] { color:#9f2929; background:#fff1f0; border-color:#c53d3d; }
+        .wzy_stats { display:grid; grid-template-columns:repeat(3,1fr); margin-bottom:24px; background:white; border:1px solid var(--wzy_line); }
+        .wzy_stat { padding:17px 22px; border-right:1px solid var(--wzy_line); }
+        .wzy_stat:last-child { border:0; }
+        .wzy_stat strong { display:block; font:600 24px/1.4 Consolas,monospace; color:var(--wzy_blue); }
+        .wzy_stat span { font-size:12px; color:var(--wzy_muted); }
+        .wzy_section_head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+        .wzy_count { font-size:13px; color:var(--wzy_muted); }
+        .wzy_filters { display:grid; grid-template-columns:minmax(0,1fr) 190px; gap:14px; margin-bottom:20px; }
+        .wzy_filters label { display:grid; gap:6px; font-size:12px; color:var(--wzy_muted); }
+        .wzy_filters input,.wzy_filters select { min-width:0; width:100%; height:42px; padding:8px 12px; border:1px solid #c8d3e3; background:white; color:var(--wzy_ink); }
+        .wzy_grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+        .wzy_card { display:flex; flex-direction:column; min-width:0; background:white; border:1px solid var(--wzy_line); }
+        .wzy_image_frame { display:grid; place-items:center; height:176px; padding:15px; background:#eef1f6; }
+        .wzy_image { display:block; width:100%; height:100%; max-height:146px; object-fit:contain; }
+        .wzy_image_fallback { color:var(--wzy_muted); font-size:13px; }
+        .wzy_card_body { display:flex; flex-direction:column; flex:1; padding:17px; }
+        .wzy_category { color:var(--wzy_blue); font:11px/1.6 Consolas,monospace; text-transform:uppercase; letter-spacing:1px; }
+        .wzy_card h3 { margin:7px 0 8px; line-height:1.6; min-height:48px; overflow-wrap:anywhere; }
+        .wzy_card_meta { color:var(--wzy_muted); font-size:12px; margin-bottom:14px; }
+        .wzy_price { font:600 22px/1.5 Consolas,monospace; margin-top:auto; }
+        .wzy_card button { width:100%; margin-top:14px; font-size:13px; }
+        .wzy_empty { padding:40px 20px; background:white; border:1px dashed #c8d3e3; text-align:center; color:var(--wzy_muted); }
+        .wzy_panel { min-width:0; margin:24px 0; padding:22px; border:1px solid var(--wzy_line); background:white; }
+        .wzy_raw { margin:14px 0 0; max-height:370px; overflow:auto; padding:17px; background:#17263f; color:#e2edff; font:13px/1.8 Consolas,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+        summary { cursor:pointer; font-weight:bold; }
+        .wzy_explain { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:26px 0; }
+        .wzy_explain p { margin:8px 0; color:var(--wzy_muted); font-size:13px; }
+        .wzy_explain pre { margin:10px 0; padding:17px; overflow:auto; background:#eaf0fa; font-size:12px; line-height:1.9; white-space:pre-wrap; overflow-wrap:anywhere; }
+        .wzy_foot { padding:20px 0 28px; border-top:1px solid var(--wzy_line); color:var(--wzy_muted); font-size:12px; }
+        .wzy_dialog { width:min(740px,calc(100% - 30px)); max-height:85vh; padding:0; border:1px solid #b5c2d4; color:var(--wzy_ink); }
+        .wzy_dialog::backdrop { background:rgb(15 29 52 / 55%); }
+        .wzy_dialog_head { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:17px 22px; border-bottom:1px solid var(--wzy_line); }
+        .wzy_dialog_head h2 { min-width:0; overflow-wrap:anywhere; }
+        .wzy_dialog_body { padding:22px; }
+        .wzy_detail_grid { display:grid; grid-template-columns:190px minmax(0,1fr); gap:22px; }
+        .wzy_detail_grid p { margin:8px 0; overflow-wrap:anywhere; }
+        .wzy_detail_desc { font-size:14px; color:var(--wzy_muted); }
+        [hidden] { display:none !important; }
+        @media(max-width:950px) { .wzy_grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media(max-width:640px) { .wzy_explain,.wzy_detail_grid { grid-template-columns:1fr; } .wzy_filters { grid-template-columns:1fr; } .wzy_stat { padding:14px 12px; } .wzy_dialog_head,.wzy_dialog_body { padding:16px; } }
+        @media(max-width:450px) { .wzy_wrap { width:calc(100% - 28px); } .wzy_grid { grid-template-columns:1fr; } .wzy_stat strong { font-size:21px; } .wzy_nav_links { gap:12px; } }
+    </style>
+</head>
+<body>
+<div class="wzy_wrap">
+    <nav class="wzy_nav" aria-label="课程导航"><a href="index.html">王梓杨 · 高级网页设计</a><div class="wzy_nav_links"><a href="17-1.html">17-1 JSON 展示</a><a href="17-2.html" aria-current="page">17-2 接口数据</a></div></nav>
+    <header class="wzy_hero"><p class="wzy_kicker">CHAPTER 17 / EXERCISE 02</p><h1>从接口，到商品列表</h1><p class="wzy_sub">使用接口文档中的 DummyJSON 商品接口，以原生 fetch 跨域获取数据，再生成商品卡片。点击“查看详情”会按商品 ID 发起第二次请求。</p></header>
+    <main>
+        <div class="wzy_request"><span class="wzy_method">GET</span><code class="wzy_endpoint">https://dummyjson.com/products?limit=8</code><button class="wzy_primary" type="button" id="wzy_reload">重新获取</button></div>
+        <p class="wzy_status" id="wzy_status" role="status" aria-live="polite">准备请求商品数据。</p>
+        <div class="wzy_stats" aria-label="请求结果概览"><div class="wzy_stat"><strong id="wzy_total">—</strong><span>接口商品总数</span></div><div class="wzy_stat"><strong id="wzy_loaded">—</strong><span>本次获取商品</span></div><div class="wzy_stat"><strong id="wzy_http">—</strong><span>HTTP 状态码</span></div></div>
+        <section aria-labelledby="wzy_list_title">
+            <div class="wzy_section_head"><h2 id="wzy_list_title">商品列表</h2><span class="wzy_count" id="wzy_count" aria-live="polite">等待数据</span></div>
+            <div class="wzy_filters"><label for="wzy_search">搜索当前 8 条商品<input type="search" id="wzy_search" placeholder="输入商品名、品牌或分类" maxlength="100"></label><label for="wzy_category">按分类筛选<select id="wzy_category"><option value="">全部分类</option></select></label></div>
+            <div class="wzy_grid" id="wzy_products" aria-busy="false"></div>
+            <p class="wzy_empty" id="wzy_empty">正在连接商品接口……</p>
+        </section>
+        <details class="wzy_panel"><summary>查看本次接口返回的 JSON 原文</summary><pre class="wzy_raw" id="wzy_raw">尚未获得响应。</pre></details>
+        <section class="wzy_explain" aria-label="实现说明">
+            <article><h2>请求 → 解析 → 展示</h2><pre>const wzy_response = await fetch(wzy_url);
+if (!wzy_response.ok) throw new Error("请求失败");
+const wzy_data = await wzy_response.json();
+// 读取 wzy_data.products，生成商品卡片。</pre><p>fetch 不会因 HTTP 404 或 500 自动抛错，所以先检查 <code>response.ok</code>，再解析 JSON。本页也处理了网络错误和 15 秒请求超时。</p></article>
+            <article><h2>列表与详情接口</h2><p>列表：<code>https://dummyjson.com/products?limit=8</code></p><p>详情：<code>https://dummyjson.com/products/1</code>，将末尾 ID 换为对应商品 ID。</p><p>数据来自公开的模拟商品接口，价格单位为美元 USD。搜索和分类仅筛选本次获取的 8 条商品。</p><p>本页可直接双击打开，接口请求与返回的商品图片需要联网。样式和脚本均写在页面内，没有第三方库。</p></article>
+        </section>
+        <noscript><p>请启用 JavaScript 以请求并展示商品。接口地址：https://dummyjson.com/products?limit=8。</p></noscript>
+    </main>
+    <footer class="wzy_foot">第十七章 · JSON 与接口数据 / 17-2　王梓杨　·　原生 HTML + CSS + JavaScript</footer>
+</div>
+<dialog class="wzy_dialog" id="wzy_dialog" aria-labelledby="wzy_detail_title"><div class="wzy_dialog_head"><h2 id="wzy_detail_title">商品详情</h2><button type="button" id="wzy_close">关闭</button></div><div class="wzy_dialog_body"><p class="wzy_status" id="wzy_detail_status" role="status" aria-live="polite"></p><div id="wzy_detail"></div><button type="button" id="wzy_detail_retry" hidden>重新获取详情</button></div></dialog>
+<script>
+    "use strict";
+    const wzy_api = "https://dummyjson.com/products";
+    const wzy_status = document.getElementById("wzy_status");
+    const wzy_reload = document.getElementById("wzy_reload");
+    const wzy_grid = document.getElementById("wzy_products");
+    const wzy_empty = document.getElementById("wzy_empty");
+    const wzy_search = document.getElementById("wzy_search");
+    const wzy_category = document.getElementById("wzy_category");
+    const wzy_dialog = document.getElementById("wzy_dialog");
+    const wzy_detail_status = document.getElementById("wzy_detail_status");
+    const wzy_retry = document.getElementById("wzy_detail_retry");
+    const wzy_currency = new Intl.NumberFormat("en-US", {style:"currency",currency:"USD"});
+    let wzy_products = [];
+    let wzy_detail_controller = null;
+    let wzy_selected_id = null;
+    let wzy_list_state = "loading";
+    function wzy_node(wzy_tag, wzy_class, wzy_text) {
+        const wzy_element = document.createElement(wzy_tag);
+        if (wzy_class) wzy_element.className = wzy_class;
+        if (wzy_text !== undefined) wzy_element.textContent = wzy_text;
+        return wzy_element;
+    }
+    function wzy_image(wzy_product) {
+        const wzy_frame = wzy_node("div", "wzy_image_frame");
+        const wzy_picture = wzy_node("img", "wzy_image");
+        wzy_picture.alt = wzy_product.title || "商品图片";
+        wzy_picture.loading = "lazy";
+        wzy_picture.referrerPolicy = "no-referrer";
+        const wzy_fallback = function() { wzy_frame.replaceChildren(wzy_node("span", "wzy_image_fallback", "商品图片暂不可用")); };
+        try {
+            const wzy_url = new URL(wzy_product.thumbnail);
+            if (wzy_url.protocol !== "https:") throw new Error("非 HTTPS 图片");
+            wzy_picture.src = wzy_url.href;
+            wzy_picture.addEventListener("error", wzy_fallback, {once:true});
+            wzy_frame.append(wzy_picture);
+        } catch (wzy_error) { wzy_fallback(); }
+        return wzy_frame;
+    }
+    function wzy_render() {
+        const wzy_query = wzy_search.value.trim().toLowerCase();
+        const wzy_filtered = wzy_products.filter(function(wzy_product) {
+            return (!wzy_category.value || wzy_product.category === wzy_category.value) && [wzy_product.title,wzy_product.brand,wzy_product.category].join(" ").toLowerCase().includes(wzy_query);
+        });
+        const wzy_fragment = document.createDocumentFragment();
+        wzy_filtered.forEach(function(wzy_product) {
+            const wzy_card = wzy_node("article", "wzy_card");
+            const wzy_body = wzy_node("div", "wzy_card_body");
+            const wzy_button = wzy_node("button", "", "查看详情");
+            wzy_button.type = "button";
+            wzy_button.setAttribute("aria-label", "查看详情：" + wzy_product.title);
+            wzy_button.addEventListener("click", function() { wzy_open_detail(wzy_product.id); });
+            wzy_body.append(wzy_node("p","wzy_category",wzy_product.category), wzy_node("h3","",wzy_product.title), wzy_node("p","wzy_card_meta","评分 " + wzy_product.rating + " / 5 · 库存 " + wzy_product.stock), wzy_node("p","wzy_price",wzy_currency.format(wzy_product.price)), wzy_button);
+            wzy_card.append(wzy_image(wzy_product), wzy_body);
+            wzy_fragment.append(wzy_card);
+        });
+        wzy_grid.replaceChildren(wzy_fragment);
+        document.getElementById("wzy_count").textContent = "显示 " + wzy_filtered.length + " / " + wzy_products.length + " 条";
+        wzy_empty.hidden = wzy_filtered.length > 0;
+        wzy_empty.textContent = wzy_list_state === "error" ? "数据获取失败，请点击上方“重试获取”。" : wzy_list_state === "loading" ? "正在连接商品接口……" : wzy_products.length ? "没有匹配的商品，试试其他关键词或分类。" : "接口本次返回了空列表。";
+    }
+    async function wzy_load_products() {
+        const wzy_controller = new AbortController();
+        const wzy_timer = setTimeout(function() { wzy_controller.abort(); }, 15000);
+        wzy_reload.disabled = true;
+        wzy_reload.textContent = "获取中……";
+        wzy_status.dataset.state = "loading";
+        wzy_status.textContent = "正在发送跨域 GET 请求，请稍候……";
+        wzy_list_state = "loading";
+        wzy_products = [];
+        wzy_grid.setAttribute("aria-busy", "true");
+        document.getElementById("wzy_total").textContent = "—";
+        document.getElementById("wzy_loaded").textContent = "—";
+        document.getElementById("wzy_http").textContent = "—";
+        document.getElementById("wzy_raw").textContent = "等待当前请求响应……";
+        wzy_category.replaceChildren(new Option("全部分类", ""));
+        wzy_render();
+        try {
+            const wzy_response = await fetch(wzy_api + "?limit=8", {method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"},signal:wzy_controller.signal});
+            document.getElementById("wzy_http").textContent = wzy_response.status;
+            if (!wzy_response.ok) throw new Error("HTTP " + wzy_response.status);
+            const wzy_data = await wzy_response.json();
+            if (!Array.isArray(wzy_data.products) || !wzy_data.products.every(function(wzy_product) { return wzy_product && Number.isInteger(wzy_product.id) && typeof wzy_product.title === "string" && typeof wzy_product.price === "number"; })) throw new Error("接口商品数据格式不正确");
+            wzy_products = wzy_data.products;
+            wzy_list_state = "success";
+            document.getElementById("wzy_total").textContent = typeof wzy_data.total === "number" ? wzy_data.total : "—";
+            document.getElementById("wzy_loaded").textContent = wzy_products.length;
+            document.getElementById("wzy_raw").textContent = JSON.stringify(wzy_data, null, 2);
+            [...new Set(wzy_products.map(function(wzy_product) { return wzy_product.category; }).filter(Boolean))].forEach(function(wzy_name) { wzy_category.append(new Option(wzy_name,wzy_name)); });
+            wzy_status.dataset.state = "success";
+            wzy_status.textContent = "请求成功 · HTTP " + wzy_response.status + " · 已获取并解析 " + wzy_products.length + " 条商品数据。";
+        } catch (wzy_error) {
+            wzy_list_state = "error";
+            wzy_status.dataset.state = "error";
+            wzy_status.textContent = wzy_error.name === "AbortError" ? "请求超时（15 秒），请检查网络后重试。" : "请求失败：" + wzy_error.message + "。请检查网络及接口跨域支持后重试。";
+            document.getElementById("wzy_raw").textContent = "未获得可用 JSON：" + wzy_status.textContent;
+        } finally {
+            clearTimeout(wzy_timer);
+            wzy_reload.disabled = false;
+            wzy_reload.textContent = wzy_list_state === "error" ? "重试获取" : "重新获取";
+            wzy_grid.setAttribute("aria-busy", "false");
+            wzy_render();
+        }
+    }
+    async function wzy_open_detail(wzy_id) {
+        if (wzy_detail_controller) wzy_detail_controller.abort();
+        const wzy_controller = new AbortController();
+        wzy_detail_controller = wzy_controller;
+        wzy_selected_id = wzy_id;
+        const wzy_timer = setTimeout(function() { wzy_controller.abort(); }, 15000);
+        document.getElementById("wzy_detail_title").textContent = "商品详情 · ID " + wzy_id;
+        document.getElementById("wzy_detail").replaceChildren();
+        wzy_retry.hidden = true;
+        wzy_detail_status.dataset.state = "loading";
+        wzy_detail_status.textContent = "正在请求 " + wzy_api + "/" + wzy_id;
+        if (!wzy_dialog.open) wzy_dialog.showModal();
+        try {
+            const wzy_response = await fetch(wzy_api + "/" + encodeURIComponent(wzy_id), {method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"},signal:wzy_controller.signal});
+            if (!wzy_response.ok) throw new Error("HTTP " + wzy_response.status);
+            const wzy_data = await wzy_response.json();
+            if (!wzy_data || wzy_data.id !== wzy_id || typeof wzy_data.title !== "string" || typeof wzy_data.price !== "number") throw new Error("详情数据格式不正确");
+            if (!wzy_dialog.open || wzy_detail_controller !== wzy_controller) return;
+            document.getElementById("wzy_detail_title").textContent = wzy_data.title;
+            const wzy_layout = wzy_node("div","wzy_detail_grid");
+            const wzy_info = wzy_node("div","");
+            wzy_info.append(wzy_node("p","wzy_category",wzy_data.category), wzy_node("p","wzy_price",wzy_currency.format(wzy_data.price)), wzy_node("p","wzy_detail_desc",wzy_data.description), wzy_node("p","","品牌：" + (wzy_data.brand || "未提供")), wzy_node("p","","评分：" + wzy_data.rating + " / 5　库存：" + wzy_data.stock), wzy_node("p","","配送：" + (wzy_data.shippingInformation || "未提供")));
+            wzy_layout.append(wzy_image(wzy_data),wzy_info);
+            const wzy_details = wzy_node("details", "wzy_panel");
+            wzy_details.append(wzy_node("summary", "", "查看详情 JSON"),wzy_node("pre","wzy_raw",JSON.stringify(wzy_data,null,2)));
+            document.getElementById("wzy_detail").append(wzy_layout,wzy_details);
+            wzy_detail_status.dataset.state = "success";
+            wzy_detail_status.textContent = "详情请求成功 · HTTP " + wzy_response.status + " · 商品 ID " + wzy_data.id;
+        } catch (wzy_error) {
+            if (!wzy_dialog.open || wzy_detail_controller !== wzy_controller) return;
+            wzy_detail_status.dataset.state = "error";
+            wzy_detail_status.textContent = wzy_error.name === "AbortError" ? "详情请求超时（15 秒），请重试。" : "详情获取失败：" + wzy_error.message;
+            wzy_retry.hidden = false;
+        } finally { clearTimeout(wzy_timer); }
+    }
+    wzy_reload.addEventListener("click", wzy_load_products);
+    wzy_search.addEventListener("input", wzy_render);
+    wzy_category.addEventListener("change", wzy_render);
+    document.getElementById("wzy_close").addEventListener("click", function() { wzy_dialog.close(); });
+    wzy_dialog.addEventListener("close", function() { if (wzy_detail_controller) wzy_detail_controller.abort(); });
+    wzy_retry.addEventListener("click", function() { wzy_open_detail(wzy_selected_id); });
+    wzy_load_products();
+</script>
+</body>
+</html>
