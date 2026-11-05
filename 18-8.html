@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 16:18，使用模型：DeepSeek-V4.1-Flash，功能名称：科研客服数据大屏 - 三列大屏布局，中间上方为中国地图咨询分布与协作飞线，配合 KPI、条形、环形、趋势与实时事件 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="18-8 科研知识库智能客服运营数据大屏：三列布局，中间上方为中国地图咨询分布、城市节点与协作飞线，另有 KPI、方向条形、知识库环形、24 小时趋势、城市排行、环节耗时与实时事件流，ECharts 与地图数据均本地化。">
+<title>18-8 · 科研客服数据大屏 · 王梓杨</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark;--wzy_bg:#05100d;--wzy_panel:rgba(11,31,25,.86);--wzy_line:rgba(79,209,165,.20);--wzy_line-soft:rgba(79,209,165,.10);--wzy_green:#4fd1a5;--wzy_dim:#2b8f6c;--wzy_gold:#e0c07a;--wzy_text:#d7ece3;--wzy_muted:#7fa89a;--wzy_ink:#a9c9bc}
+body{margin:0;height:100vh;overflow:hidden;background:
+  radial-gradient(ellipse at 50% -10%,rgba(43,143,108,.22) 0,transparent 62%),
+  linear-gradient(#05100d,#040d0b);color:var(--wzy_text);font:13px/1.6 "Microsoft YaHei",system-ui,sans-serif}
+h1,h2,p,ol,ul{margin:0}
+ol,ul{list-style:none;padding:0}
+button{font:inherit;color:var(--wzy_text);background:rgba(79,209,165,.08);border:1px solid var(--wzy_line);padding:5px 11px;font-size:11px;cursor:pointer;letter-spacing:.5px}
+button:hover{border-color:var(--wzy_green);background:rgba(79,209,165,.16)}
+button[aria-pressed="true"]{background:rgba(79,209,165,.2);border-color:var(--wzy_green);color:#eafff6}
+:focus-visible{outline:2px solid var(--wzy_green);outline-offset:3px}
+.wzy_screen{height:100vh;display:flex;flex-direction:column;padding:0 14px 12px}
+
+/* ── 顶栏 ── */
+.wzy_head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;height:62px;border-bottom:1px solid var(--wzy_line);position:relative}
+.wzy_head::after{content:"";position:absolute;left:0;bottom:-1px;width:180px;height:1px;background:linear-gradient(90deg,var(--wzy_green),transparent)}
+.wzy_brand{display:flex;align-items:center;gap:13px;min-width:0}
+.wzy_logo{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--wzy_green);color:var(--wzy_green);font:11px Consolas,monospace;letter-spacing:1px;box-shadow:inset 0 0 14px rgba(79,209,165,.25)}
+.wzy_brand h1{font-size:16px;font-weight:600;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wzy_brand p{font:9px Consolas,monospace;letter-spacing:2.2px;color:var(--wzy_dim);margin-top:3px}
+.wzy_head_right{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.wzy_live{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--wzy_green);letter-spacing:1px}
+.wzy_live i{width:6px;height:6px;border-radius:50%;background:var(--wzy_green);box-shadow:0 0 8px var(--wzy_green);animation:wzy_pulse 1.8s infinite}
+@keyframes wzy_pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.wzy_clock{font:20px Consolas,monospace;letter-spacing:2px;color:#eafff6;line-height:1}
+.wzy_date{font:10px Consolas,monospace;color:var(--wzy_muted);letter-spacing:1px}
+
+/* ── 三列 ── */
+.wzy_dash{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:21.5% minmax(0,1fr) 25.5%;gap:11px;padding-top:11px}
+.wzy_col{display:flex;flex-direction:column;gap:11px;min-width:0;min-height:0}
+
+/* ── 面板 ── */
+.wzy_panel{position:relative;flex:1 1 0;min-height:0;display:flex;flex-direction:column;padding:11px 13px 10px;background:var(--wzy_panel);border:1px solid var(--wzy_line-soft);backdrop-filter:blur(2px)}
+.wzy_panel::before,.wzy_panel::after{content:"";position:absolute;width:9px;height:9px;border-color:var(--wzy_green);border-style:solid;opacity:.7}
+.wzy_panel::before{left:-1px;top:-1px;border-width:1px 0 0 1px}
+.wzy_panel::after{right:-1px;bottom:-1px;border-width:0 1px 1px 0}
+.wzy_panel h2{flex:0 0 auto;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;letter-spacing:1.2px;color:var(--wzy_ink)}
+.wzy_panel h2::before{content:"";width:3px;height:11px;background:var(--wzy_green);box-shadow:0 0 6px var(--wzy_green)}
+.wzy_panel h2 span{margin-left:auto;font:9px Consolas,monospace;letter-spacing:.5px;color:var(--wzy_dim);font-weight:400}
+.wzy_chart{flex:1 1 auto;min-height:0;width:100%}
+.wzy_kpi_panel{flex:0 0 auto}
+.wzy_kpi_grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.wzy_kpi{padding:8px 10px;background:linear-gradient(135deg,rgba(79,209,165,.10),rgba(79,209,165,.02));border-left:2px solid var(--wzy_dim)}
+.wzy_kpi span{display:block;font-size:10px;color:var(--wzy_muted);letter-spacing:.6px}
+.wzy_kpi b{display:block;margin-top:3px;font:22px/1.2 Consolas,monospace;color:#eafff6;letter-spacing:-.5px}
+.wzy_kpi b em{font:11px Consolas,monospace;font-style:normal;color:var(--wzy_green);margin-left:3px}
+.wzy_kpi small{display:block;font-size:9px;color:var(--wzy_dim);margin-top:2px}
+
+/* ── 地图面板 ── */
+.wzy_map_panel{flex:2.05 1 0}
+.wzy_map{flex:1 1 auto;min-height:0;width:100%}
+.wzy_map_foot{flex:0 0 auto;display:flex;justify-content:space-between;gap:10px;font-size:9px;color:#5f8478;padding-top:2px}
+.wzy_scale{position:absolute;left:14px;bottom:34px;display:flex;flex-direction:column;align-items:center;gap:4px;font:9px Consolas,monospace;color:var(--wzy_muted);pointer-events:none}
+.wzy_scale i{display:block;width:8px;height:64px;background:linear-gradient(#4fbf92,#2c8563,#1c5f49,#134034,#0c241d);border:1px solid rgba(79,209,165,.25)}
+.wzy_map_stats{position:absolute;right:14px;top:42px;display:flex;gap:14px;text-align:center;pointer-events:none}
+.wzy_map_stats span{font-size:9px;color:#5f8478;letter-spacing:.5px}
+.wzy_map_stats b{display:block;font:17px Consolas,monospace;color:var(--wzy_green);letter-spacing:0}
+.wzy_map_foot a{color:#6f9a8a;text-decoration:underline;text-underline-offset:2px}
+
+/* ── 排行 ── */
+.wzy_rank{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:space-around;margin-top:8px}
+.wzy_rank li{display:grid;grid-template-columns:18px 44px minmax(0,1fr) 44px;align-items:center;gap:7px;font-size:11px}
+.wzy_rank li b{font:10px Consolas,monospace;color:var(--wzy_dim);text-align:center}
+.wzy_rank li:nth-child(1) b,.wzy_rank li:nth-child(2) b,.wzy_rank li:nth-child(3) b{color:var(--wzy_gold)}
+.wzy_rank .wzy_city{color:var(--wzy_ink);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wzy_rank .wzy_bar_track{position:relative;height:5px;background:rgba(79,209,165,.10);overflow:hidden}
+.wzy_rank .wzy_bar_track i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--wzy_dim),var(--wzy_green));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.wzy_rank .wzy_num{font:10.5px Consolas,monospace;color:var(--wzy_green);text-align:right}
+
+/* ── 事件流 ── */
+.wzy_feed{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.wzy_feed li{display:grid;grid-template-columns:38px 1fr;gap:8px;font-size:10.5px;line-height:1.5;padding-bottom:6px;border-bottom:1px dashed rgba(79,209,165,.10);animation:wzy_in .45s ease}
+.wzy_feed li time{font:9.5px Consolas,monospace;color:var(--wzy_dim);padding-top:2px}
+.wzy_feed li b{color:var(--wzy_text);font-weight:400}
+.wzy_feed li em{font-style:normal;color:var(--wzy_gold)}
+@keyframes wzy_in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* ── 页脚 ── */
+.wzy_foot{flex:0 0 auto;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:9px;font-size:9.5px;color:#5f8478}
+.wzy_foot a{color:#6f9a8a;text-decoration:underline;text-underline-offset:2px}
+
+/* ── 响应式 ── */
+@media(max-width:1280px){
+  .wzy_dash{grid-template-columns:23% minmax(0,1fr) 27%}
+  .wzy_brand p{display:none}
+}
+@media(max-width:1080px){
+  body{height:auto;overflow:auto}
+  .wzy_screen{height:auto;min-height:100vh}
+  .wzy_dash{grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,auto)}
+  .wzy_col_mid{grid-column:1/-1;order:-1}
+  .wzy_col{min-height:520px}
+  .wzy_map_panel{min-height:460px}
+  .wzy_kpi_grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:760px){
+  .wzy_screen{padding:0 9px 10px}
+  .wzy_head{height:auto;padding:10px 0;flex-wrap:wrap;gap:9px}
+  .wzy_brand h1{font-size:14px;white-space:normal}
+  .wzy_head_right{gap:9px;flex-wrap:wrap}
+  .wzy_clock{font-size:16px}
+  .wzy_dash{grid-template-columns:1fr}
+  .wzy_col_mid{grid-column:auto}
+  .wzy_col{min-height:0}
+  .wzy_kpi_grid{grid-template-columns:1fr 1fr}
+  .wzy_panel{min-height:260px}
+  .wzy_map_panel{min-height:380px}
+  .wzy_panel h2{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+<div class="wzy_screen">
+
+  <header class="wzy_head">
+    <div class="wzy_brand">
+      <span class="wzy_logo">WZY</span>
+      <div>
+        <h1>科研知识库智能客服 · 运营数据大屏</h1>
+        <p>RESEARCH KNOWLEDGE SERVICE / OPERATION OVERVIEW</p>
+      </div>
+    </div>
+    <div class="wzy_head_right">
+      <span class="wzy_live" id="wzy_live"><i></i>实时监控</span>
+      <div>
+        <div class="wzy_clock" id="wzy_clock">--:--:--</div>
+        <div class="wzy_date" id="wzy_date">----</div>
+      </div>
+      <button type="button" id="wzy_pause" aria-pressed="false">暂停刷新</button>
+      <button type="button" id="wzy_full">全屏</button>
+    </div>
+  </header>
+
+  <main class="wzy_dash">
+
+    <!-- 左列 -->
+    <section class="wzy_col wzy_col_left" aria-label="核心指标与结构">
+      <div class="wzy_panel wzy_kpi_panel">
+        <h2>核心指标<span>今日累计</span></h2>
+        <div class="wzy_kpi_grid">
+          <div class="wzy_kpi"><span>咨询总量</span><b data-count="12486">0</b><small>较昨日 +8.2%</small></div>
+          <div class="wzy_kpi"><span>有据解答率</span><b data-count="87.4" data-suffix="%">0</b><small>有知识库证据支持</small></div>
+          <div class="wzy_kpi"><span>平均响应</span><b data-count="1.8" data-suffix="s">0</b><small>端到端耗时</small></div>
+          <div class="wzy_kpi"><span>在线坐席</span><b data-count="24" data-suffix="人">0</b><small>3 个技能组</small></div>
+        </div>
+      </div>
+
+      <div class="wzy_panel">
+        <h2>咨询方向分布<span>次</span></h2>
+        <div class="wzy_chart" id="wzy_bar" role="img" aria-label="五个科研方向的咨询量横向条形图"></div>
+      </div>
+
+      <div class="wzy_panel">
+        <h2>知识库构成<span>占比</span></h2>
+        <div class="wzy_chart" id="wzy_pie" role="img" aria-label="知识库来源构成的环形图"></div>
+      </div>
+    </section>
+
+    <!-- 中列 -->
+    <section class="wzy_col wzy_col_mid" aria-label="地理分布与趋势">
+      <div class="wzy_panel wzy_map_panel">
+        <h2>全国咨询分布<span>单位：次 / 教学模拟</span></h2>
+        <div class="wzy_map" id="wzy_map" role="img" aria-label="中国地图，按省份着色显示咨询量，标注十个城市节点与北京出发的协作飞线，含南海诸岛"></div>
+        <div class="wzy_scale" aria-hidden="true"><span>高</span><i></i><span>低</span></div>
+        <div class="wzy_map_stats" aria-hidden="true"><span><b>34</b>省级</span><span><b>10</b>节点</span><span><b>9</b>连线</span></div>
+        <div class="wzy_map_foot">
+          <span>边界依据国家基础地理信息标准地图 · 含台湾、港澳与南海诸岛</span>
+          <span><a href="images/18-8/README.md">地图数据来源</a></span>
+        </div>
+      </div>
+
+      <div class="wzy_panel">
+        <h2>24 小时咨询趋势<span>次 / 小时</span></h2>
+        <div class="wzy_chart" id="wzy_line" role="img" aria-label="二十四小时咨询总量与有据解答量面积折线图"></div>
+      </div>
+    </section>
+
+    <!-- 右列 -->
+    <section class="wzy_col wzy_col_right" aria-label="排行与实时事件">
+      <div class="wzy_panel">
+        <h2>城市咨询排行<span>TOP 6</span></h2>
+        <ol class="wzy_rank" id="wzy_rank"></ol>
+      </div>
+
+      <div class="wzy_panel">
+        <h2>应答环节耗时<span>毫秒</span></h2>
+        <div class="wzy_chart" id="wzy_stage" role="img" aria-label="改写、召回、重排、生成、校验五个环节的平均耗时条形图"></div>
+      </div>
+
+      <div class="wzy_panel">
+        <h2>实时事件<span>每 4 秒</span></h2>
+        <ul class="wzy_feed" id="wzy_feed" aria-live="polite"></ul>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="wzy_foot">
+    <span>王梓杨 · 高级网页设计 · 第十八章 · 全部数据为课堂演示构造，非真实统计</span>
+    <span>本地 ECharts 6.1.0 · <a href="cdn/echarts-LICENSE.txt">MIT 许可</a> · 地图数据在 <a href="images/18-8/china-geo.js">images/18-8/</a></span>
+  </footer>
+
+</div>
+
+<!-- 课程指定图表库与本地地图数据，无远程脚本；第三方库内部标识符保留上游原样。 -->
+<script src="./cdn/echarts.min.js"></script>
+<script src="./images/18-8/china-geo.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var wzy_get = function(wzy_id){ return document.getElementById(wzy_id); };
+  var wzy_reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wzy_charts = {};
+  var wzy_timer = null;
+  var wzy_paused = false;
+  var wzy_tick = 0;
+
+  /* ── 基础数据（教学模拟） ── */
+  var wzy_province = {
+    '北京市':1280,'天津市':250,'河北省':320,'山西省':220,'内蒙古自治区':130,'辽宁省':330,'吉林省':190,'黑龙江省':210,
+    '上海市':1120,'江苏省':760,'浙江省':720,'安徽省':350,'福建省':380,'江西省':280,'山东省':640,'河南省':430,
+    '湖北省':520,'湖南省':400,'广东省':980,'广西壮族自治区':165,'海南省':90,'重庆市':270,'四川省':560,'贵州省':170,
+    '云南省':180,'西藏自治区':45,'陕西省':460,'甘肃省':140,'青海省':60,'宁夏回族自治区':70,'新疆维吾尔自治区':120,
+    '台湾省':210,'香港特别行政区':160,'澳门特别行政区':60
+  };
+
+  var wzy_cities = [
+    {name:'北京', lon:116.41, lat:39.90, base:1280},
+    {name:'上海', lon:121.47, lat:31.23, base:1120},
+    {name:'广州', lon:113.26, lat:23.13, base:980},
+    {name:'成都', lon:104.07, lat:30.57, base:560},
+    {name:'西安', lon:108.94, lat:34.34, base:460},
+    {name:'武汉', lon:114.30, lat:30.59, base:520},
+    {name:'哈尔滨', lon:126.53, lat:45.80, base:210},
+    {name:'乌鲁木齐', lon:87.62, lat:43.82, base:120},
+    {name:'昆明', lon:102.71, lat:25.04, base:180},
+    {name:'拉萨', lon:91.14, lat:29.65, base:45}
+  ];
+
+  var wzy_topics = ['机器学习','材料科学','生命科学','工程技术','科研办事'];
+  var wzy_topic_values = [3200, 2680, 2240, 1980, 1620];
+  var wzy_stages = ['查询改写','向量召回','重排','生成','引用校验'];
+  var wzy_stage_values = [120, 210, 160, 980, 140];
+
+  var wzy_axis = {
+    light: 'rgba(215,236,227,.92)',
+    sub: '#7fa89a',
+    line: 'rgba(79,209,165,.16)',
+    split: 'rgba(79,209,165,.08)'
+  };
+
+  function wzy_base_grid(){
+    return { left: 6, right: 14, top: 14, bottom: 6, containLabel: true };
+  }
+
+  /* ── 条形：咨询方向 ── */
+  function wzy_draw_bar(){
+    var wzy_c = wzy_charts.bar;
+    if(!wzy_c) return;
+    wzy_c.setOption({
+      animationDuration: 700,
+      grid: wzy_base_grid(),
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, backgroundColor: 'rgba(6,22,17,.94)', borderColor: 'rgba(79,209,165,.3)', textStyle: { color: '#d7ece3', fontSize: 11 } },
+      xAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: wzy_axis.sub, fontSize: 9 }, splitLine: { lineStyle: { color: wzy_axis.split } } },
+      yAxis: { type: 'category', inverse: true, data: wzy_topics, axisLine: { lineStyle: { color: wzy_axis.line } }, axisTick: { show: false }, axisLabel: { color: wzy_axis.light, fontSize: 10 } },
+      series: [{
+        type: 'bar', barWidth: 9, data: wzy_topic_values,
+        itemStyle: {
+          borderRadius: [0, 4, 4, 0],
+          color: new window.echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: '#1f6a4f' }, { offset: 1, color: '#5fe0b0' }
+          ])
+        },
+        label: { show: true, position: 'right', color: '#9fd6c2', fontSize: 9, formatter: '{c}' }
+      }]
+    });
+  }
+
+  /* ── 环形：知识库构成 ── */
+  function wzy_draw_pie(){
+    var wzy_c = wzy_charts.pie;
+    if(!wzy_c) return;
+    wzy_c.setOption({
+      animationDuration: 700,
+      tooltip: { trigger: 'item', backgroundColor: 'rgba(6,22,17,.94)', borderColor: 'rgba(79,209,165,.3)', textStyle: { color: '#d7ece3', fontSize: 11 }, formatter: '{b}：{d}%' },
+      legend: { orient: 'vertical', right: 4, top: 'middle', itemWidth: 7, itemHeight: 7, itemGap: 7, textStyle: { color: wzy_axis.sub, fontSize: 9.5 }, icon: 'circle' },
+      series: [{
+        type: 'pie', radius: ['48%', '70%'], center: ['34%', '50%'], avoidLabelOverlap: true,
+        itemStyle: { borderColor: '#07130f', borderWidth: 2 },
+        label: { show: false }, labelLine: { show: false },
+        data: [
+          { value: 46, name: '期刊论文', itemStyle: { color: '#4fd1a5' } },
+          { value: 18, name: '学位论文', itemStyle: { color: '#3aa886' } },
+          { value: 14, name: '会议论文', itemStyle: { color: '#e0c07a' } },
+          { value: 12, name: '技术报告', itemStyle: { color: '#2b8f6c' } },
+          { value: 10, name: '办事指南', itemStyle: { color: '#8fb7a5' } }
+        ]
+      }]
+    });
+  }
+
+  /* ── 折线：24 小时趋势 ── */
+  function wzy_hours(){
+    var wzy_h = [], wzy_q = [], wzy_a = [];
+    for(var wzy_i = 0; wzy_i < 24; wzy_i++){
+      wzy_h.push((wzy_i < 10 ? '0' : '') + wzy_i + ':00');
+      var wzy_peak = Math.exp(-Math.pow(wzy_i - 10, 2) / 26) + 0.85 * Math.exp(-Math.pow(wzy_i - 15, 2) / 22) + 0.18;
+      var wzy_v = Math.round(60 + 520 * wzy_peak);
+      wzy_q.push(wzy_v);
+      wzy_a.push(Math.round(wzy_v * 0.87));
+    }
+    return { hours: wzy_h, queries: wzy_q, answered: wzy_a };
+  }
+  var wzy_trend = wzy_hours();
+
+  function wzy_draw_line(){
+    var wzy_c = wzy_charts.line;
+    if(!wzy_c) return;
+    wzy_c.setOption({
+      animationDuration: 700,
+      grid: { left: 6, right: 16, top: 30, bottom: 4, containLabel: true },
+      tooltip: { trigger: 'axis', backgroundColor: 'rgba(6,22,17,.94)', borderColor: 'rgba(79,209,165,.3)', textStyle: { color: '#d7ece3', fontSize: 11 } },
+      legend: { right: 8, top: 2, itemWidth: 12, itemHeight: 3, itemGap: 12, textStyle: { color: wzy_axis.sub, fontSize: 9.5 }, data: ['咨询量', '有据解答'] },
+      xAxis: { type: 'category', boundaryGap: false, data: wzy_trend.hours, axisLine: { lineStyle: { color: wzy_axis.line } }, axisTick: { show: false }, axisLabel: { color: wzy_axis.sub, fontSize: 8.5, interval: 3 } },
+      yAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: wzy_axis.sub, fontSize: 9 }, splitLine: { lineStyle: { color: wzy_axis.split } } },
+      series: [
+        {
+          name: '咨询量', type: 'line', smooth: true, symbol: 'none', data: wzy_trend.queries,
+          lineStyle: { width: 1.6, color: '#4fd1a5' },
+          areaStyle: { color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(79,209,165,.34)' }, { offset: 1, color: 'rgba(79,209,165,0)' }
+          ]) }
+        },
+        {
+          name: '有据解答', type: 'line', smooth: true, symbol: 'none', data: wzy_trend.answered,
+          lineStyle: { width: 1.3, color: '#e0c07a', type: 'dashed' },
+          areaStyle: { color: new window.echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(224,192,122,.18)' }, { offset: 1, color: 'rgba(224,192,122,0)' }
+          ]) }
+        }
+      ]
+    });
+  }
+
+  /* ── 条形：环节耗时 ── */
+  function wzy_draw_stage(){
+    var wzy_c = wzy_charts.stage;
+    if(!wzy_c) return;
+    wzy_c.setOption({
+      animationDuration: 700,
+      grid: wzy_base_grid(),
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, backgroundColor: 'rgba(6,22,17,.94)', borderColor: 'rgba(79,209,165,.3)', textStyle: { color: '#d7ece3', fontSize: 11 }, formatter: '{b}：{c} ms' },
+      xAxis: { type: 'value', max: 1150, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: wzy_axis.sub, fontSize: 9 }, splitLine: { lineStyle: { color: wzy_axis.split } } },
+      yAxis: { type: 'category', inverse: true, data: wzy_stages, axisLine: { lineStyle: { color: wzy_axis.line } }, axisTick: { show: false }, axisLabel: { color: wzy_axis.light, fontSize: 10 } },
+      series: [{
+        type: 'bar', barWidth: 8, data: wzy_stage_values,
+        itemStyle: {
+          borderRadius: [0, 4, 4, 0],
+          color: new window.echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: '#8a6d33' }, { offset: 1, color: '#e0c07a' }
+          ])
+        },
+        label: { show: true, position: 'right', color: '#d9c9a0', fontSize: 9, formatter: '{c}' }
+      }]
+    });
+  }
+
+  /* ── 地图 ── */
+  function wzy_city_data(){
+    return wzy_cities.map(function(wzy_city){
+      return { name: wzy_city.name, value: [wzy_city.lon, wzy_city.lat, wzy_city.base] };
+    });
+  }
+
+  function wzy_shade(wzy_value){
+    var wzy_t = Math.max(0, Math.min(1, wzy_value / 1300));
+    wzy_t = Math.pow(wzy_t, 0.72);
+    var wzy_from = [12, 36, 29], wzy_to = [79, 191, 146];
+    var wzy_rgb = wzy_from.map(function(wzy_c, wzy_i){
+      return Math.round(wzy_c + (wzy_to[wzy_i] - wzy_c) * wzy_t);
+    });
+    return 'rgb(' + wzy_rgb.join(',') + ')';
+  }
+
+  function wzy_draw_map(){
+    var wzy_c = wzy_charts.map;
+    if(!wzy_c) return;
+    var wzy_points = wzy_city_data();
+    var wzy_lines = wzy_cities.slice(1).map(function(wzy_city){
+      return { coords: [[116.41, 39.90], [wzy_city.lon, wzy_city.lat]] };
+    });
+    var wzy_prov = Object.keys(wzy_province).map(function(wzy_name){
+      return { name: wzy_name, value: wzy_province[wzy_name] };
+    });
+
+    wzy_c.setOption({
+      animationDuration: 800,
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(6,22,17,.94)', borderColor: 'rgba(79,209,165,.3)',
+        textStyle: { color: '#d7ece3', fontSize: 11 },
+        formatter: function(wzy_p){
+          if(wzy_p.seriesType === 'effectScatter') return wzy_p.name + '：' + wzy_p.value[2] + ' 次';
+          var wzy_val = wzy_province[wzy_p.name];
+          if(wzy_val !== undefined) return wzy_p.name + '：' + wzy_val + ' 次';
+          return wzy_p.name;
+        }
+      },
+      geo: {
+        map: 'wzy_china', roam: false,
+        layoutCenter: ['49%', '48%'], layoutSize: '109%',
+        label: { show: false },
+        regions: wzy_prov.map(function(wzy_item){
+          return { name: wzy_item.name, itemStyle: { areaColor: wzy_shade(wzy_item.value) } };
+        }),
+        itemStyle: { areaColor: '#0c241d', borderColor: 'rgba(79,209,165,.46)', borderWidth: .7, shadowColor: 'rgba(0,0,0,.45)', shadowBlur: 8 },
+        emphasis: {
+          label: { show: true, color: '#eafff6', fontSize: 10 },
+          itemStyle: { areaColor: '#2c8563' }
+        }
+      },
+      series: [
+        {
+          name: '协作连线', type: 'lines', coordinateSystem: 'geo', geoIndex: 0, zlevel: 2,
+          effect: { show: !wzy_reduce, period: 4.5, trailLength: .35, symbol: 'arrow', symbolSize: 5, color: '#f0d79a' },
+          lineStyle: { color: '#d8b56a', width: .9, opacity: .38, curveness: .22 },
+          data: wzy_lines,
+          silent: true
+        },
+        {
+          name: '城市节点', type: 'effectScatter', coordinateSystem: 'geo', geoIndex: 0, zlevel: 3,
+          data: wzy_points,
+          symbolSize: function(wzy_val){ return 5 + Math.sqrt(wzy_val[2]) / 3.4; },
+          rippleEffect: { brushType: 'stroke', scale: 2.8, period: 3.6 },
+          itemStyle: { color: '#7fe8bb', shadowBlur: 12, shadowColor: 'rgba(127,232,187,.85)' },
+          label: { show: true, position: 'right', distance: 4, formatter: '{b}', color: '#bfe3d2', fontSize: 9.5, textShadowColor: '#04100c', textShadowBlur: 4 }
+        }
+      ]
+    });
+  }
+
+  /* ── 排行榜 ── */
+  function wzy_draw_rank(){
+    var wzy_list = wzy_cities.slice().sort(function(wzy_a, wzy_b){ return wzy_b.base - wzy_a.base; }).slice(0, 6);
+    var wzy_max = wzy_list[0].base;
+    var wzy_target = wzy_get('wzy_rank');
+    wzy_target.innerHTML = '';
+    wzy_list.forEach(function(wzy_city, wzy_i){
+      var wzy_li = document.createElement('li');
+      var wzy_b = document.createElement('b');
+      wzy_b.textContent = (wzy_i + 1 < 10 ? '0' : '') + (wzy_i + 1);
+      var wzy_label = document.createElement('span');
+      wzy_label.className = 'wzy_city';
+      wzy_label.textContent = wzy_city.name;
+      var wzy_track = document.createElement('div');
+      wzy_track.className = 'wzy_bar_track';
+      var wzy_fill = document.createElement('i');
+      wzy_fill.style.width = '0%';
+      wzy_track.appendChild(wzy_fill);
+      var wzy_num = document.createElement('span');
+      wzy_num.className = 'wzy_num';
+      wzy_num.textContent = wzy_city.base;
+      wzy_li.appendChild(wzy_b);
+      wzy_li.appendChild(wzy_label);
+      wzy_li.appendChild(wzy_track);
+      wzy_li.appendChild(wzy_num);
+      wzy_target.appendChild(wzy_li);
+      window.requestAnimationFrame(function(){
+        window.setTimeout(function(){ wzy_fill.style.width = (wzy_city.base / wzy_max * 100).toFixed(1) + '%'; }, 60 + wzy_i * 70);
+      });
+    });
+  }
+
+  /* ── 实时事件 ── */
+  var wzy_events = [
+    ['北京','材料科学','命中知识库 4 条，引用 2 篇'],
+    ['上海','机器学习','证据不足，已转人工坐席'],
+    ['广州','生命科学','返回回答，用户点了满意'],
+    ['成都','科研办事','命中办事指南，直接答复'],
+    ['西安','工程技术','敏感词拦截，转复核队列'],
+    ['武汉','机器学习','向量召回 18 条，重排后取 5 条'],
+    ['哈尔滨','材料科学','会话超时，自动关闭工单'],
+    ['乌鲁木齐','科研办事','请求跨库检索，耗时 2.1 秒'],
+    ['昆明','生命科学','引用校验未通过，改为追问'],
+    ['拉萨','工程技术','知识库无覆盖，已登记缺口']
+  ];
+  var wzy_event_index = 0;
+
+  function wzy_clock_text(){
+    var wzy_now = new Date();
+    var wzy_pad = function(wzy_n){ return (wzy_n < 10 ? '0' : '') + wzy_n; };
+    wzy_get('wzy_clock').textContent = wzy_pad(wzy_now.getHours()) + ':' + wzy_pad(wzy_now.getMinutes()) + ':' + wzy_pad(wzy_now.getSeconds());
+    var wzy_week = ['日','一','二','三','四','五','六'][wzy_now.getDay()];
+    wzy_get('wzy_date').textContent = wzy_now.getFullYear() + '-' + wzy_pad(wzy_now.getMonth() + 1) + '-' + wzy_pad(wzy_now.getDate()) + ' 周' + wzy_week;
+  }
+
+  function wzy_push_event(){
+    var wzy_item = wzy_events[wzy_event_index % wzy_events.length];
+    wzy_event_index++;
+    var wzy_li = document.createElement('li');
+    var wzy_now = new Date();
+    var wzy_pad = function(wzy_n){ return (wzy_n < 10 ? '0' : '') + wzy_n; };
+    var wzy_time = document.createElement('time');
+    wzy_time.textContent = wzy_pad(wzy_now.getHours()) + ':' + wzy_pad(wzy_now.getMinutes()) + ':' + wzy_pad(wzy_now.getSeconds());
+    var wzy_text = document.createElement('span');
+    var wzy_b = document.createElement('b');
+    wzy_b.textContent = wzy_item[0] + ' · ' + wzy_item[1];
+    var wzy_em = document.createElement('em');
+    wzy_em.textContent = ' — ' + wzy_item[2];
+    wzy_text.appendChild(wzy_b);
+    wzy_text.appendChild(wzy_em);
+    wzy_li.appendChild(wzy_time);
+    wzy_li.appendChild(wzy_text);
+    var wzy_feed = wzy_get('wzy_feed');
+    wzy_feed.insertBefore(wzy_li, wzy_feed.firstChild);
+    while(wzy_feed.children.length > 5) wzy_feed.removeChild(wzy_feed.lastChild);
+  }
+
+  /* ── KPI 数字滚动 ── */
+  function wzy_count_up(){
+    var wzy_nodes = document.querySelectorAll('[data-count]');
+    Array.prototype.forEach.call(wzy_nodes, function(wzy_node){
+      var wzy_target = parseFloat(wzy_node.getAttribute('data-count'));
+      var wzy_suffix = wzy_node.getAttribute('data-suffix') || '';
+      var wzy_decimals = (String(wzy_target).split('.')[1] || '').length;
+      var wzy_start = wzy_reduce ? wzy_target : 0;
+      var wzy_from = wzy_start;
+      var wzy_t0 = performance.now();
+      var wzy_dur = 1100;
+      function wzy_step(wzy_now){
+        var wzy_p = Math.min(1, (wzy_now - wzy_t0) / wzy_dur);
+        var wzy_ease = 1 - Math.pow(1 - wzy_p, 3);
+        var wzy_val = wzy_from + (wzy_target - wzy_from) * wzy_ease;
+        wzy_node.textContent = wzy_val.toFixed(wzy_decimals) + wzy_suffix;
+        if(wzy_p < 1) window.requestAnimationFrame(wzy_step);
+      }
+      window.requestAnimationFrame(wzy_step);
+    });
+  }
+
+  /* ── 数据小幅波动 ── */
+  function wzy_jitter(){
+    wzy_tick++;
+    wzy_topic_values = wzy_topic_values.map(function(wzy_v, wzy_i){
+      var wzy_next = Math.round(wzy_v * (1 + (Math.sin(wzy_tick * 0.7 + wzy_i) * 0.035)));
+      return Math.max(200, wzy_next);
+    });
+    wzy_stage_values = wzy_stage_values.map(function(wzy_v, wzy_i){
+      return Math.max(60, Math.round(wzy_v * (1 + Math.sin(wzy_tick * 0.9 + wzy_i) * 0.08)));
+    });
+    if(wzy_charts.bar) wzy_charts.bar.setOption({ series: [{ data: wzy_topic_values }] });
+    if(wzy_charts.stage) wzy_charts.stage.setOption({ series: [{ data: wzy_stage_values }] });
+  }
+
+  /* ── 初始化 ── */
+  function wzy_init(){
+    if(!window.echarts || !window.wzy_china_geo){
+      var wzy_msg = document.createElement('div');
+      wzy_msg.style.cssText = 'padding:30px;color:#e0c07a;font-size:13px;line-height:2;text-align:center';
+      wzy_msg.innerHTML = '图表库或地图数据未能加载。<br>请确认 <code>cdn/echarts.min.js</code> 与 <code>images/18-8/china-geo.js</code> 与本页一起保存。';
+      wzy_get('wzy_map').appendChild(wzy_msg);
+      return;
+    }
+    window.echarts.registerMap('wzy_china', window.wzy_china_geo);
+
+    wzy_charts.map = window.echarts.init(wzy_get('wzy_map'));
+    wzy_charts.bar = window.echarts.init(wzy_get('wzy_bar'));
+    wzy_charts.pie = window.echarts.init(wzy_get('wzy_pie'));
+    wzy_charts.line = window.echarts.init(wzy_get('wzy_line'));
+    wzy_charts.stage = window.echarts.init(wzy_get('wzy_stage'));
+
+    wzy_draw_map(); wzy_draw_bar(); wzy_draw_pie(); wzy_draw_line(); wzy_draw_stage();
+    wzy_draw_rank();
+    wzy_count_up();
+    wzy_clock_text();
+    wzy_push_event(); wzy_push_event();
+
+    var wzy_resize = function(){
+      Object.keys(wzy_charts).forEach(function(wzy_key){
+        if(wzy_charts[wzy_key]) wzy_charts[wzy_key].resize();
+      });
+    };
+    if('ResizeObserver' in window){
+      var wzy_ro = new ResizeObserver(function(){ wzy_resize(); });
+      ['wzy_map','wzy_bar','wzy_pie','wzy_line','wzy_stage'].forEach(function(wzy_id){
+        var wzy_el = wzy_get(wzy_id);
+        if(wzy_el) wzy_ro.observe(wzy_el.parentElement);
+      });
+    }else{
+      window.addEventListener('resize', wzy_resize);
+    }
+
+    window.setInterval(wzy_clock_text, 1000);
+
+    wzy_timer = window.setInterval(function(){
+      if(wzy_paused) return;
+      wzy_push_event();
+      wzy_jitter();
+    }, 4000);
+  }
+
+  /* ── 顶栏按钮 ── */
+  wzy_get('wzy_pause').addEventListener('click', function(){
+    wzy_paused = !wzy_paused;
+    this.setAttribute('aria-pressed', String(wzy_paused));
+    this.textContent = wzy_paused ? '继续刷新' : '暂停刷新';
+    wzy_get('wzy_live').innerHTML = '<i style="' + (wzy_paused ? 'background:#8a8f8c;box-shadow:none;animation:none' : '') + '"></i>' + (wzy_paused ? '已暂停' : '实时监控');
+  });
+
+  wzy_get('wzy_full').addEventListener('click', function(){
+    if(document.fullscreenElement){
+      document.exitFullscreen();
+    }else if(document.documentElement.requestFullscreen){
+      document.documentElement.requestFullscreen().catch(function(){});
+    }
+  });
+
+  document.addEventListener('fullscreenchange', function(){
+    wzy_get('wzy_full').textContent = document.fullscreenElement ? '退出全屏' : '全屏';
+    window.setTimeout(function(){
+      Object.keys(wzy_charts).forEach(function(wzy_key){
+        if(wzy_charts[wzy_key]) wzy_charts[wzy_key].resize();
+      });
+    }, 120);
+  });
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', wzy_init);
+  }else{
+    wzy_init();
+  }
+})();
+</script>
+</body>
+</html>

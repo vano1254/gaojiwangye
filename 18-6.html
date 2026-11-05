@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 14:31，使用模型：DeepSeek-V4.1-Flash，功能名称：智能客服流程图与 ER 图 - 使用本地 Mermaid 渲染会话流程与数据关系，支持视图切换、深浅主题、缩放、源码查看与 SVG 导出 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="18-6 智能客服 Mermaid 图：用本地 Mermaid 11.4.1 渲染会话流程图与数据 ER 图，支持三种视图、深浅主题、适应宽度与原始大小、源码查看与 SVG 下载，断网可用。">
+<title>18-6 · 智能客服 Mermaid 流程图与 ER 图 · 王梓杨</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:light;--wzy_ink:#2b3d33;--wzy_muted:#7b877d;--wzy_line:#dde3d7;--wzy_green:#3f7458;--wzy_gold:#b79a69;--wzy_bg:#f4f6f0;--wzy_panel:#ffffff}
+body{margin:0;background:var(--wzy_bg);color:var(--wzy_ink);font:14px/1.7 "Microsoft YaHei",system-ui,sans-serif}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;background:#fff;border:1px solid #cbd7c9;color:var(--wzy_ink);padding:8px 12px;cursor:pointer}
+button:hover{border-color:var(--wzy_green)}
+button[disabled]{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--wzy_green);outline-offset:3px}
+.wzy_wrap{width:min(1320px,calc(100% - 64px));margin:auto}
+.wzy_nav{padding:21px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--wzy_line)}
+.wzy_brand{font-weight:700;letter-spacing:1px}
+.wzy_links{display:flex;gap:20px;flex-wrap:wrap;color:var(--wzy_muted);font-size:12px}
+.wzy_links [aria-current]{color:var(--wzy_green);font-weight:bold}
+.wzy_hero{padding:32px 0 26px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.wzy_kicker{font:11px Consolas,monospace;letter-spacing:3px;color:var(--wzy_green);margin-bottom:13px}
+h1{font-size:clamp(28px,3.2vw,42px);letter-spacing:-1px;line-height:1.4}
+.wzy_sub{margin-top:10px;color:var(--wzy_muted);max-width:640px}
+.wzy_tag{padding:6px 11px;border:1px solid #d7c59f;color:#927641;font-size:11px;white-space:nowrap;background:#fcf8ec}
+.wzy_toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:13px 18px;border:1px solid var(--wzy_line);background:#fff}
+.wzy_group{display:flex;align-items:center;gap:6px}
+.wzy_group>span{font-size:11px;color:var(--wzy_muted);margin-right:2px}
+.wzy_seg{display:flex;border:1px solid #cfd9cc}
+.wzy_seg button{border:0;border-radius:0;padding:7px 12px;font-size:12px;background:#fff}
+.wzy_seg button+button{border-left:1px solid #cfd9cc}
+.wzy_seg button[aria-pressed="true"]{background:#eaf1e4;color:#2f5c45;font-weight:bold}
+.wzy_grow{margin-left:auto;display:flex;gap:8px;align-items:center}
+.wzy_status{font-size:11px;color:var(--wzy_muted)}
+.wzy_stage{margin-top:18px;display:grid;gap:16px}
+.wzy_stage[data-layout="flow"]{grid-template-columns:1fr}
+.wzy_stage[data-layout="er"]{grid-template-columns:1fr}
+.wzy_stage[data-layout="both"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+.wzy_stage[data-layout="flow"] .wzy_diagram[data-kind="er"],
+.wzy_stage[data-layout="er"] .wzy_diagram[data-kind="flow"]{display:none}
+.wzy_diagram{border:1px solid var(--wzy_line);background:#fff;display:flex;flex-direction:column;min-width:0}
+.wzy_diagram-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid #e7ece1}
+.wzy_diagram-head h2{font-size:15px;font-weight:600}
+.wzy_diagram-head p{font:10px Consolas,monospace;letter-spacing:1.6px;color:#96a294;margin-top:4px}
+.wzy_diagram-head button{padding:5px 10px;font-size:11px}
+.wzy_canvas{padding:22px 18px;overflow:auto;flex:1;min-height:430px;display:flex;align-items:flex-start;justify-content:flex-start;background:
+  linear-gradient(#f2f5ee 1px,transparent 1px) 0 0/100% 28px,
+  linear-gradient(90deg,#f2f5ee 1px,transparent 1px) 0 0/28px 100%,#fff}
+.wzy_canvas[data-theme="dark"]{background:
+  linear-gradient(#1e2e26 1px,transparent 1px) 0 0/100% 28px,
+  linear-gradient(90deg,#1e2e26 1px,transparent 1px) 0 0/28px 100%,#16211c}
+.wzy_canvas svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.wzy_canvas[data-zoom="raw"] svg{max-width:none}
+.wzy_diagram-foot{padding:11px 18px;border-top:1px solid #e7ece1;font-size:11px;color:var(--wzy_muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.wzy_legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--wzy_muted)}
+.wzy_legend i{display:inline-block;width:11px;height:11px;border:1px solid #8fa78c;margin-right:5px;vertical-align:-1px}
+.wzy_legend i.d{transform:rotate(45deg);width:9px;height:9px}
+.wzy_legend i.r{border-radius:6px}
+.wzy_notes{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:22px 0;border:1px solid var(--wzy_line);background:#fff}
+.wzy_note{padding:22px 24px}
+.wzy_note+.wzy_note{border-left:1px solid var(--wzy_line)}
+.wzy_note h2{font-size:12px;letter-spacing:1px;color:var(--wzy_green);margin-bottom:10px;font-family:Consolas,monospace}
+.wzy_note p{font-size:12.5px;color:#5d6d60;line-height:1.9}
+.wzy_code{margin-top:6px;border:1px solid var(--wzy_line);background:#fff}
+.wzy_code>summary{padding:14px 18px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:10px;list-style:none}
+.wzy_code>summary::-webkit-details-marker{display:none}
+.wzy_code>summary::after{content:"展开";font:10px Consolas,monospace;letter-spacing:1px;color:var(--wzy_muted);border:1px solid #d5ded2;padding:3px 8px}
+.wzy_code[open]>summary::after{content:"收起"}
+.wzy_code>summary:hover{background:#fafcf7}
+.wzy_code-body{padding:0 18px 18px;display:grid;gap:16px}
+.wzy_code-item{border:1px solid #e5eae0;background:#fbfcf8}
+.wzy_code-item header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #e5eae0;font-size:11px;color:var(--wzy_muted)}
+.wzy_code-item header b{color:var(--wzy_ink);font-size:12px;font-weight:600}
+.wzy_code-item header button{padding:3px 9px;font-size:10px}
+.wzy_code-item pre{margin:0;padding:13px 14px;overflow:auto;max-height:330px;font:11.5px/1.85 Consolas,"Courier New",monospace;color:#3a4d41;tab-size:2}
+.wzy_fail{padding:26px 22px;text-align:center;color:#8a5c3b;background:#fdf6ef;border:1px dashed #dfc3a5;font-size:12.5px;line-height:1.9}
+.wzy_fail b{display:block;margin-bottom:6px;font-size:13px}
+.wzy_fail code{font-family:Consolas,monospace;background:#f6ece0;padding:1px 5px}
+.wzy_footer{margin:34px 0 40px;padding-top:18px;border-top:1px solid var(--wzy_line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--wzy_muted)}
+.wzy_footer a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1080px){.wzy_stage[data-layout="both"]{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .wzy_wrap{width:calc(100% - 30px)}
+  .wzy_hero{flex-direction:column;align-items:flex-start;gap:14px}
+  .wzy_links{gap:12px;font-size:11px}
+  .wzy_notes{grid-template-columns:1fr}
+  .wzy_note+.wzy_note{border-left:0;border-top:1px solid var(--wzy_line)}
+  .wzy_canvas{min-height:340px;padding:16px 12px}
+  .wzy_grow{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+<nav class="wzy_nav" aria-label="课程导航">
+  <a class="wzy_brand" href="index.html">WZY / 课堂实验</a>
+  <div class="wzy_links">
+    <a href="index.html">作品目录</a>
+    <a href="18-1.html">18-1 动画</a>
+    <a href="18-2.html">18-2 电商架构</a>
+    <a href="18-3.html">18-3 科研客服</a>
+    <a href="18-4.html">18-4 图表</a>
+    <a href="18-6.html" aria-current="page">18-6 流程图</a>
+    <a href="18-7.html">18-7 三维</a>
+  </div>
+</nav>
+
+<header class="wzy_hero">
+  <div>
+    <p class="wzy_kicker">CHAPTER 18 / MERMAID DIAGRAMS</p>
+    <h1>把流程写成文字，<br>让文字长成一张图。</h1>
+    <p class="wzy_sub">同一套智能客服系统，用 Mermaid 画两张图：一张讲会话怎么走，一张讲数据怎么存。</p>
+  </div>
+  <span class="wzy_tag">本地 Mermaid 11.4.1 · 可离线</span>
+</header>
+
+<main>
+  <div class="wzy_toolbar">
+    <div class="wzy_group">
+      <span>视图</span>
+      <div class="wzy_seg" id="wzy_views" role="group" aria-label="切换视图">
+        <button type="button" data-view="flow" aria-pressed="true">流程图</button>
+        <button type="button" data-view="er" aria-pressed="false">ER 图</button>
+        <button type="button" data-view="both" aria-pressed="false">并排</button>
+      </div>
+    </div>
+    <div class="wzy_group">
+      <span>主题</span>
+      <div class="wzy_seg" id="wzy_themes" role="group" aria-label="切换图表主题">
+        <button type="button" data-theme="light" aria-pressed="true">浅色</button>
+        <button type="button" data-theme="dark" aria-pressed="false">深色</button>
+      </div>
+    </div>
+    <div class="wzy_group">
+      <span>缩放</span>
+      <div class="wzy_seg" id="wzy_zooms" role="group" aria-label="切换缩放方式">
+        <button type="button" data-zoom="raw" aria-pressed="true">原始大小</button>
+        <button type="button" data-zoom="height" aria-pressed="false">全图</button>
+        <button type="button" data-zoom="fit" aria-pressed="false">适应宽度</button>
+      </div>
+    </div>
+    <div class="wzy_grow">
+      <span class="wzy_status" id="wzy_status">正在准备图源…</span>
+    </div>
+  </div>
+
+  <div class="wzy_stage" id="wzy_stage" data-layout="flow">
+    <section class="wzy_diagram" data-kind="flow" aria-labelledby="wzy_flow_title">
+      <div class="wzy_diagram-head">
+        <div>
+          <h2 id="wzy_flow_title">智能客服会话流程</h2>
+          <p>01 / FLOWCHART TD</p>
+        </div>
+        <button type="button" id="wzy_flow_save">下载 SVG</button>
+      </div>
+      <div class="wzy_canvas" id="wzy_flow" data-theme="light" role="img" aria-label="智能客服会话流程图：权限校验后分为常见问题、科研咨询、转人工三条分支，检索分支经过改写、召回、重排、生成与引用校验"></div>
+      <div class="wzy_diagram-foot">
+        <div class="wzy_legend"><span><i class="r"></i>起止</span><span><i class="d"></i>判断</span><span><i></i>处理</span></div>
+        <span>三条主分支 · 两个卡点</span>
+      </div>
+    </section>
+
+    <section class="wzy_diagram" data-kind="er" aria-labelledby="wzy_er_title">
+      <div class="wzy_diagram-head">
+        <div>
+          <h2 id="wzy_er_title">会话与知识库数据模型</h2>
+          <p>02 / ER DIAGRAM</p>
+        </div>
+        <button type="button" id="wzy_er_save">下载 SVG</button>
+      </div>
+      <div class="wzy_canvas" id="wzy_er" data-theme="light" role="img" aria-label="实体关系图：用户、会话、消息、文献、片段、向量、引用、工单、坐席与评价之间的关系"></div>
+      <div class="wzy_diagram-foot">
+        <div class="wzy_legend"><span><i></i>实体</span><span>PK 主键 · FK 外键</span></div>
+        <span>11 个实体 · 12 条关系</span>
+      </div>
+    </section>
+  </div>
+
+  <section class="wzy_notes" aria-label="读图笔记">
+    <article class="wzy_note">
+      <h2>01 / 为什么用文本画图</h2>
+      <p>图源就是几行文字，能和代码一起放进仓库、一起评审。改一行分支，图跟着变，不用回到画图软件里挪方框。</p>
+    </article>
+    <article class="wzy_note">
+      <h2>02 / 流程怎么读</h2>
+      <p>先看入口的权限校验，再看三条分支：命中 FAQ 直接答，科研问题走检索生成，投诉与复杂问题转人工。两个卡点是「证据是否充分」和「是否通过校验」，不通过就回到追问或转人工。</p>
+    </article>
+    <article class="wzy_note">
+      <h2>03 / 关系怎么读</h2>
+      <p>会话是主轴，一条会话挂多条消息；消息通过引用表指向文献片段，回答才有出处。转人工时消息生出工单，工单再分配给坐席。</p>
+    </article>
+  </section>
+
+  <details class="wzy_code" id="wzy_source">
+    <summary>查看图源（Mermaid 源码）</summary>
+    <div class="wzy_code-body">
+      <div class="wzy_code-item">
+        <header><b>flowchart.mmd</b><button type="button" data-copy="flow">复制</button></header>
+        <pre id="wzy_flow_code"></pre>
+      </div>
+      <div class="wzy_code-item">
+        <header><b>schema.mmd</b><button type="button" data-copy="er">复制</button></header>
+        <pre id="wzy_er_code"></pre>
+      </div>
+    </div>
+  </details>
+</main>
+
+<footer class="wzy_footer">
+  <span>王梓杨 · 高级网页设计 · 第十八章</span>
+  <span>本地 Mermaid 11.4.1 · <a href="cdn/mermaid-LICENSE.txt">MIT 许可</a> · <a href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">官方文档</a></span>
+</footer>
+
+</div>
+
+<!-- 课程指定图表工具，使用本地文件，无远程脚本。第三方库内部标识符保留上游原样。 -->
+<script src="./cdn/mermaid.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var wzy_get = function(wzy_id){ return document.getElementById(wzy_id); };
+
+  var wzy_flow_source = [
+    'flowchart TD',
+    '    A(["用户发起咨询"]) --> B{"身份与权限校验"}',
+    '    B -->|"未通过"| B1["提示登录 / 申请权限"]',
+    '    B1 --> A',
+    '    B -->|"通过"| C{"问题类型"}',
+    '    C -->|"常见问题"| D["FAQ 精确匹配"]',
+    '    C -->|"科研咨询"| E["查询改写 + 混合检索"]',
+    '    C -->|"投诉 / 复杂"| F["转接人工坐席"]',
+    '    D --> G{"是否命中"}',
+    '    G -->|"是"| H["返回标准答案"]',
+    '    G -->|"否"| E',
+    '    E --> I{"证据是否充分"}',
+    '    I -->|"否"| J["追问澄清或转人工"]',
+    '    I -->|"是"| K["生成回答并校验引用"]',
+    '    H --> L["写入会话记录"]',
+    '    K --> L',
+    '    J --> L',
+    '    F --> L',
+    '    L --> M{"用户是否解决"}',
+    '    M -->|"否"| F',
+    '    M -->|"是"| N(["结束 / 满意度评价"])'
+  ].join('\n');
+
+  var wzy_er_source = [
+    'erDiagram',
+    '    USER ||--o{ SESSION : "发起"',
+    '    USER ||--o{ FEEDBACK : "提交"',
+    '    SESSION ||--|{ MESSAGE : "包含"',
+    '    MESSAGE ||--o| FEEDBACK : "被评价"',
+    '    MESSAGE ||--o{ CITATION : "生成"',
+    '    CITATION }o--|| CHUNK : "指向"',
+    '    CHUNK }o--|| DOCUMENT : "切分自"',
+    '    DOCUMENT }o--|| SOURCE : "来源于"',
+    '    CHUNK ||--|| EMBEDDING : "编码为"',
+    '    MESSAGE ||--o| TICKET : "转人工"',
+    '    TICKET }o--|| AGENT : "分配给"',
+    '    AGENT ||--o{ TICKET : "处理"',
+    '',
+    '    USER {',
+    '        bigint user_id PK "用户编号"',
+    '        string name "姓名"',
+    '        string role "角色"',
+    '        string dept "院系"',
+    '        datetime created_at "创建时间"',
+    '    }',
+    '    SESSION {',
+    '        bigint session_id PK "会话编号"',
+    '        bigint user_id FK "所属用户"',
+    '        string channel "来源渠道"',
+    '        string status "会话状态"',
+    '        datetime started_at "开始时间"',
+    '    }',
+    '    MESSAGE {',
+    '        bigint message_id PK "消息编号"',
+    '        bigint session_id FK "所属会话"',
+    '        string role "提问或回答"',
+    '        text content "内容"',
+    '        int latency_ms "响应耗时"',
+    '        datetime created_at "创建时间"',
+    '    }',
+    '    DOCUMENT {',
+    '        bigint doc_id PK "文献编号"',
+    '        string title "标题"',
+    '        string doi "DOI"',
+    '        string status "审核状态"',
+    '    }',
+    '    SOURCE {',
+    '        bigint source_id PK "来源编号"',
+    '        string name "数据库名称"',
+    '        string license "授权方式"',
+    '    }',
+    '    CHUNK {',
+    '        bigint chunk_id PK "片段编号"',
+    '        bigint doc_id FK "所属文献"',
+    '        int seq "片段序号"',
+    '        text content "片段内容"',
+    '    }',
+    '    EMBEDDING {',
+    '        bigint vector_id PK "向量编号"',
+    '        bigint chunk_id FK "所属片段"',
+    '        string model "向量模型"',
+    '        int dim "维度"',
+    '    }',
+    '    CITATION {',
+    '        bigint citation_id PK "引用编号"',
+    '        bigint message_id FK "所属回答"',
+    '        bigint chunk_id FK "证据片段"',
+    '        float score "相关度"',
+    '    }',
+    '    TICKET {',
+    '        bigint ticket_id PK "工单编号"',
+    '        bigint message_id FK "来源消息"',
+    '        string priority "优先级"',
+    '        string status "处理状态"',
+    '    }',
+    '    AGENT {',
+    '        bigint agent_id PK "坐席编号"',
+    '        string name "姓名"',
+    '        string group_name "技能组"',
+    '        int load "当前负载"',
+    '    }',
+    '    FEEDBACK {',
+    '        bigint feedback_id PK "评价编号"',
+    '        bigint user_id FK "提交用户"',
+    '        bigint message_id FK "被评价消息"',
+    '        int score "满意度"',
+    '    }'
+  ].join('\n');
+
+  var wzy_palette = {
+    light: {
+      background: '#ffffff',
+      primaryColor: '#eef3e6',
+      primaryTextColor: '#2b3d33',
+      primaryBorderColor: '#8fa78c',
+      lineColor: '#8a9c86',
+      secondaryColor: '#f7f2e4',
+      tertiaryColor: '#f5f8f0',
+      textColor: '#2b3d33',
+      mainBkg: '#eef3e6',
+      nodeBorder: '#8fa78c',
+      clusterBkg: '#f7f9f3',
+      clusterBorder: '#cfdccb',
+      defaultLinkColor: '#8a9c86',
+      edgeLabelBackground: '#ffffff',
+      titleColor: '#2b3d33',
+      attributeBackgroundColorOdd: '#ffffff',
+      attributeBackgroundColorEven: '#f6f9f1'
+    },
+    dark: {
+      background: '#16211c',
+      primaryColor: '#22362d',
+      primaryTextColor: '#e4eee0',
+      primaryBorderColor: '#5f8a6c',
+      lineColor: '#8fb199',
+      secondaryColor: '#2b3b31',
+      tertiaryColor: '#1d2b24',
+      textColor: '#dbe7d6',
+      mainBkg: '#22362d',
+      nodeBorder: '#5f8a6c',
+      clusterBkg: '#1b2a22',
+      clusterBorder: '#3c5646',
+      defaultLinkColor: '#8fb199',
+      edgeLabelBackground: '#1b2a22',
+      titleColor: '#e4eee0',
+      attributeBackgroundColorOdd: '#1c2b23',
+      attributeBackgroundColorEven: '#22362d'
+    }
+  };
+
+  var wzy_state = { theme: 'light', zoom: 'raw', seq: 0, done: { flow: false, er: false } };
+  var wzy_reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function wzy_options(){
+    var wzy_c = wzy_palette[wzy_state.theme];
+    return {
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: 'base',
+      fontFamily: '"Microsoft YaHei", "PingFang SC", system-ui, sans-serif',
+      themeVariables: wzy_c,
+      flowchart: { curve: 'basis', padding: 16, nodeSpacing: 46, rankSpacing: 46, htmlLabels: false, useMaxWidth: false },
+      er: { diagramPadding: 18, entityPadding: 14, minEntityWidth: 118, minEntityHeight: 56, fontSize: 12, useMaxWidth: false },
+      deterministicIds: true
+    };
+  }
+
+  function wzy_clear_error(){
+    var wzy_nodes = document.querySelectorAll('[id^="dwzy_mmd_"], .wzy_mermaid_error');
+    Array.prototype.forEach.call(wzy_nodes, function(wzy_node){ wzy_node.remove(); });
+  }
+
+  function wzy_fail(wzy_target, wzy_reason){
+    wzy_target.innerHTML = '';
+    var wzy_box = document.createElement('div');
+    wzy_box.className = 'wzy_fail';
+    var wzy_title = document.createElement('b');
+    wzy_title.textContent = '图形渲染失败';
+    var wzy_text = document.createElement('span');
+    wzy_text.textContent = wzy_reason + ' 图源仍可在下方「查看图源」中复制，粘贴到任意 Mermaid 编辑器即可继续使用。';
+    wzy_box.appendChild(wzy_title);
+    wzy_box.appendChild(wzy_text);
+    wzy_target.appendChild(wzy_box);
+  }
+
+  function wzy_apply_zoom(){
+    var wzy_list = document.querySelectorAll('.wzy_canvas');
+    Array.prototype.forEach.call(wzy_list, function(wzy_el){
+      wzy_el.setAttribute('data-zoom', wzy_state.zoom);
+      var wzy_svg = wzy_el.querySelector('svg');
+      if(!wzy_svg) return;
+      var wzy_box = wzy_svg.viewBox && wzy_svg.viewBox.baseVal;
+      var wzy_w = wzy_box && wzy_box.width ? wzy_box.width : 0;
+      var wzy_h = wzy_box && wzy_box.height ? wzy_box.height : 0;
+      wzy_svg.style.maxWidth = 'none';
+      if(wzy_state.zoom === 'fit'){
+        var wzy_limit = Math.max(320, wzy_el.clientWidth - 36);
+        wzy_svg.style.maxWidth = 'none';
+        wzy_svg.style.width = (wzy_w ? Math.min(wzy_w, wzy_limit) : wzy_limit) + 'px';
+        wzy_svg.style.height = 'auto';
+      }else if(wzy_state.zoom === 'height'){
+        var wzy_avail = Math.max(320, Math.min(window.innerHeight * 0.72, 720));
+        wzy_svg.style.height = wzy_avail + 'px';
+        wzy_svg.style.width = (wzy_w && wzy_h) ? Math.round(wzy_avail * wzy_w / wzy_h) + 'px' : 'auto';
+      }else{
+        wzy_svg.style.height = 'auto';
+        wzy_svg.style.width = wzy_w ? wzy_w + 'px' : 'auto';
+      }
+    });
+  }
+
+  function wzy_draw(wzy_key, wzy_target, wzy_source){
+    if(!window.mermaid){
+      wzy_fail(wzy_target, 'Mermaid 库未能加载，请确认 cdn/mermaid.min.js 与本页一起保存。');
+      return Promise.resolve();
+    }
+    var wzy_id = 'wzy_mmd_' + (++wzy_state.seq);
+    wzy_target.setAttribute('aria-busy', 'true');
+    return window.mermaid.render(wzy_id, wzy_source).then(function(wzy_result){
+      wzy_target.innerHTML = wzy_result.svg;
+      wzy_target.removeAttribute('aria-busy');
+      wzy_state.done[wzy_key] = true;
+      wzy_apply_zoom();
+    }).catch(function(wzy_err){
+      wzy_clear_error();
+      wzy_target.removeAttribute('aria-busy');
+      wzy_state.done[wzy_key] = false;
+      wzy_fail(wzy_target, (wzy_err && wzy_err.message ? wzy_err.message : '解析或渲染过程中出现问题。'));
+    });
+  }
+
+  function wzy_render_all(){
+    if(!window.mermaid) return;
+    window.mermaid.initialize(wzy_options());
+    var wzy_jobs = [];
+    if(wzy_get('wzy_flow')) wzy_jobs.push(wzy_draw('flow', wzy_get('wzy_flow'), wzy_flow_source));
+    if(wzy_get('wzy_er')) wzy_jobs.push(wzy_draw('er', wzy_get('wzy_er'), wzy_er_source));
+    return Promise.all(wzy_jobs).then(function(){
+      var wzy_ok = (wzy_state.done.flow ? 1 : 0) + (wzy_state.done.er ? 1 : 0);
+      wzy_get('wzy_status').textContent = wzy_ok === 2
+        ? 'Mermaid 11.4.1 · 本地渲染 · 可离线'
+        : (wzy_ok === 0 ? '渲染失败 · 请查看下方图源' : '部分图形渲染失败');
+    });
+  }
+
+  function wzy_set_pressed(wzy_group, wzy_attr, wzy_value){
+    Array.prototype.forEach.call(wzy_group.querySelectorAll('button'), function(wzy_btn){
+      wzy_btn.setAttribute('aria-pressed', String(wzy_btn.getAttribute('data-' + wzy_attr) === wzy_value));
+    });
+  }
+
+  function wzy_download(wzy_key){
+    var wzy_target = wzy_get(wzy_key === 'flow' ? 'wzy_flow' : 'wzy_er');
+    var wzy_svg = wzy_target.querySelector('svg');
+    if(!wzy_svg){ wzy_get('wzy_status').textContent = '还没有可导出的图形'; return; }
+    var wzy_clone = wzy_svg.cloneNode(true);
+    var wzy_box = wzy_svg.viewBox && wzy_svg.viewBox.baseVal;
+    var wzy_w = wzy_box && wzy_box.width ? Math.round(wzy_box.width) : 1200;
+    var wzy_h = wzy_box && wzy_box.height ? Math.round(wzy_box.height) : 800;
+    wzy_clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    wzy_clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+    wzy_clone.setAttribute('width', wzy_w);
+    wzy_clone.setAttribute('height', wzy_h);
+    wzy_clone.style.maxWidth = '';
+    wzy_clone.style.width = '';
+    wzy_clone.style.height = '';
+    if(wzy_state.theme === 'dark'){
+      var wzy_rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      wzy_rect.setAttribute('x', '0');
+      wzy_rect.setAttribute('y', '0');
+      wzy_rect.setAttribute('width', wzy_w);
+      wzy_rect.setAttribute('height', wzy_h);
+      wzy_rect.setAttribute('fill', wzy_palette.dark.background);
+      wzy_clone.insertBefore(wzy_rect, wzy_clone.firstChild);
+    }
+    var wzy_text = new XMLSerializer().serializeToString(wzy_clone);
+    var wzy_blob = new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n' + wzy_text], { type: 'image/svg+xml;charset=utf-8' });
+    var wzy_url = URL.createObjectURL(wzy_blob);
+    var wzy_link = document.createElement('a');
+    wzy_link.href = wzy_url;
+    wzy_link.download = wzy_key === 'flow' ? 'wzy-smart-service-flow.svg' : 'wzy-smart-service-er.svg';
+    document.body.appendChild(wzy_link);
+    wzy_link.click();
+    wzy_link.remove();
+    setTimeout(function(){ URL.revokeObjectURL(wzy_url); }, 2000);
+    wzy_get('wzy_status').textContent = '已导出 ' + wzy_link.download;
+  }
+
+  wzy_get('wzy_flow_code').textContent = wzy_flow_source;
+  wzy_get('wzy_er_code').textContent = wzy_er_source;
+
+  wzy_get('wzy_views').addEventListener('click', function(wzy_event){
+    var wzy_btn = wzy_event.target.closest('button');
+    if(!wzy_btn) return;
+    var wzy_view = wzy_btn.getAttribute('data-view');
+    wzy_get('wzy_stage').setAttribute('data-layout', wzy_view);
+    wzy_set_pressed(wzy_get('wzy_views'), 'view', wzy_view);
+    wzy_apply_zoom();
+  });
+
+  wzy_get('wzy_themes').addEventListener('click', function(wzy_event){
+    var wzy_btn = wzy_event.target.closest('button');
+    if(!wzy_btn) return;
+    wzy_state.theme = wzy_btn.getAttribute('data-theme');
+    wzy_set_pressed(wzy_get('wzy_themes'), 'theme', wzy_state.theme);
+    wzy_get('wzy_flow').setAttribute('data-theme', wzy_state.theme);
+    wzy_get('wzy_er').setAttribute('data-theme', wzy_state.theme);
+    wzy_get('wzy_status').textContent = '正在重绘…';
+    wzy_render_all();
+  });
+
+  wzy_get('wzy_zooms').addEventListener('click', function(wzy_event){
+    var wzy_btn = wzy_event.target.closest('button');
+    if(!wzy_btn) return;
+    wzy_state.zoom = wzy_btn.getAttribute('data-zoom');
+    wzy_set_pressed(wzy_get('wzy_zooms'), 'zoom', wzy_state.zoom);
+    wzy_apply_zoom();
+  });
+
+  wzy_get('wzy_flow_save').addEventListener('click', function(){ wzy_download('flow'); });
+  wzy_get('wzy_er_save').addEventListener('click', function(){ wzy_download('er'); });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function(wzy_btn){
+    wzy_btn.addEventListener('click', function(){
+      var wzy_key = wzy_btn.getAttribute('data-copy');
+      var wzy_text = wzy_key === 'flow' ? wzy_flow_source : wzy_er_source;
+      var wzy_done = function(){
+        wzy_btn.textContent = '已复制';
+        setTimeout(function(){ wzy_btn.textContent = '复制'; }, 1600);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(wzy_text).then(wzy_done).catch(function(){ wzy_fallback_copy(wzy_text, wzy_done); });
+      }else{
+        wzy_fallback_copy(wzy_text, wzy_done);
+      }
+    });
+  });
+
+  function wzy_fallback_copy(wzy_text, wzy_done){
+    var wzy_area = document.createElement('textarea');
+    wzy_area.value = wzy_text;
+    wzy_area.setAttribute('readonly', 'readonly');
+    wzy_area.style.position = 'fixed';
+    wzy_area.style.left = '-9999px';
+    document.body.appendChild(wzy_area);
+    wzy_area.select();
+    try{ document.execCommand('copy'); wzy_done(); }catch(wzy_err){ wzy_get('wzy_status').textContent = '浏览器不允许自动复制，请手动选择源码'; }
+    wzy_area.remove();
+  }
+
+  if(wzy_reduce){ wzy_get('wzy_status').textContent = 'Mermaid 11.4.1 · 静态渲染'; }
+  wzy_render_all();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 14:31，使用模型：DeepSeek-V4.1-Flash，功能名称：three.js 三维图形 - 用本地 three.js 渲染知识晶体与检索轨道两个几何体，支持拖拽旋转、线框、配色、速度与暂停 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="18-7 three.js 三维图形：知识晶体（二十面体）与检索轨道（环面结），支持拖拽旋转、线框切换、三套配色、速度调节与暂停，库本地化，可离线打开。">
+<title>18-7 · three.js 三维图形 · 王梓杨</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:light;--wzy_ink:#2b3d33;--wzy_muted:#7b877d;--wzy_line:#dde3d7;--wzy_green:#3f7458;--wzy_gold:#b79a69;--wzy_bg:#f4f6f0}
+body{margin:0;background:var(--wzy_bg);color:var(--wzy_ink);font:14px/1.7 "Microsoft YaHei",system-ui,sans-serif}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;background:#fff;border:1px solid #cbd7c9;color:var(--wzy_ink);padding:8px 12px;cursor:pointer}
+button:hover{border-color:var(--wzy_green)}
+button[aria-pressed="true"]{background:#eaf1e4;border-color:#a9bfa6;color:#2f5c45;font-weight:bold}
+:focus-visible{outline:2px solid var(--wzy_green);outline-offset:3px}
+.wzy_wrap{width:min(1320px,calc(100% - 64px));margin:auto}
+.wzy_nav{padding:21px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--wzy_line)}
+.wzy_brand{font-weight:700;letter-spacing:1px}
+.wzy_links{display:flex;gap:20px;flex-wrap:wrap;color:var(--wzy_muted);font-size:12px}
+.wzy_links [aria-current]{color:var(--wzy_green);font-weight:bold}
+.wzy_hero{padding:32px 0 26px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.wzy_kicker{font:11px Consolas,monospace;letter-spacing:3px;color:var(--wzy_green);margin-bottom:13px}
+h1{font-size:clamp(28px,3.2vw,42px);letter-spacing:-1px;line-height:1.4}
+.wzy_sub{margin-top:10px;color:var(--wzy_muted);max-width:640px}
+.wzy_tag{padding:6px 11px;border:1px solid #d7c59f;color:#927641;font-size:11px;white-space:nowrap;background:#fcf8ec}
+.wzy_toolbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:13px 18px;border:1px solid var(--wzy_line);background:#fff}
+.wzy_toolbar label{font-size:12px;color:var(--wzy_muted);display:flex;align-items:center;gap:9px}
+.wzy_toolbar input[type="range"]{width:120px;accent-color:#3f7458}
+.wzy_readout{font:11px Consolas,monospace;color:var(--wzy_green);min-width:34px}
+.wzy_grow{margin-left:auto;display:flex;align-items:center;gap:10px}
+.wzy_status{font-size:11px;color:var(--wzy_muted)}
+.wzy_grid{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.wzy_panel{border:1px solid var(--wzy_line);background:#fff;display:flex;flex-direction:column;min-width:0}
+.wzy_panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid #e7ece1}
+.wzy_panel-head h2{font-size:15px;font-weight:600}
+.wzy_panel-head p{font:10px Consolas,monospace;letter-spacing:1.6px;color:#96a294;margin-top:4px}
+.wzy_panel-head span{font-size:11px;color:var(--wzy_muted);white-space:nowrap}
+.wzy_stage{position:relative;height:clamp(300px,30vw,400px);overflow:hidden;background:
+  radial-gradient(circle at 22% 18%,rgba(159,199,170,.16) 0 1px,transparent 1px) 0 0/46px 46px,
+  radial-gradient(circle at 68% 72%,rgba(215,231,197,.14) 0 1px,transparent 1px) 0 0/62px 62px,
+  radial-gradient(ellipse at 50% 42%,#2d4d3e 0,#13201a 72%)}
+.wzy_stage canvas{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+.wzy_stage canvas:active{cursor:grabbing}
+.wzy_badge{position:absolute;left:15px;top:13px;font:10px Consolas,monospace;letter-spacing:1.5px;color:#9fbfa8;pointer-events:none}
+.wzy_meta{position:absolute;right:15px;bottom:12px;font:10px Consolas,monospace;color:#8fae97;pointer-events:none;text-align:right;line-height:1.8}
+.wzy_fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:26px;text-align:center;color:#c9dcc9;font-size:12.5px;line-height:1.9}
+.wzy_fallback b{display:block;font-size:14px;margin-bottom:6px;color:#e6efda}
+.wzy_ctrl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 15px;border-top:1px solid #e7ece1;background:#fbfcf8}
+.wzy_ctrl button{padding:5px 10px;font-size:11px;white-space:nowrap;flex:0 0 auto}
+.wzy_swatches{display:flex;gap:6px;margin-left:2px}
+.wzy_swatches button{width:18px;height:18px;padding:0;border:1px solid #c3d0c0;border-radius:50%}
+.wzy_swatches button[aria-pressed="true"]{box-shadow:0 0 0 2px #fff,0 0 0 3px #3f7458}
+.wzy_ctrl .wzy_tip{margin-left:auto;font-size:10px;color:#96a294}
+.wzy_notes{display:grid;grid-template-columns:repeat(3,1fr);margin:22px 0;border:1px solid var(--wzy_line);background:#fff}
+.wzy_note{padding:22px 24px}
+.wzy_note+.wzy_note{border-left:1px solid var(--wzy_line)}
+.wzy_note h2{font-size:12px;letter-spacing:1px;color:var(--wzy_green);margin-bottom:10px;font-family:Consolas,monospace}
+.wzy_note p{font-size:12.5px;color:#5d6d60;line-height:1.9}
+.wzy_note code{font-family:Consolas,monospace;font-size:11.5px;background:#eef3e8;padding:1px 5px;color:#37614a}
+.wzy_code{margin-top:6px;border:1px solid var(--wzy_line);background:#fff}
+.wzy_code>summary{padding:14px 18px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:space-between;list-style:none}
+.wzy_code>summary::-webkit-details-marker{display:none}
+.wzy_code>summary::after{content:"展开";font:10px Consolas,monospace;letter-spacing:1px;color:var(--wzy_muted);border:1px solid #d5ded2;padding:3px 8px}
+.wzy_code[open]>summary::after{content:"收起"}
+.wzy_code>summary:hover{background:#fafcf7}
+.wzy_code pre{margin:0;padding:0 18px 18px;overflow:auto;max-height:330px;font:11.5px/1.9 Consolas,"Courier New",monospace;color:#3a4d41}
+.wzy_footer{margin:34px 0 40px;padding-top:18px;border-top:1px solid var(--wzy_line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--wzy_muted)}
+.wzy_footer a{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:980px){.wzy_grid{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .wzy_wrap{width:calc(100% - 30px)}
+  .wzy_hero{flex-direction:column;align-items:flex-start;gap:14px}
+  .wzy_links{gap:12px;font-size:11px}
+  .wzy_notes{grid-template-columns:1fr}
+  .wzy_note+.wzy_note{border-left:0;border-top:1px solid var(--wzy_line)}
+  .wzy_stage{height:300px}
+  .wzy_grow{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wzy_wrap">
+
+<nav class="wzy_nav" aria-label="课程导航">
+  <a class="wzy_brand" href="index.html">WZY / 课堂实验</a>
+  <div class="wzy_links">
+    <a href="index.html">作品目录</a>
+    <a href="18-1.html">18-1 动画</a>
+    <a href="18-2.html">18-2 电商架构</a>
+    <a href="18-3.html">18-3 科研客服</a>
+    <a href="18-4.html">18-4 图表</a>
+    <a href="18-6.html">18-6 流程图</a>
+    <a href="18-7.html" aria-current="page">18-7 三维</a>
+  </div>
+</nav>
+
+<header class="wzy_hero">
+  <div>
+    <p class="wzy_kicker">CHAPTER 18 / THREE.JS IN SPACE</p>
+    <h1>两个图形，<br>一次空间练习。</h1>
+    <p class="wzy_sub">用 three.js 在浏览器里搭两个会转的几何体：一颗代表知识块的多面体，一条代表检索路径的环面结。拖动就能换角度。</p>
+  </div>
+  <span class="wzy_tag">本地 three.js r149 · 可离线</span>
+</header>
+
+<main>
+  <div class="wzy_toolbar">
+    <label for="wzy_speed">旋转速度
+      <input type="range" id="wzy_speed" min="0" max="2" step="0.1" value="0.8" aria-describedby="wzy_speed_value">
+      <span class="wzy_readout" id="wzy_speed_value">0.8×</span>
+    </label>
+    <button type="button" id="wzy_reset">重置视角</button>
+    <div class="wzy_grow">
+      <span class="wzy_status" id="wzy_status">正在初始化 WebGL…</span>
+    </div>
+  </div>
+
+  <div class="wzy_grid">
+    <section class="wzy_panel" aria-labelledby="wzy_crystal_title">
+      <div class="wzy_panel-head">
+        <div>
+          <h2 id="wzy_crystal_title">知识晶体</h2>
+          <p>01 / ICOSAHEDRON</p>
+        </div>
+        <span>二十面体 · 80 面</span>
+      </div>
+      <div class="wzy_stage" id="wzy_crystal_stage">
+        <canvas id="wzy_crystal" aria-label="可拖拽旋转的三维二十面体，外围有星尘粒子"></canvas>
+        <span class="wzy_badge">KNOWLEDGE / CRYSTAL</span>
+        <span class="wzy_meta" id="wzy_crystal_meta">半径 1.25<br>细分 1</span>
+      </div>
+      <div class="wzy_ctrl">
+        <button type="button" id="wzy_crystal_wire" aria-pressed="false">线框</button>
+        <button type="button" id="wzy_crystal_play" aria-pressed="true">暂停</button>
+        <div class="wzy_swatches" id="wzy_crystal_colors" role="group" aria-label="知识晶体配色">
+          <button type="button" data-color="celadon" aria-pressed="true" title="青瓷" style="background:#4f8a68"></button>
+          <button type="button" data-color="ocean" aria-pressed="false" title="深海" style="background:#4a7fa8"></button>
+          <button type="button" data-color="dusk" aria-pressed="false" title="暮紫" style="background:#7a6aa8"></button>
+        </div>
+        <span class="wzy_tip">拖动旋转</span>
+      </div>
+    </section>
+
+    <section class="wzy_panel" aria-labelledby="wzy_knot_title">
+      <div class="wzy_panel-head">
+        <div>
+          <h2 id="wzy_knot_title">检索轨道</h2>
+          <p>02 / TORUS KNOT</p>
+        </div>
+        <span>环面结 · 11200 面</span>
+      </div>
+      <div class="wzy_stage" id="wzy_knot_stage">
+        <canvas id="wzy_knot" aria-label="可拖拽旋转的三维环面结，外围有轨道粒子"></canvas>
+        <span class="wzy_badge">RETRIEVAL / ORBIT</span>
+        <span class="wzy_meta" id="wzy_knot_meta">半径 0.92<br>管径 0.27</span>
+      </div>
+      <div class="wzy_ctrl">
+        <button type="button" id="wzy_knot_wire" aria-pressed="false">线框</button>
+        <button type="button" id="wzy_knot_play" aria-pressed="true">暂停</button>
+        <div class="wzy_swatches" id="wzy_knot_colors" role="group" aria-label="检索轨道配色">
+          <button type="button" data-color="celadon" aria-pressed="true" title="青瓷" style="background:#b79a69"></button>
+          <button type="button" data-color="ocean" aria-pressed="false" title="深海" style="background:#7fb3c8"></button>
+          <button type="button" data-color="dusk" aria-pressed="false" title="暮紫" style="background:#c9a0b8"></button>
+        </div>
+        <span class="wzy_tip">拖动旋转</span>
+      </div>
+    </section>
+  </div>
+
+  <section class="wzy_notes" aria-label="实现笔记">
+    <article class="wzy_note">
+      <h2>01 / 三件套</h2>
+      <p>每个图形都由 <code>Scene</code>、<code>PerspectiveCamera</code> 和 <code>WebGLRenderer</code> 组成。相机放在 z 轴上看向原点，图形绕着原点自转。</p>
+    </article>
+    <article class="wzy_note">
+      <h2>02 / 几何与材质</h2>
+      <p>左图用 <code>IcosahedronGeometry</code> 取平面着色，棱角分明；右图用 <code>TorusKnotGeometry</code> 配光滑材质。线框按钮直接切换材质的 <code>wireframe</code>。</p>
+    </article>
+    <article class="wzy_note">
+      <h2>03 / 光照与动画</h2>
+      <p>半球光提供整体明暗，平行光给出高光，点光在背侧补一层冷色。动画按帧间时间累加旋转角度，切到后台标签页时停止绘制。</p>
+    </article>
+  </section>
+
+  <details class="wzy_code">
+    <summary>查看核心代码（初始化与渲染循环）</summary>
+    <pre id="wzy_core_code"></pre>
+  </details>
+</main>
+
+<footer class="wzy_footer">
+  <span>王梓杨 · 高级网页设计 · 第十八章</span>
+  <span>本地 three.js r149 · <a href="cdn/three-LICENSE.txt">MIT 许可</a> · <a href="https://threejs.org/docs/" target="_blank" rel="noopener">官方文档</a></span>
+</footer>
+
+</div>
+
+<!-- 课程指定三维库，使用本地文件，无远程脚本。第三方库内部标识符保留上游原样。 -->
+<script src="./cdn/three.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var wzy_get = function(wzy_id){ return document.getElementById(wzy_id); };
+  var wzy_reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var wzy_speed = wzy_reduce ? 0 : 0.8;
+  var wzy_running = !wzy_reduce;
+  var wzy_scenes = [];
+
+  var wzy_palettes = {
+    celadon: { crystal: 0x4f8a68, knot: 0xb79a69, dust: 0xcfe3c8, rim: 0x9fd0b0 },
+    ocean:   { crystal: 0x4a7fa8, knot: 0x7fb3c8, dust: 0xbfdcea, rim: 0x8fc4dd },
+    dusk:    { crystal: 0x7a6aa8, knot: 0xc9a0b8, dust: 0xdccbe4, rim: 0xb9a4d6 }
+  };
+
+  function wzy_webgl_ready(){
+    try{
+      var wzy_probe = document.createElement('canvas');
+      var wzy_ctx = wzy_probe.getContext('webgl') || wzy_probe.getContext('experimental-webgl');
+      if(!wzy_ctx) return false;
+      var wzy_lose = wzy_ctx.getExtension('WEBGL_lose_context');
+      if(wzy_lose) wzy_lose.loseContext();
+      return true;
+    }catch(wzy_err){ return false; }
+  }
+
+  function wzy_fallback(){
+    ['wzy_crystal_stage','wzy_knot_stage'].forEach(function(wzy_id){
+      var wzy_stage = wzy_get(wzy_id);
+      if(!wzy_stage) return;
+      var wzy_box = document.createElement('div');
+      wzy_box.className = 'wzy_fallback';
+      wzy_box.innerHTML = '<div><b>当前浏览器无法使用 WebGL</b>三维图形需要开启硬件加速。请更换浏览器或在设置中启用 WebGL 后重新打开本页，其余章节页面不受影响。</div>';
+      wzy_stage.appendChild(wzy_box);
+    });
+    wzy_get('wzy_status').textContent = 'WebGL 不可用 · 已显示降级提示';
+    wzy_get('wzy_speed').disabled = true;
+    wzy_get('wzy_reset').disabled = true;
+  }
+
+  function wzy_dust(wzy_count, wzy_radius, wzy_color){
+    var wzy_positions = new Float32Array(wzy_count * 3);
+    for(var wzy_i = 0; wzy_i < wzy_count; wzy_i++){
+      var wzy_u = Math.random() * 2 - 1;
+      var wzy_theta = Math.random() * Math.PI * 2;
+      var wzy_r = wzy_radius * (0.82 + Math.random() * 0.35);
+      var wzy_s = Math.sqrt(1 - wzy_u * wzy_u);
+      wzy_positions[wzy_i * 3] = Math.cos(wzy_theta) * wzy_s * wzy_r;
+      wzy_positions[wzy_i * 3 + 1] = wzy_u * wzy_r;
+      wzy_positions[wzy_i * 3 + 2] = Math.sin(wzy_theta) * wzy_s * wzy_r;
+    }
+    var wzy_geo = new THREE.BufferGeometry();
+    wzy_geo.setAttribute('position', new THREE.BufferAttribute(wzy_positions, 3));
+    var wzy_mat = new THREE.PointsMaterial({ color: wzy_color, size: 0.032, sizeAttenuation: true, transparent: true, opacity: 0.72, depthWrite: false });
+    return new THREE.Points(wzy_geo, wzy_mat);
+  }
+
+  function wzy_build(wzy_canvas, wzy_kind, wzy_key){
+    var wzy_scene = new THREE.Scene();
+    var wzy_camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    wzy_camera.position.set(0, 0, wzy_kind === 'crystal' ? 4.3 : 4.6);
+
+    var wzy_renderer = new THREE.WebGLRenderer({ canvas: wzy_canvas, antialias: true, alpha: true });
+    wzy_renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    if('outputEncoding' in wzy_renderer) wzy_renderer.outputEncoding = THREE.sRGBEncoding;
+
+    wzy_scene.add(new THREE.HemisphereLight(0xffffff, 0x20342a, 0.95));
+    var wzy_dir = new THREE.DirectionalLight(0xffffff, 0.95);
+    wzy_dir.position.set(3.2, 4.2, 4.5);
+    wzy_scene.add(wzy_dir);
+    var wzy_rim = new THREE.PointLight(0x9fd0b0, 1.5, 14);
+    wzy_rim.position.set(-3.4, -1.6, 2.2);
+    wzy_scene.add(wzy_rim);
+    var wzy_fill = new THREE.PointLight(0xffffff, 0.55, 14);
+    wzy_fill.position.set(1.5, -3, -2.5);
+    wzy_scene.add(wzy_fill);
+
+    var wzy_geo = wzy_kind === 'crystal'
+      ? new THREE.IcosahedronGeometry(1.25, 1)
+      : new THREE.TorusKnotGeometry(0.92, 0.27, 200, 28);
+
+    var wzy_pal = wzy_palettes.celadon;
+    var wzy_mat = new THREE.MeshStandardMaterial({
+      color: wzy_pal[wzy_key],
+      metalness: 0.18,
+      roughness: wzy_kind === 'crystal' ? 0.42 : 0.28,
+      flatShading: wzy_kind === 'crystal'
+    });
+    var wzy_mesh = new THREE.Mesh(wzy_geo, wzy_mat);
+    wzy_scene.add(wzy_mesh);
+
+    var wzy_wire = null;
+    if(wzy_kind === 'crystal'){
+      wzy_wire = new THREE.LineSegments(
+        new THREE.WireframeGeometry(wzy_geo),
+        new THREE.LineBasicMaterial({ color: 0xe4f0d8, transparent: true, opacity: 0.22 })
+      );
+      wzy_mesh.add(wzy_wire);
+    }
+
+    var wzy_points = wzy_dust(wzy_kind === 'crystal' ? 320 : 420, wzy_kind === 'crystal' ? 2.05 : 1.95, wzy_pal.dust);
+    wzy_scene.add(wzy_points);
+
+    var wzy_state = {
+      scene: wzy_scene, camera: wzy_camera, renderer: wzy_renderer,
+      mesh: wzy_mesh, material: wzy_mat, wire: wzy_wire, points: wzy_points,
+      kind: wzy_kind, key: wzy_key,
+      spin: Math.random() * Math.PI * 2, dragX: 0.18, dragY: 0.4,
+      running: wzy_running, visible: true, ready: false
+    };
+
+    wzy_bind_pointer(wzy_canvas, wzy_state);
+    wzy_observe(wzy_canvas, wzy_state);
+    return wzy_state;
+  }
+
+  function wzy_bind_pointer(wzy_canvas, wzy_state){
+    var wzy_dragging = false, wzy_lastX = 0, wzy_lastY = 0;
+    wzy_canvas.addEventListener('pointerdown', function(wzy_event){
+      wzy_dragging = true;
+      wzy_lastX = wzy_event.clientX;
+      wzy_lastY = wzy_event.clientY;
+      if(wzy_canvas.setPointerCapture) wzy_canvas.setPointerCapture(wzy_event.pointerId);
+    });
+    wzy_canvas.addEventListener('pointermove', function(wzy_event){
+      if(!wzy_dragging) return;
+      wzy_state.dragY += (wzy_event.clientX - wzy_lastX) * 0.008;
+      wzy_state.dragX += (wzy_event.clientY - wzy_lastY) * 0.006;
+      wzy_state.dragX = Math.max(-1.25, Math.min(1.25, wzy_state.dragX));
+      wzy_lastX = wzy_event.clientX;
+      wzy_lastY = wzy_event.clientY;
+    });
+    var wzy_end = function(wzy_event){
+      wzy_dragging = false;
+      if(wzy_canvas.releasePointerCapture && wzy_event.pointerId !== undefined){
+        try{ wzy_canvas.releasePointerCapture(wzy_event.pointerId); }catch(wzy_err){}
+      }
+    };
+    wzy_canvas.addEventListener('pointerup', wzy_end);
+    wzy_canvas.addEventListener('pointercancel', wzy_end);
+    wzy_canvas.addEventListener('pointerleave', wzy_end);
+  }
+
+  function wzy_observe(wzy_canvas, wzy_state){
+    var wzy_resize = function(){
+      var wzy_box = wzy_canvas.parentElement.getBoundingClientRect();
+      var wzy_w = Math.max(1, Math.round(wzy_box.width));
+      var wzy_h = Math.max(1, Math.round(wzy_box.height));
+      wzy_state.renderer.setSize(wzy_w, wzy_h, false);
+      wzy_state.camera.aspect = wzy_w / wzy_h;
+      wzy_state.camera.updateProjectionMatrix();
+      wzy_state.ready = true;
+    };
+    if('ResizeObserver' in window){
+      var wzy_observer = new ResizeObserver(wzy_resize);
+      wzy_observer.observe(wzy_canvas.parentElement);
+    }else{
+      window.addEventListener('resize', wzy_resize);
+    }
+    wzy_resize();
+    if('IntersectionObserver' in window){
+      var wzy_io = new IntersectionObserver(function(wzy_entries){
+        wzy_state.visible = wzy_entries[0].isIntersecting;
+      }, { threshold: 0.05 });
+      wzy_io.observe(wzy_canvas);
+    }
+  }
+
+  function wzy_apply_color(wzy_state, wzy_name){
+    var wzy_pal = wzy_palettes[wzy_name];
+    if(!wzy_pal) return;
+    wzy_state.key = wzy_name;
+    wzy_state.material.color.setHex(wzy_pal[wzy_state.kind]);
+    wzy_state.points.material.color.setHex(wzy_pal.dust);
+    if(wzy_state.wire) wzy_state.wire.material.color.setHex(wzy_pal.dust);
+  }
+
+  function wzy_tick(wzy_now){
+    var wzy_dt = wzy_tick.last ? Math.min((wzy_now - wzy_tick.last) / 1000, 0.05) : 0;
+    wzy_tick.last = wzy_now;
+    var wzy_hidden = document.hidden;
+    wzy_scenes.forEach(function(wzy_state){
+      if(!wzy_state.ready) return;
+      if(wzy_state.running && wzy_speed > 0) wzy_state.spin += wzy_dt * wzy_speed * 0.55;
+      wzy_state.mesh.rotation.y = wzy_state.spin + wzy_state.dragY;
+      wzy_state.mesh.rotation.x = wzy_state.dragX;
+      wzy_state.points.rotation.y = -wzy_state.spin * 0.32;
+      wzy_state.points.rotation.x = wzy_state.dragX * 0.4;
+      if(!wzy_hidden && wzy_state.visible) wzy_state.renderer.render(wzy_state.scene, wzy_state.camera);
+    });
+    requestAnimationFrame(wzy_tick);
+  }
+
+  function wzy_wire_toggle(wzy_state, wzy_button){
+    var wzy_on = wzy_button.getAttribute('aria-pressed') !== 'true';
+    wzy_button.setAttribute('aria-pressed', String(wzy_on));
+    wzy_state.material.wireframe = wzy_on;
+    if(wzy_state.wire) wzy_state.wire.visible = !wzy_on;
+  }
+
+  function wzy_play_toggle(wzy_state, wzy_button){
+    var wzy_on = wzy_button.getAttribute('aria-pressed') !== 'true';
+    wzy_button.setAttribute('aria-pressed', String(wzy_on));
+    wzy_button.textContent = wzy_on ? '暂停' : '旋转';
+    wzy_state.running = wzy_on;
+  }
+
+  function wzy_bind_colors(wzy_group, wzy_state){
+    Array.prototype.forEach.call(wzy_group.querySelectorAll('button'), function(wzy_btn){
+      wzy_btn.addEventListener('click', function(){
+        var wzy_name = wzy_btn.getAttribute('data-color');
+        Array.prototype.forEach.call(wzy_group.querySelectorAll('button'), function(wzy_other){
+          wzy_other.setAttribute('aria-pressed', String(wzy_other === wzy_btn));
+        });
+        wzy_apply_color(wzy_state, wzy_name);
+      });
+    });
+  }
+
+  wzy_get('wzy_core_code').textContent = [
+    '// 1. 场景、相机、渲染器',
+    'const scene = new THREE.Scene();',
+    'const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);',
+    'camera.position.set(0, 0, 4.3);',
+    'const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });',
+    'renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));',
+    '',
+    '// 2. 几何体与材质',
+    'const geometry = new THREE.IcosahedronGeometry(1.25, 1);',
+    'const material = new THREE.MeshStandardMaterial({',
+    '  color: 0x4f8a68, metalness: 0.18, roughness: 0.42, flatShading: true',
+    '});',
+    'const mesh = new THREE.Mesh(geometry, material);',
+    'scene.add(mesh);',
+    '',
+    '// 3. 光照',
+    'scene.add(new THREE.HemisphereLight(0xffffff, 0x20342a, 0.95));',
+    'const dir = new THREE.DirectionalLight(0xffffff, 0.95);',
+    'dir.position.set(3.2, 4.2, 4.5);',
+    'scene.add(dir);',
+    '',
+    '// 4. 按帧间时间旋转',
+    'let last = 0;',
+    'function tick(now) {',
+    '  const dt = Math.min((now - last) / 1000, 0.05);',
+    '  last = now;',
+    '  mesh.rotation.y += dt * 0.55;',
+    '  renderer.render(scene, camera);',
+    '  requestAnimationFrame(tick);',
+    '}',
+    'requestAnimationFrame(tick);'
+  ].join('\n');
+
+  if(!window.THREE || !wzy_webgl_ready()){ wzy_fallback(); return; }
+
+  var wzy_crystal = wzy_build(wzy_get('wzy_crystal'), 'crystal', 'crystal');
+  var wzy_knot = wzy_build(wzy_get('wzy_knot'), 'knot', 'knot');
+  wzy_scenes.push(wzy_crystal, wzy_knot);
+
+  wzy_bind_colors(wzy_get('wzy_crystal_colors'), wzy_crystal);
+  wzy_bind_colors(wzy_get('wzy_knot_colors'), wzy_knot);
+
+  wzy_get('wzy_crystal_wire').addEventListener('click', function(){ wzy_wire_toggle(wzy_crystal, this); });
+  wzy_get('wzy_knot_wire').addEventListener('click', function(){ wzy_wire_toggle(wzy_knot, this); });
+  wzy_get('wzy_crystal_play').addEventListener('click', function(){ wzy_play_toggle(wzy_crystal, this); });
+  wzy_get('wzy_knot_play').addEventListener('click', function(){ wzy_play_toggle(wzy_knot, this); });
+
+  if(wzy_reduce){
+    wzy_get('wzy_crystal_play').setAttribute('aria-pressed', 'false');
+    wzy_get('wzy_crystal_play').textContent = '旋转';
+    wzy_get('wzy_knot_play').setAttribute('aria-pressed', 'false');
+    wzy_get('wzy_knot_play').textContent = '旋转';
+    wzy_get('wzy_status').textContent = 'three.js r149 · 已按系统偏好停止自动旋转';
+  }else{
+    wzy_get('wzy_status').textContent = 'three.js r149 · WebGL · 本地资源';
+  }
+
+  wzy_get('wzy_speed').addEventListener('input', function(){
+    wzy_speed = Number(this.value);
+    wzy_get('wzy_speed_value').textContent = wzy_speed.toFixed(1) + '×';
+    if(wzy_speed > 0 && !wzy_crystal.running && !wzy_knot.running){
+      wzy_play_toggle(wzy_crystal, wzy_get('wzy_crystal_play'));
+      wzy_play_toggle(wzy_knot, wzy_get('wzy_knot_play'));
+    }
+  });
+
+  wzy_get('wzy_reset').addEventListener('click', function(){
+    wzy_scenes.forEach(function(wzy_state){
+      wzy_state.dragX = 0.18;
+      wzy_state.dragY = 0.4;
+      wzy_state.spin = 0;
+    });
+    wzy_get('wzy_status').textContent = '视角已重置';
+  });
+
+  requestAnimationFrame(wzy_tick);
+})();
+</script>
+</body>
+</html>
