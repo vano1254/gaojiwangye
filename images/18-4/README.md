@@ -8,3 +8,10 @@
 - 页面使用 ECharts GL globe + scatter3D + lines3D。
 - 八座城市及连接为教学示意，非真实机构合作或咨询来源。节点数量按 28/14/12/10/10/8/10/8 的固定权重分配，和当前周期总量一致。
 - 浏览器无法提供 WebGL 时显示平面地表与同一城市数据，二维图表继续运行。
+
+## 纹理刷新修复（2026-11-05）
+
+- globe.baseTexture 使用 data URI 字符串；预加载 Image 只用来验证图片能解码。
+- GL 2.1.0 的 graphicGL.loadTexture 对已缓存 Image 对象的分支不会调用启用材质纹理的回调，而每次 setTextureImage 又会先禁用纹理。旋转/定位等 setOption 更新因此使球体变白。
+- 字符串缓存分支会在缓存命中后再次调用回调，避免控件更新时丢失贴图；不修改第三方库。
+- 上游源码：https://github.com/ecomfe/echarts-gl/blob/2.1.0/src/util/graphicGL.js
