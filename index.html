@@ -398,6 +398,7 @@ footer code{font-family:var(--mono)}
           <li><b>本次追加（创意小岛）</b>：新增 <code>japan-islands.html</code>「岛屿来信」，以五座内联 SVG 小岛展示京都、富士、北海道、冲绳与东京风格，支持四季、昼夜、地图缩放和本地收藏手帐；作为其他页面编号 46 收录，可离线打开。</li>
           <li><b>本次追加（第十八章）</b>：新增 <code>18-1.html</code>（Canvas 粒子轨道动画：暂停、调速、数量、配色、拖尾与鼠标牵引）和 <code>18-2.html</code>（Canvas 电商全站架构图：五层结构、模块说明、三条业务链路、逐步演示和 PNG 导出），编号 37~38；其他页面顺延为 39~48。两页均为原生单文件，可离线打开。</li>
           <li><b>本次补充（18-1、18-3、18-4）</b>：18-1 增加 Canvas 文字衰减；新增 18-3 科研知识库智能客服 SVG 架构图和 18-4 ECharts 柱状图与折线图，编号 39~40，其他页面顺延为 41~50。ECharts 按课堂要求保存在 <code>cdn/</code>，SVG 原图位于 <code>images/18-3/</code>，均可离线使用。</li>
+          <li><b>本次更新（18-4 地球）</b>：在科研图表页融合 ECharts GL 三维地球、八座城市节点、七条协作连线、旋转/定位/显示控制和周期联动；GL 库保存在 <code>cdn/</code>，贴图及离线纹理位于 <code>images/18-4/</code>，不增加页面总数。</li>
           <li><b>修正链接基准</b>：本页已移动到 <code>D:\vscodehtml\</code>，课堂作品改用同目录相对路径，直接点开即可。</li>
           <li><b>保留旧收录</b>：原工作区的 9 个页面移到「其他页面」板块，改写成 <code>file:///</code> 绝对路径，不会因移动而失效。</li>
           <li><b>提示词单独留档</b>：所有生成提示词只保存在项目根目录的 <code>wang prompt.md</code> 中，网页里不再展示。</li>
@@ -1688,12 +1689,12 @@ footer code{font-family:var(--mono)}
           <div class="tags"><span class="tag course">课堂实践</span><span class="tag">SVG / 知识库</span><span class="tag offline">可离线打开</span></div>
           <div class="card-foot"><span class="meta">25.3 KB · 2026/11/05</span><a class="open" href="18-3.html" target="_blank" rel="noopener">打开页面</a></div>
         </article>
-        <article class="card reveal" data-item data-tags="course offline" data-key="18-4 ECharts 图表 柱状图 折线图 科研 数据 可视化 本地 cdn 王梓杨">
-          <div class="card-top"><span class="num">40</span><div><h4><a href="18-4.html" target="_blank" rel="noopener">科研咨询 · ECharts 柱状图与折线图</a></h4><div class="sub">18-4.html · 王梓杨</div></div></div>
-          <p class="desc"><b>知识点：</b>使用本地 ECharts 6.1.0，展示各方向咨询量柱状图与月度趋势折线图；支持周期切换、图例筛选、区间缩放、原始数据表和 PNG 导出。全部为教学模拟数据。</p>
+        <article class="card reveal" data-item data-tags="course offline" data-key="18-4 ECharts GL 三维 地球 globe scatter3D lines3D 城市 节点 连线 图表 柱状图 折线图 科研 数据 可视化 本地 cdn 王梓杨">
+          <div class="card-top"><span class="num">40</span><div><h4><a href="18-4.html" target="_blank" rel="noopener">全球科研咨询 · 地球与 ECharts 图表</a></h4><div class="sub">18-4.html · 王梓杨</div></div></div>
+          <p class="desc"><b>知识点：</b>使用本地 ECharts 6.1.0 与 GL 2.1.0，融合可旋转三维地球、八个城市节点和七条协作连线；节点随周期更新，并保留柱状图、折线图、数据表与 PNG 导出。库和地表贴图均本地化，全部为教学模拟。</p>
           <div class="path"><span>路径：</span>D:\vscodehtml\18-4.html</div>
           <div class="tags"><span class="tag course">课堂实践</span><span class="tag">ECharts / 数据图表</span><span class="tag offline">可离线打开</span></div>
-          <div class="card-foot"><span class="meta">14.9 KB · 2026/11/05</span><a class="open" href="18-4.html" target="_blank" rel="noopener">打开页面</a></div>
+          <div class="card-foot"><span class="meta">27.6 KB · 2026/11/05</span><a class="open" href="18-4.html" target="_blank" rel="noopener">打开页面</a></div>
         </article>
       </div>
     </div>
@@ -1969,12 +1970,13 @@ footer code{font-family:var(--mono)}
           <li><code>18-1.html</code>　第十八章 · Canvas 粒子轨道与文字衰减动画（暂停、调速、数量、配色、拖尾、鼠标牵引、文字输入与重播，可离线）</li>
           <li><code>18-2.html</code>　第十八章 · Canvas 电商系统架构图（五层架构、模块说明、三条业务流程、逐步演示与 PNG 导出，可离线）</li>
           <li><code>18-3.html</code>　第十八章 · 科研知识库智能客服 SVG 架构图（文献入库、检索增强、引用、权限、人工转接，原图在 <code>images/18-3/</code>）</li>
-          <li><code>18-4.html</code>　第十八章 · ECharts 柱状图与折线图（周期、图例、缩放、数据表、PNG 导出，模拟数据，库文件在 <code>cdn/</code>）</li>
+          <li><code>18-4.html</code>　第十八章 · ECharts 三维地球、柱状图与折线图（城市定位、协作连线、周期、数据表与导出；库在 <code>cdn/</code>，贴图在 <code>images/18-4/</code>，模拟数据）</li>
           <li><code>images/18-3/</code>　科研客服架构 SVG 原图：<code>research-kb-architecture.svg</code></li>
+          <li><code>images/18-4/</code>　地球影像与离线纹理：<code>earth.jpg</code>、<code>earth-texture.js</code> 及来源说明</li>
           <li><code>images/</code>　图片素材：<code>2-2.html</code> 用的 qq.png、tw1.png，以及
               <code>7-1 / 7-2</code> 用的 banner1~4.jpg，以及 <code>images/9-1/</code> 里的 p1~p9.jpg（9-1 九张卡片的配图）</li>
           <li><code>img/</code>　图片素材：<code>10-2.html</code> 幻灯片用的 1.jpg ~ 3.jpg</li>
-          <li><code>cdn/</code>　课程图标与图表资源：<code>all.min.css</code> + <code>webfonts/</code> 里 8 个字体文件、<code>lucide/</code> 里 48 个 svg、<code>lucide.min.js</code>、<code>echarts.min.js</code> + ECharts LICENSE / NOTICE / 来源说明（全部离线）</li>
+          <li><code>cdn/</code>　课程图标与图表资源：<code>all.min.css</code> + <code>webfonts/</code> 里 8 个字体文件、<code>lucide/</code> 里 48 个 svg、<code>lucide.min.js</code>、<code>echarts.min.js</code>、<code>echarts-gl.min.js</code> + ECharts / GL 许可与来源说明（全部离线）</li>
           <li><code>font/</code>　图标字体：<code>13-3.html</code> 用的自建 <code>iconfont.css</code> + <code>iconfont.woff2 / .woff / .ttf / .svg</code>（4 个字形，码位 E600~E603）</li>
         </ul>
       </div>
