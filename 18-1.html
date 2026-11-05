@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 13:35，使用模型：GPT-6，功能名称：Canvas 粒子轨道 - 用原生 Canvas 绘制可调速、可暂停的星轨动画 -->
+<!-- 更新：2026-11-05 14:04，使用模型：GPT-6.1-sol，内容：补充 Canvas 文字衰减、输入与重播 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="第十八章 Canvas 动画：粒子轨道和文字衰减，支持拖尾、鼠标引力、暂停、调速、重置与文字重播，纯原生实现，可离线打开。">
+<title>18-1 · 星轨实验室 · 王梓杨</title>
+<style>
+*{box-sizing:border-box} :root{color-scheme:dark;--wzy_bg:#0b101a;--wzy_panel:#111925;--wzy_line:#263140;--wzy_text:#ecf1f7;--wzy_muted:#91a1b5;--wzy_accent:#bde3b4}
+body{margin:0;background:var(--wzy_bg);color:var(--wzy_text);font:14px/1.7 "Microsoft YaHei",system-ui,sans-serif}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button,select{border:1px solid var(--wzy_line);background:#182230;color:var(--wzy_text);padding:10px 15px;cursor:pointer}button:hover,select:hover{border-color:var(--wzy_accent)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--wzy_accent);outline-offset:4px}h1,h2,p{margin:0}h1{font-size:clamp(32px,4vw,52px);letter-spacing:-2px;line-height:1.25}h2{font-size:16px}code{font-family:Consolas,monospace;color:#bde3b4}
+.wzy_wrap{width:min(1320px,calc(100% - 64px));margin:auto}.wzy_nav{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:22px 0;border-bottom:1px solid var(--wzy_line)}.wzy_brand{font-weight:700;letter-spacing:1px}.wzy_links{display:flex;flex-wrap:wrap;gap:25px;font-size:12px;color:var(--wzy_muted)}.wzy_links [aria-current]{color:var(--wzy_accent)}.wzy_hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:38px 0 30px}.wzy_kicker{font:11px/1.6 Consolas,monospace;letter-spacing:3px;color:var(--wzy_accent);margin-bottom:12px}.wzy_hero p:not(.wzy_kicker){margin-top:13px;color:var(--wzy_muted)}.wzy_mark{font:12px/1.8 Consolas,monospace;color:var(--wzy_muted);text-align:right;white-space:nowrap}.wzy_workspace{display:grid;grid-template-columns:minmax(0,1fr) 278px;border:1px solid var(--wzy_line)}.wzy_stage{position:relative;min-width:0;background:#080f1a;overflow:hidden}canvas{display:block;width:100%;height:540px;touch-action:pan-y}.wzy_stage_top{position:absolute;inset:20px 22px auto;display:flex;justify-content:space-between;pointer-events:none;font:11px/1.5 Consolas,monospace;letter-spacing:1px;color:#8eacc0}.wzy_live{color:#bde3b4}.wzy_stage_bottom{position:absolute;bottom:20px;left:22px;right:22px;display:flex;justify-content:space-between;gap:10px;pointer-events:none;font-size:11px;color:#8eacc0}.wzy_controls{border-left:1px solid var(--wzy_line);padding:24px;background:var(--wzy_panel)}.wzy_controls h2{margin-bottom:22px}.wzy_control{display:block;margin:23px 0}.wzy_control>span{display:flex;justify-content:space-between;margin-bottom:11px;color:var(--wzy_muted);font-size:12px}.wzy_control output{color:var(--wzy_text);font-family:Consolas,monospace}input[type=range]{width:100%;accent-color:var(--wzy_accent);cursor:pointer}select{width:100%;font-size:12px}.wzy_check{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--wzy_muted);margin:19px 0}input[type=checkbox]{accent-color:var(--wzy_accent);width:16px;height:16px}.wzy_actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:25px}.wzy_primary{background:var(--wzy_accent);color:#17251b;border-color:var(--wzy_accent)}.wzy_note{font-size:11px;color:var(--wzy_muted);margin-top:16px}.wzy_explain{display:grid;grid-template-columns:repeat(3,1fr);margin:25px 0 34px;border-bottom:1px solid var(--wzy_line)}.wzy_explain article{padding:0 28px 24px 0}.wzy_explain article+article{padding-left:28px;border-left:1px solid var(--wzy_line)}.wzy_number{font:11px Consolas,monospace;color:var(--wzy_accent);margin-bottom:12px}.wzy_explain h2{margin-bottom:8px}.wzy_explain p{font-size:12px;color:var(--wzy_muted)}.wzy_footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;padding-bottom:24px;color:var(--wzy_muted);font-size:11px}
+@media(max-width:850px){.wzy_wrap{width:calc(100% - 32px)}.wzy_workspace{grid-template-columns:1fr}.wzy_controls{border-left:0;border-top:1px solid var(--wzy_line);display:grid;grid-template-columns:1fr 1fr;gap:0 24px}.wzy_controls h2,.wzy_note{grid-column:1/-1}.wzy_control{margin:10px 0}.wzy_actions{margin:8px 0}.wzy_mark{display:none}canvas{height:440px}}@media(max-width:520px){.wzy_links{gap:15px}.wzy_hero{padding:28px 0}.wzy_explain{grid-template-columns:1fr}.wzy_explain article,.wzy_explain article+article{padding:16px 0;border:0}.wzy_controls{padding:18px;gap:0 16px}canvas{height:380px}.wzy_stage_bottom{font-size:10px}.wzy_stage_top{inset:15px 16px auto}}
+.wzy_text_panel{margin-top:24px;border:1px solid var(--wzy_line);background:var(--wzy_panel)}.wzy_text_head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:18px 22px;border-bottom:1px solid var(--wzy_line)}.wzy_text_head p{font-size:12px;color:var(--wzy_muted);margin-top:5px}.wzy_text_form{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.wzy_text_form label{font-size:12px;color:var(--wzy_muted)}.wzy_text_form input{width:230px;max-width:100%;padding:10px 12px;color:var(--wzy_text);background:#0b1421;border:1px solid var(--wzy_line)}#wzy_text_canvas{height:240px;background:#080f1a}.wzy_text_hint{padding:12px 22px;border-top:1px solid var(--wzy_line);font-size:12px;color:var(--wzy_muted)}
+</style>
+</head>
+<body>
+<div class="wzy_wrap">
+<nav class="wzy_nav" aria-label="课程导航"><a class="wzy_brand" href="index.html">WZY / 课堂实验</a><div class="wzy_links"><a href="index.html">作品目录</a><a href="18-1.html" aria-current="page">18-1 动画</a><a href="18-2.html">18-2 架构图</a><a href="18-3.html">18-3 科研客服</a><a href="18-4.html">18-4 图表</a></div></nav>
+<header class="wzy_hero"><div><p class="wzy_kicker">CHAPTER 18 / CANVAS MOTION</p><h1>让每一帧，都有迹可循。</h1><p>一束光，许多条轨道。在画布上，观察运动与时间的形状。</p></div><div class="wzy_mark">EXPERIMENT 01<br>原生 Canvas 2D · 离线运行</div></header>
+<main>
+<div class="wzy_workspace">
+<section class="wzy_stage" aria-label="粒子动画预览"><div class="wzy_stage_top"><span>ORBIT FIELD / 001</span><span class="wzy_live" id="wzy_state" aria-live="polite">运行中</span></div><canvas id="wzy_canvas" role="img" aria-label="彩色粒子围绕中心沿椭圆轨道运动，移动指针可改变引力中心">当前浏览器不支持 Canvas，请使用支持 HTML5 的浏览器。</canvas><div class="wzy_stage_bottom"><span>移动指针，轻轻牵引星轨</span><span id="wzy_fps">FPS —</span></div></section>
+<aside class="wzy_controls" aria-label="动画控制"><h2>调整你的轨道</h2><label class="wzy_control" for="wzy_speed"><span>运动速度 <output id="wzy_speed_value" for="wzy_speed">1.0×</output></span><input id="wzy_speed" type="range" min="0.2" max="2.5" step="0.1" value="1"></label><label class="wzy_control" for="wzy_count"><span>粒子数量 <output id="wzy_count_value" for="wzy_count">160</output></span><input id="wzy_count" type="range" min="40" max="320" step="20" value="160"></label><label class="wzy_control" for="wzy_palette"><span>光的配色</span><select id="wzy_palette"><option value="aurora">极光 / 青绿与冰蓝</option><option value="sunset">落日 / 橘金与玫红</option><option value="violet">星云 / 紫色与淡蓝</option></select></label><label class="wzy_check"><input id="wzy_trail" type="checkbox" checked>保留运动拖尾</label><div class="wzy_actions"><button type="button" class="wzy_primary" id="wzy_toggle" aria-pressed="false">暂停动画</button><button type="button" id="wzy_reset">重置</button></div><p class="wzy_note">暂停后仍可调整参数。重置恢复默认配色、数量、速度与中心位置。系统偏好减少动态效果时，默认暂停。</p></aside>
+</div>
+<section class="wzy_text_panel" aria-labelledby="wzy_text_title"><div class="wzy_text_head"><div><h2 id="wzy_text_title">文字衰减 · 让光慢慢消失</h2><p>文字逐字漂移、变淡，再重新出现；与上方动画共用暂停和速度控制。</p></div><div class="wzy_text_form"><label for="wzy_text_input">画布文字</label><input type="text" id="wzy_text_input" maxlength="24" value="CANVAS · 让想法发光"><button type="button" id="wzy_text_replay">重播文字</button></div></div><canvas id="wzy_text_canvas" role="img" aria-label="文字衰减动画：逐字上浮并降低透明度，循环重播">文字衰减需要支持 Canvas 的浏览器。</canvas><p class="wzy_text_hint">先保持清晰，再逐字衰减。绘制每个字时设置 <code>globalAlpha = exp(-k × t)</code>，透明度随时间下降；重新输入或点击重播，从头观察。</p></section>
+<section class="wzy_explain" aria-label="动画原理"><article><div class="wzy_number">01 / DRAW</div><h2>先画出一个点</h2><p><code>arc()</code> 绘制粒子，颜色与半径赋予每个点不同的亮度和层次。</p></article><article><div class="wzy_number">02 / UPDATE</div><h2>让位置随时间变化</h2><p>用三角函数计算椭圆轨道，按帧间时间更新角度，让不同刷新率下的运动速度保持一致。</p></article><article><div class="wzy_number">03 / REPEAT</div><h2>把瞬间连成运动</h2><p><code>requestAnimationFrame()</code> 持续重绘；半透明背景覆盖上一帧，留下逐渐消退的光迹。</p></article></section>
+</main><footer class="wzy_footer"><span>王梓杨 · 高级网页设计 · 第十八章</span><a href="18-2.html">下一项实验：电商系统架构图 →</a></footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  const wzy_get = (wzy_id) => document.getElementById(wzy_id);
+  const wzy_canvas = wzy_get('wzy_canvas'), wzy_ctx = wzy_canvas.getContext('2d');
+  if (!wzy_ctx) { wzy_get('wzy_state').textContent = '当前浏览器不支持 Canvas 2D'; return; }
+  const wzy_speed = wzy_get('wzy_speed'), wzy_count = wzy_get('wzy_count'), wzy_palette = wzy_get('wzy_palette'), wzy_trail = wzy_get('wzy_trail');
+  const wzy_reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const wzy_text_canvas = wzy_get('wzy_text_canvas'), wzy_text_ctx = wzy_text_canvas.getContext('2d'), wzy_text_input = wzy_get('wzy_text_input');
+  let wzy_text_time = 0, wzy_text_width = 0, wzy_text_height = 0;
+  function wzy_draw_text(wzy_delta) {
+    if (!wzy_text_ctx) return;
+    wzy_text_time = (wzy_text_time + wzy_delta * Number(wzy_speed.value)) % 7;
+    wzy_text_ctx.clearRect(0,0,wzy_text_width,wzy_text_height);
+    const wzy_label = wzy_text_input.value.trim() || 'CANVAS · 让想法发光';
+    const wzy_font = Math.min(44,Math.max(10,(wzy_text_width-40)/Array.from(wzy_label).length));
+    wzy_text_ctx.font = '500 '+wzy_font+'px "Microsoft YaHei",sans-serif';
+    const wzy_chars = Array.from(wzy_label), wzy_total = wzy_text_ctx.measureText(wzy_label).width;
+    let wzy_x = (wzy_text_width-wzy_total)/2;
+    wzy_chars.forEach((wzy_char,wzy_i) => {
+      const wzy_age = Math.max(0,wzy_text_time-1.1-wzy_i*0.055);
+      wzy_text_ctx.save(); wzy_text_ctx.globalAlpha = Math.exp(-1.3*wzy_age);
+      wzy_text_ctx.fillStyle = wzy_colors[wzy_palette.value][wzy_i%3];
+      wzy_text_ctx.shadowColor = wzy_text_ctx.fillStyle; wzy_text_ctx.shadowBlur = 10;
+      wzy_text_ctx.fillText(wzy_char,wzy_x+Math.sin(wzy_i*2.4)*wzy_age*8,wzy_text_height/2+wzy_font*.35-wzy_age*wzy_age*9);
+      wzy_text_ctx.restore(); wzy_x += wzy_text_ctx.measureText(wzy_char).width;
+    });
+  }
+  const wzy_colors = { aurora:['#bde3b4','#70dfcd','#81baf0'], sunset:['#ffc17d','#ff897d','#f5b5cf'], violet:['#c8acff','#879cfa','#e8d4ff'] };
+  let wzy_width = 0, wzy_height = 0, wzy_particles = [], wzy_time = 0, wzy_last = 0, wzy_raf = 0, wzy_running = !wzy_reduced.matches;
+  let wzy_center = {x:0.5,y:0.5}, wzy_target = {x:0.5,y:0.5}, wzy_frame_count = 0, wzy_frame_time = 0;
+  function wzy_seed() {
+    wzy_particles = Array.from({length:Number(wzy_count.value)}, (wzy_unused,wzy_i) => ({
+      angle:wzy_i * 2.39996, radius:0.14 + ((wzy_i * 37) % 101) / 140,
+      speed:0.12 + ((wzy_i * 13) % 29) / 55, size:0.8 + (wzy_i % 5) * 0.32,
+      tilt:(wzy_i % 3 - 1) * 0.24, color:wzy_i % 3
+    }));
+  }
+  function wzy_clear() { wzy_ctx.fillStyle = '#080f1a'; wzy_ctx.fillRect(0,0,wzy_width,wzy_height); }
+  function wzy_draw(wzy_delta) {
+    wzy_draw_text(wzy_delta);
+    if (wzy_delta > 0) {
+      wzy_time += wzy_delta * Number(wzy_speed.value);
+      const wzy_ease = 1 - Math.exp(-wzy_delta * 3);
+      wzy_center.x += (wzy_target.x - wzy_center.x) * wzy_ease;
+      wzy_center.y += (wzy_target.y - wzy_center.y) * wzy_ease;
+    }
+    wzy_ctx.fillStyle = wzy_trail.checked && wzy_delta > 0 ? 'rgba(8,15,26,' + (1-Math.exp(-wzy_delta*8)) + ')' : '#080f1a';
+    wzy_ctx.fillRect(0,0,wzy_width,wzy_height);
+    const wzy_x = wzy_width * wzy_center.x, wzy_y = wzy_height * wzy_center.y, wzy_scale = Math.min(wzy_width * 0.47,wzy_height * 0.63);
+    wzy_ctx.save(); wzy_ctx.translate(wzy_x,wzy_y); wzy_ctx.rotate(-0.32);
+    wzy_ctx.strokeStyle = 'rgba(112,153,184,0.09)'; wzy_ctx.lineWidth = 1;
+    [0.30,0.52,0.75,0.94].forEach((wzy_r) => { wzy_ctx.beginPath(); wzy_ctx.ellipse(0,0,wzy_scale*wzy_r,wzy_scale*wzy_r*0.53,0,0,Math.PI*2); wzy_ctx.stroke(); });
+    wzy_ctx.globalCompositeOperation = 'lighter';
+    wzy_particles.forEach((wzy_p) => {
+      const wzy_angle = wzy_p.angle + wzy_time*wzy_p.speed, wzy_radius = wzy_scale*wzy_p.radius;
+      wzy_ctx.save(); wzy_ctx.rotate(wzy_p.tilt);
+      wzy_ctx.fillStyle = wzy_colors[wzy_palette.value][wzy_p.color]; wzy_ctx.shadowColor = wzy_ctx.fillStyle; wzy_ctx.shadowBlur = 9;
+      wzy_ctx.beginPath(); wzy_ctx.arc(Math.cos(wzy_angle)*wzy_radius,Math.sin(wzy_angle)*wzy_radius*0.53,wzy_p.size,0,Math.PI*2); wzy_ctx.fill(); wzy_ctx.restore();
+    });
+    wzy_ctx.restore();
+    const wzy_glow = wzy_ctx.createRadialGradient(wzy_x,wzy_y,0,wzy_x,wzy_y,42);
+    wzy_glow.addColorStop(0,'rgba(189,227,180,0.24)'); wzy_glow.addColorStop(1,'rgba(189,227,180,0)');
+    wzy_ctx.fillStyle = wzy_glow; wzy_ctx.fillRect(wzy_x-42,wzy_y-42,84,84);
+    wzy_ctx.fillStyle = '#e2f4dc'; wzy_ctx.beginPath(); wzy_ctx.arc(wzy_x,wzy_y,3,0,Math.PI*2); wzy_ctx.fill();
+  }
+  function wzy_resize() {
+    const wzy_rect = wzy_canvas.getBoundingClientRect(), wzy_dpr = Math.min(window.devicePixelRatio || 1,2);
+    wzy_width = wzy_rect.width; wzy_height = wzy_rect.height;
+    wzy_canvas.width = Math.round(wzy_width*wzy_dpr); wzy_canvas.height = Math.round(wzy_height*wzy_dpr);
+    wzy_ctx.setTransform(wzy_dpr,0,0,wzy_dpr,0,0); wzy_draw(0);
+    const wzy_text_rect = wzy_text_canvas.getBoundingClientRect();
+    wzy_text_width = wzy_text_rect.width; wzy_text_height = wzy_text_rect.height;
+    wzy_text_canvas.width = Math.round(wzy_text_width*wzy_dpr); wzy_text_canvas.height = Math.round(wzy_text_height*wzy_dpr);
+    if(wzy_text_ctx) wzy_text_ctx.setTransform(wzy_dpr,0,0,wzy_dpr,0,0); wzy_draw_text(0);
+  }
+  function wzy_frame(wzy_now) {
+    wzy_raf = 0;
+    if (!wzy_running || document.hidden) return;
+    const wzy_delta = wzy_last ? Math.min((wzy_now-wzy_last)/1000,0.05) : 0;
+    wzy_last = wzy_now; wzy_draw(wzy_delta); wzy_frame_count++; wzy_frame_time += wzy_delta;
+    if (wzy_frame_time >= 0.5) { wzy_get('wzy_fps').textContent = 'FPS ' + Math.round(wzy_frame_count/wzy_frame_time); wzy_frame_time = 0; wzy_frame_count = 0; }
+    wzy_raf = requestAnimationFrame(wzy_frame);
+  }
+  function wzy_sync() {
+    cancelAnimationFrame(wzy_raf); wzy_raf = 0; wzy_last = 0; wzy_frame_count = 0; wzy_frame_time = 0;
+    wzy_get('wzy_toggle').textContent = wzy_running ? '暂停动画' : '播放动画';
+    wzy_get('wzy_toggle').setAttribute('aria-pressed',String(!wzy_running));
+    wzy_get('wzy_state').textContent = wzy_running ? '运行中' : '已暂停';
+    if (wzy_running && !document.hidden) wzy_raf = requestAnimationFrame(wzy_frame);
+    else wzy_get('wzy_fps').textContent = 'FPS —';
+  }
+  wzy_get('wzy_toggle').addEventListener('click',() => { wzy_running = !wzy_running; wzy_sync(); });
+  function wzy_replay_text() { wzy_text_time = 0; wzy_draw_text(0); }
+  wzy_text_input.addEventListener('input',wzy_replay_text);
+  wzy_get('wzy_text_replay').addEventListener('click',wzy_replay_text);
+  wzy_speed.addEventListener('input',() => { wzy_get('wzy_speed_value').textContent = Number(wzy_speed.value).toFixed(1)+'×'; });
+  wzy_count.addEventListener('input',() => { wzy_get('wzy_count_value').textContent = wzy_count.value; wzy_seed(); wzy_draw(0); });
+  [wzy_palette,wzy_trail].forEach((wzy_control) => wzy_control.addEventListener('change',() => wzy_draw(0)));
+  wzy_canvas.addEventListener('pointermove',(wzy_event) => { const wzy_rect = wzy_canvas.getBoundingClientRect(); wzy_target = {x:0.5+((wzy_event.clientX-wzy_rect.left)/wzy_width-0.5)*0.35,y:0.5+((wzy_event.clientY-wzy_rect.top)/wzy_height-0.5)*0.35}; });
+  wzy_canvas.addEventListener('pointerleave',() => { wzy_target = {x:0.5,y:0.5}; });
+  wzy_get('wzy_reset').addEventListener('click',() => {
+    wzy_speed.value = '1'; wzy_count.value = '160'; wzy_palette.value = 'aurora'; wzy_trail.checked = true;
+    wzy_get('wzy_speed_value').textContent = '1.0×'; wzy_get('wzy_count_value').textContent = '160';
+    wzy_center = {x:0.5,y:0.5}; wzy_target = {x:0.5,y:0.5}; wzy_time = 0; wzy_text_time = 0; wzy_text_input.value = 'CANVAS · 让想法发光'; wzy_seed(); wzy_clear(); wzy_draw(0); wzy_sync();
+  });
+  document.addEventListener('visibilitychange',wzy_sync);
+  wzy_reduced.addEventListener('change',() => { if (wzy_reduced.matches) { wzy_running = false; wzy_sync(); } });
+  window.addEventListener('resize',wzy_resize);
+  wzy_seed(); wzy_resize(); wzy_sync();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 14:03，使用模型：GPT-6.1-sol，功能名称：科研客服数据图表 - 使用本地 ECharts 展示柱状图与折线图并切换教学模拟数据 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="18-4 ECharts 柱状图与折线图，以科研知识库客服为主题，支持周期切换、图例筛选、数据表与 PNG 导出，ECharts 本地保存于 cdn 目录，全部数据为教学模拟。">
+<title>18-4 · 科研客服数据图表 · 王梓杨</title>
+<style>
+*{box-sizing:border-box}:root{color-scheme:light;--wzy_ink:#2d443a;--wzy_muted:#788579;--wzy_line:#dce3d6;--wzy_green:#3e765c;--wzy_gold:#b79a69}body{margin:0;background:#f5f6f0;color:var(--wzy_ink);font:14px/1.7 "Microsoft YaHei",system-ui,sans-serif}h1,h2,p{margin:0}a{color:inherit;text-decoration:none}button,select{font:inherit;background:white;border:1px solid #cbd7c9;color:var(--wzy_ink);padding:9px 13px;cursor:pointer}button:hover,select:hover{border-color:var(--wzy_green)}:focus-visible{outline:2px solid var(--wzy_green);outline-offset:4px}.wzy_wrap{width:min(1380px,calc(100% - 64px));margin:auto}.wzy_nav{padding:21px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--wzy_line)}.wzy_brand{font-weight:700;letter-spacing:1px}.wzy_links{display:flex;gap:22px;flex-wrap:wrap;color:var(--wzy_muted);font-size:12px}.wzy_links [aria-current]{color:var(--wzy_green);font-weight:bold}.wzy_hero{padding:32px 0 27px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}.wzy_kicker{font:11px Consolas,monospace;letter-spacing:3px;color:var(--wzy_green);margin-bottom:13px}h1{font-size:clamp(29px,3.3vw,44px);letter-spacing:-1px;line-height:1.4}.wzy_sub{margin-top:10px;color:var(--wzy_muted)}.wzy_data_tag{padding:6px 11px;border:1px solid #d7c59f;color:#927641;font-size:11px;white-space:nowrap;background:#fcf8ec}.wzy_toolbar{padding:15px 19px;border:1px solid var(--wzy_line);display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:white}.wzy_toolbar label{font-size:12px;color:var(--wzy_muted)}.wzy_status{margin-left:auto;font-size:11px;color:var(--wzy_muted)}.wzy_stats{display:grid;grid-template-columns:repeat(3,1fr);margin:20px 0;border:1px solid var(--wzy_line);background:#fff}.wzy_stat{padding:19px 23px}.wzy_stat+.wzy_stat{border-left:1px solid var(--wzy_line)}.wzy_stat span{font-size:12px;color:var(--wzy_muted)}.wzy_stat strong{display:block;font:32px/1.6 Consolas,monospace;color:var(--wzy_green)}.wzy_stat small{font-size:11px;color:var(--wzy_muted)}.wzy_charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}.wzy_panel{min-width:0;background:#fff;border:1px solid var(--wzy_line)}.wzy_panel_head{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between;gap:15px}.wzy_panel_head h2{font-size:17px}.wzy_panel_head p{font-size:11px;color:var(--wzy_muted);margin-top:4px}.wzy_panel_head button{font-size:11px;white-space:nowrap}.wzy_chart{height:370px;width:100%}.wzy_caption{font-size:12px;color:var(--wzy_muted);padding:0 22px 20px}.wzy_message{margin:18px 0;color:var(--wzy_green);font-size:12px;min-height:21px}.wzy_table_panel{margin-bottom:24px;border:1px solid var(--wzy_line);background:#fff;padding:20px 22px}.wzy_table_panel[hidden]{display:none}.wzy_table_grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}.wzy_table_scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}caption{text-align:left;font-weight:700;font-size:14px;padding-bottom:10px}th,td{border-bottom:1px solid var(--wzy_line);padding:10px;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:#667c69;font-weight:500;background:#f7f9f3}.wzy_explain{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:25px 0}.wzy_explain h2{font-size:14px}.wzy_explain p{font-size:12px;color:var(--wzy_muted);margin-top:8px}.wzy_footer{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:20px 0;border-top:1px solid var(--wzy_line);font-size:11px;color:var(--wzy_muted)}.wzy_footer a{text-decoration:underline;text-underline-offset:4px}.wzy_error{margin-top:15px;padding:12px 16px;background:#fff2df;border:1px solid #e4cc9f;color:#8a612c;font-size:12px}.wzy_error[hidden]{display:none}
+@media(max-width:1000px){.wzy_charts{grid-template-columns:1fr}.wzy_chart{height:380px}}@media(max-width:600px){.wzy_wrap{width:calc(100% - 28px)}.wzy_hero{align-items:flex-start;flex-direction:column;gap:15px}.wzy_links{gap:14px}.wzy_stats{grid-template-columns:1fr}.wzy_stat+.wzy_stat{border-left:0;border-top:1px solid var(--wzy_line)}.wzy_stat{padding:13px 18px;display:grid;grid-template-columns:1fr auto;align-items:center}.wzy_stat small{grid-column:1/-1}.wzy_stat strong{font-size:25px}.wzy_chart{height:340px}.wzy_explain,.wzy_table_grid{grid-template-columns:1fr}.wzy_status{width:100%;margin-left:0}.wzy_panel_head{padding:17px 15px 0}}
+</style>
+</head>
+<body>
+<div class="wzy_wrap">
+<nav class="wzy_nav" aria-label="课程导航"><a class="wzy_brand" href="index.html">WZY / 课堂实验</a><div class="wzy_links"><a href="index.html">作品目录</a><a href="18-1.html">18-1 动画</a><a href="18-2.html">18-2 电商架构</a><a href="18-3.html">18-3 科研客服</a><a href="18-4.html" aria-current="page">18-4 图表</a></div></nav>
+<header class="wzy_hero"><div><p class="wzy_kicker">CHAPTER 18 / DATA OBSERVATORY</p><h1>用两张图，读懂科研咨询。</h1><p class="wzy_sub">柱状图比较学科分布，折线图观察月度变化。</p></div><span class="wzy_data_tag">教学模拟数据 · 非真实统计</span></header>
+<main>
+<div class="wzy_toolbar"><label for="wzy_period">统计周期</label><select id="wzy_period"><option value="recent">2026 年 5–10 月</option><option value="previous">2025 年 11 月–2026 年 4 月</option></select><button type="button" id="wzy_table_toggle" aria-expanded="false" aria-controls="wzy_tables">查看数据表</button><button type="button" id="wzy_reset">恢复默认</button><span class="wzy_status">ECharts 6.1.0 · 本地资源 · 可离线</span></div>
+<p class="wzy_error" id="wzy_error" role="alert" hidden>图表库加载失败，请确认 cdn/echarts.min.js 与本页一同保存。下方数据表仍可查看。</p>
+<section class="wzy_stats" aria-label="当前周期统计"><div class="wzy_stat"><span>咨询总量</span><strong id="wzy_total">—</strong><small>按当前周期汇总 · 次</small></div><div class="wzy_stat"><span>有据解答占比</span><strong id="wzy_rate">—</strong><small>有知识库证据支持的解答 / 咨询总量</small></div><div class="wzy_stat"><span>咨询方向</span><strong>05</strong><small>机器学习 / 材料 / 生命 / 工程 / 办事</small></div></section>
+<div class="wzy_charts">
+<section class="wzy_panel" aria-labelledby="wzy_bar_title"><div class="wzy_panel_head"><div><h2 id="wzy_bar_title">各方向咨询量</h2><p>01 / BAR CHART · 单位：次</p></div><button type="button" id="wzy_export_bar">导出 PNG</button></div><div class="wzy_chart" id="wzy_bar" role="img" aria-label="各科研方向的咨询总量与有据解答量柱状图"></div><p class="wzy_caption">点击柱子查看数值；点击图例可隐藏或显示对应数据。</p></section>
+<section class="wzy_panel" aria-labelledby="wzy_line_title"><div class="wzy_panel_head"><div><h2 id="wzy_line_title">月度咨询趋势</h2><p>02 / LINE CHART · 单位：次</p></div><button type="button" id="wzy_export_line">导出 PNG</button></div><div class="wzy_chart" id="wzy_line" role="img" aria-label="六个月咨询总量与有据解答量的折线图"></div><p class="wzy_caption">悬停查看每月数据，拖动底部滑块缩放观察区间。</p></section>
+</div>
+<p class="wzy_message" id="wzy_message" aria-live="polite">所有数据均为课堂演示构造，可展开数据表核对。</p>
+<section class="wzy_table_panel" id="wzy_tables" hidden aria-label="图表对应数据"><div class="wzy_table_grid"><div class="wzy_table_scroll"><table><caption>按科研方向汇总</caption><thead><tr><th scope="col">咨询方向</th><th scope="col">咨询总量</th><th scope="col">有据解答</th></tr></thead><tbody id="wzy_bar_rows"></tbody></table></div><div class="wzy_table_scroll"><table><caption>按月份汇总</caption><thead><tr><th scope="col">月份</th><th scope="col">咨询总量</th><th scope="col">有据解答</th></tr></thead><tbody id="wzy_line_rows"></tbody></table></div></div></section>
+<section class="wzy_explain"><article><h2>01 / 比较数量</h2><p>两组柱形共用从零开始的数量轴，便于比较各方向的咨询规模与有据解答数量。</p></article><article><h2>02 / 观察变化</h2><p>两条折线使用相同单位与坐标轴，保留月份顺序；底部滑块只改变显示范围，不改变汇总数字。</p></article><article><h2>03 / 正确解读</h2><p>有据解答表示有知识库证据支持，不等同于答案准确率；其余咨询可能需要澄清、补充材料或人工处理。</p></article></section>
+</main><footer class="wzy_footer"><span>王梓杨 · 高级网页设计 · 第十八章</span><span>本地 ECharts · <a href="cdn/echarts-LICENSE.txt">许可证</a> · <a href="https://echarts.apache.org/handbook/zh/get-started/" target="_blank" rel="noopener">官方入门文档</a></span></footer>
+</div>
+<!-- 课程指定图表库，使用本地文件，无远程脚本。第三方库内部标识符保留上游原样。 -->
+<script src="./cdn/echarts.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  const wzy_get=(wzy_id)=>document.getElementById(wzy_id);
+  const wzy_datasets={
+    recent:{months:['5月','6月','7月','8月','9月','10月'],queries:[160,198,224,260,306,352],answered:[128,164,189,225,266,310],topics:[420,318,276,258,228],topicAnswered:[370,278,230,218,186]},
+    previous:{months:['11月','12月','1月','2月','3月','4月'],queries:[100,122,140,156,180,202],answered:[74,90,106,121,143,166],topics:[240,205,170,160,125],topicAnswered:[194,161,130,120,95]}
+  };
+  const wzy_topics=['机器学习','材料科学','生命科学','工程技术','科研办事'];
+  const wzy_reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let wzy_bar=null,wzy_line=null;
+  const wzy_sum=(wzy_values)=>wzy_values.reduce((wzy_total,wzy_value)=>wzy_total+wzy_value,0);
+  function wzy_base(){return {animation:!wzy_reduce,animationDuration:500,color:['#477b60','#b7c6a1'],textStyle:{fontFamily:'Microsoft YaHei, sans-serif',color:'#6d7e70'},aria:{enabled:true},tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},legend:{top:18,itemWidth:13,itemHeight:8,textStyle:{fontSize:11,color:'#6f7f72'}},grid:{left:18,right:25,top:78,bottom:35,containLabel:true},xAxis:{type:'category',axisLine:{lineStyle:{color:'#cfdace'}},axisTick:{show:false},axisLabel:{fontSize:10,interval:0}},yAxis:{type:'value',min:0,name:'次',nameTextStyle:{fontSize:10},splitLine:{lineStyle:{color:'#edf0e9'}},axisLabel:{fontSize:10}}};}
+  function wzy_rows(wzy_target,wzy_names,wzy_queries,wzy_answers){
+    wzy_target.replaceChildren();
+    wzy_names.forEach((wzy_name,wzy_i)=>{const wzy_row=document.createElement('tr');[wzy_name,wzy_queries[wzy_i],wzy_answers[wzy_i]].forEach((wzy_value,wzy_j)=>{const wzy_cell=document.createElement(wzy_j===0?'th':'td');if(wzy_j===0)wzy_cell.setAttribute('scope','row');wzy_cell.textContent=String(wzy_value);wzy_row.append(wzy_cell);});wzy_target.append(wzy_row);});
+  }
+  function wzy_render(){
+    const wzy_data=wzy_datasets[wzy_get('wzy_period').value],wzy_total=wzy_sum(wzy_data.queries),wzy_answers=wzy_sum(wzy_data.answered);
+    wzy_get('wzy_total').textContent=wzy_total.toLocaleString('zh-CN');wzy_get('wzy_rate').textContent=(wzy_answers/wzy_total*100).toFixed(1)+'%';
+    wzy_rows(wzy_get('wzy_bar_rows'),wzy_topics,wzy_data.topics,wzy_data.topicAnswered);wzy_rows(wzy_get('wzy_line_rows'),wzy_data.months,wzy_data.queries,wzy_data.answered);
+    if(!wzy_bar||!wzy_line)return;
+    const wzy_bar_option=wzy_base();wzy_bar_option.xAxis.data=wzy_topics;wzy_bar_option.series=[{name:'咨询总量',type:'bar',barMaxWidth:24,data:wzy_data.topics},{name:'有据解答',type:'bar',barMaxWidth:24,data:wzy_data.topicAnswered}];
+    const wzy_line_option=wzy_base();wzy_line_option.tooltip.axisPointer.type='line';wzy_line_option.grid.bottom=72;wzy_line_option.xAxis.data=wzy_data.months;wzy_line_option.xAxis.boundaryGap=false;wzy_line_option.color=['#477b60','#b79a69'];
+    wzy_line_option.dataZoom=[{type:'slider',height:15,bottom:13,start:0,end:100,borderColor:'#dce4d5',fillerColor:'rgba(86,130,95,.15)',handleStyle:{color:'#80a27c'}}];
+    wzy_line_option.series=[{name:'咨询总量',type:'line',symbol:'circle',symbolSize:7,lineStyle:{width:2.5},data:wzy_data.queries},{name:'有据解答',type:'line',symbol:'circle',symbolSize:6,lineStyle:{width:2,type:'dashed'},data:wzy_data.answered}];
+    wzy_bar.setOption(wzy_bar_option,true);wzy_line.setOption(wzy_line_option,true);
+  }
+  function wzy_show_tables(wzy_show){wzy_get('wzy_tables').hidden=!wzy_show;wzy_get('wzy_table_toggle').setAttribute('aria-expanded',String(wzy_show));wzy_get('wzy_table_toggle').textContent=wzy_show?'收起数据表':'查看数据表';}
+  if(window.echarts){
+    wzy_bar=window.echarts.init(wzy_get('wzy_bar'));wzy_line=window.echarts.init(wzy_get('wzy_line'));
+    wzy_bar.on('click',(wzy_event)=>{wzy_get('wzy_message').textContent=wzy_event.name+' · '+wzy_event.seriesName+'：'+wzy_event.value+' 次（教学模拟）';});
+    function wzy_resize(){wzy_bar.resize();wzy_line.resize();}
+    if('ResizeObserver' in window){const wzy_observer=new ResizeObserver(wzy_resize);wzy_observer.observe(wzy_get('wzy_bar'));wzy_observer.observe(wzy_get('wzy_line'));}else window.addEventListener('resize',wzy_resize);
+  }else{wzy_get('wzy_error').hidden=false;wzy_get('wzy_export_bar').disabled=true;wzy_get('wzy_export_line').disabled=true;wzy_show_tables(true);}
+  wzy_get('wzy_period').addEventListener('change',()=>{wzy_render();wzy_get('wzy_message').textContent='周期已更新；两张图表和数据表已同步。所有数值均为教学模拟。';});
+  wzy_get('wzy_table_toggle').addEventListener('click',()=>wzy_show_tables(wzy_get('wzy_tables').hidden));
+  wzy_get('wzy_reset').addEventListener('click',()=>{wzy_get('wzy_period').value='recent';wzy_render();wzy_show_tables(!wzy_bar);wzy_get('wzy_message').textContent='已恢复默认周期、图例与完整月份范围。';});
+  function wzy_export(wzy_chart,wzy_name){if(!wzy_chart)return;const wzy_link=document.createElement('a');wzy_link.download='18-4-'+wzy_name+'-教学模拟.png';wzy_link.href=wzy_chart.getDataURL({type:'png',pixelRatio:2,backgroundColor:'#ffffff'});wzy_link.click();}
+  wzy_get('wzy_export_bar').addEventListener('click',()=>wzy_export(wzy_bar,'学科柱状图'));
+  wzy_get('wzy_export_line').addEventListener('click',()=>wzy_export(wzy_line,'月度折线图'));
+  wzy_render();
+})();
+</script>
+</body>
+</html>

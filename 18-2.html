@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!-- 姓名：王梓杨，建立时间：2026-11-05 13:38，使用模型：GPT-6，功能名称：电商系统架构图 - 使用 Canvas 绘制全站分层架构并演示业务数据流 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="王梓杨">
+<meta name="description" content="第十八章 Canvas 电商全站系统架构图，展示客户端、接入层、业务服务、数据基础设施、第三方与运维，支持节点说明、业务流程演示及 PNG 导出，可离线运行。">
+<title>18-2 · 电商系统架构图 · 王梓杨</title>
+<style>
+*{box-sizing:border-box}:root{color-scheme:light;--wzy_ink:#233d3b;--wzy_muted:#72807c;--wzy_line:#dce3dc;--wzy_green:#356e59}body{margin:0;background:#f5f6f0;color:var(--wzy_ink);font:14px/1.7 "Microsoft YaHei",system-ui,sans-serif}h1,h2,p{margin:0}a{color:inherit;text-decoration:none}button,select{font:inherit;color:var(--wzy_ink);background:#fff;border:1px solid #cbd7cf;padding:9px 13px;cursor:pointer}button:hover,select:hover{border-color:var(--wzy_green)}button:disabled{opacity:.45;cursor:default}:focus-visible{outline:2px solid var(--wzy_green);outline-offset:4px}h1{font-size:clamp(30px,3.5vw,45px);line-height:1.35;letter-spacing:-1px}h2{font-size:16px}.wzy_wrap{width:min(1440px,calc(100% - 64px));margin:auto}.wzy_nav{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:22px 0;border-bottom:1px solid var(--wzy_line)}.wzy_brand{font-weight:700;letter-spacing:1px}.wzy_links{display:flex;flex-wrap:wrap;gap:25px;font-size:12px;color:var(--wzy_muted)}.wzy_links [aria-current]{color:var(--wzy_green);font-weight:bold}.wzy_hero{padding:32px 0 27px;display:flex;justify-content:space-between;align-items:flex-end;gap:22px}.wzy_kicker{font:11px/1.6 Consolas,monospace;letter-spacing:3px;color:var(--wzy_green);margin-bottom:10px}.wzy_sub{margin-top:10px;color:var(--wzy_muted)}.wzy_badge{font:11px/1.8 Consolas,monospace;color:var(--wzy_muted);white-space:nowrap;text-align:right}.wzy_toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:15px 18px;background:white;border:1px solid var(--wzy_line)}.wzy_toolbar label{font-size:12px;color:var(--wzy_muted)}.wzy_primary{background:var(--wzy_green);border-color:var(--wzy_green);color:#fff}.wzy_export{margin-left:auto}.wzy_workspace{display:grid;grid-template-columns:minmax(0,1fr) 266px;border:1px solid var(--wzy_line);border-top:0;background:white}.wzy_map{min-width:0}.wzy_scroll{overflow:auto}canvas{display:block;width:100%;height:auto;min-width:780px;aspect-ratio:1100/790}.wzy_legend{display:flex;gap:20px;flex-wrap:wrap;padding:15px 22px;border-top:1px solid var(--wzy_line);color:var(--wzy_muted);font-size:11px}.wzy_legend span::before{content:"";display:inline-block;width:18px;height:2px;vertical-align:middle;background:#b5c5bd;margin-right:7px}.wzy_legend span:nth-child(2)::before{background:#34755b;height:3px}.wzy_legend span:nth-child(3)::before{background:repeating-linear-gradient(90deg,#b79867 0 4px,transparent 4px 7px)}.wzy_sidebar{border-left:1px solid var(--wzy_line);background:#fafbf7;padding:22px}.wzy_label{font:10px Consolas,monospace;letter-spacing:2px;color:var(--wzy_muted);margin-bottom:12px}.wzy_sidebar select{width:100%;font-size:12px;margin-top:14px}.wzy_detail{min-height:155px;margin-top:20px}.wzy_detail h2{margin-bottom:10px}.wzy_detail p{font-size:12px;color:#667a70}.wzy_type{display:inline-block;margin-top:13px;padding:3px 8px;background:#e9f0e7;font-size:11px;color:var(--wzy_green)}.wzy_flow{border-top:1px solid var(--wzy_line);padding-top:20px;margin-top:20px}.wzy_flow h2{margin-bottom:8px}.wzy_flow p{font-size:12px;color:#667a70}.wzy_steps{padding-left:22px;font-size:12px;color:var(--wzy_muted);line-height:1.7}.wzy_steps li{padding:5px 0 5px 4px}.wzy_steps li[aria-current="step"]{color:#225b43;font-weight:700;background:#e6efdf}.wzy_hint{font-size:11px;color:var(--wzy_muted);padding:14px 20px;border-top:1px solid var(--wzy_line)}.wzy_notes{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin:25px 0 30px}.wzy_notes h2{font-size:14px;margin-bottom:7px}.wzy_notes p{font-size:12px;color:var(--wzy_muted)}.wzy_footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--wzy_muted);padding:20px 0;border-top:1px solid var(--wzy_line)}
+@media(max-width:1100px){.wzy_workspace{grid-template-columns:1fr}.wzy_sidebar{border-left:0;border-top:1px solid var(--wzy_line);display:grid;grid-template-columns:1fr 1fr;gap:0 30px}.wzy_sidebar>div:first-child{grid-column:1}.wzy_detail{grid-column:1;min-height:0}.wzy_flow{grid-column:2;grid-row:1/3;margin:0;border:0;padding:0}.wzy_badge{display:none}}@media(max-width:600px){.wzy_wrap{width:calc(100% - 28px)}.wzy_links{gap:14px}.wzy_hero{padding:25px 0}.wzy_toolbar{padding:12px;gap:8px}.wzy_toolbar select{max-width:100%}.wzy_export{margin-left:0}.wzy_sidebar{display:block;padding:18px}.wzy_flow{border-top:1px solid var(--wzy_line);padding-top:20px;margin-top:20px}.wzy_notes{grid-template-columns:1fr;gap:18px}.wzy_legend{gap:10px}}
+</style>
+</head>
+<body>
+<div class="wzy_wrap">
+<nav class="wzy_nav" aria-label="课程导航"><a class="wzy_brand" href="index.html">WZY / 课堂实验</a><div class="wzy_links"><a href="index.html">作品目录</a><a href="18-1.html">18-1 动画</a><a href="18-2.html" aria-current="page">18-2 架构图</a><a href="18-3.html">18-3 科研客服</a><a href="18-4.html">18-4 图表</a></div></nav>
+<header class="wzy_hero"><div><p class="wzy_kicker">CHAPTER 18 / SYSTEM ARCHITECTURE</p><h1>一次下单，经过怎样的系统？</h1><p class="wzy_sub">从用户界面到数据存储，沿着一条请求，看懂电商全站。</p></div><div class="wzy_badge">CANVAS 2D / INTERACTIVE MAP<br>05 个层次 · 16 个模块</div></header>
+<main>
+<div class="wzy_toolbar"><label for="wzy_scenario">业务视角</label><select id="wzy_scenario"><option value="overview">全站架构总览</option><option value="browse">商品浏览链路</option><option value="checkout">下单支付链路</option><option value="admin">后台管理链路</option></select><button type="button" class="wzy_primary" id="wzy_play">演示下单流程</button><button type="button" id="wzy_next" disabled>下一步</button><button type="button" id="wzy_reset">恢复总览</button><button type="button" class="wzy_export" id="wzy_export">导出 PNG</button></div>
+<div class="wzy_workspace"><section class="wzy_map" aria-label="系统架构画布"><div class="wzy_scroll" tabindex="0" role="region" aria-label="电商架构图，窄屏可横向滚动"><canvas id="wzy_canvas" width="1100" height="790" role="img" aria-label="电商全站五层架构图。模块可点击；也可通过右侧选择框查看各模块说明。完整文本结构见下方。">浏览器不支持 Canvas，请阅读页面下方的文本结构说明。</canvas></div><div class="wzy_legend"><span>模块调用 / 数据访问</span><span>当前业务步骤</span><span>异步消息</span></div><p class="wzy_hint">点击模块查看职责。窄屏可横向滚动画布；键盘用户可用模块下拉框。箭头表示调用或事件方向，省略响应返回线。</p></section>
+<aside class="wzy_sidebar"><div><p class="wzy_label">MODULE INSPECTOR</p><h2>每一层，各司其职</h2><label for="wzy_module" class="wzy_label">选择模块查看详情</label><select id="wzy_module"><option value="">选择一个架构模块</option></select></div><div class="wzy_detail" aria-live="polite"><h2 id="wzy_detail_title">全站架构总览</h2><p id="wzy_detail_text">上方是访问入口，中间是业务服务，下方是数据与外部能力。选择一条业务链路，逐步观察模块之间如何协作。</p><span class="wzy_type" id="wzy_detail_type">教学示意 · 非真实后端</span></div><div class="wzy_flow"><p class="wzy_label">REQUEST JOURNEY</p><h2 id="wzy_flow_title">从一次操作开始</h2><p id="wzy_flow_status" aria-live="polite">选择业务视角，或点击“演示下单流程”。</p><ol class="wzy_steps" id="wzy_steps"></ol></div></aside></div>
+<section class="wzy_notes" aria-label="架构说明"><article><h2>01 / 前端与业务解耦</h2><p>商城网页、移动端与管理后台统一访问网关。网关处理路由、鉴权与限流，用户、商品、订单、库存、支付服务负责各自业务。</p></article><article><h2>02 / 数据与事件分工</h2><p>关系数据库保存用户、商品、订单和库存；Redis 加速热点读取；消息队列传递支付事件；对象存储保存商品图片。数据库示意为逻辑存储，可按服务拆分。</p></article><article><h2>03 / 外部能力与运行保障</h2><p>支付服务对接第三方支付并验签、幂等处理回调；消息消费者触发物流履约。监控、日志与告警覆盖全站。流程为简化演示，实际还需库存回滚、重试与补偿。</p></article></section>
+<details><summary>查看完整文本结构（无障碍阅读）</summary><p>客户端：商城网页、移动端、管理后台 → 接入层：API 网关 → 业务层：用户认证、商品目录、订单中心、库存管理、支付结算 → 数据层：MySQL 数据库、Redis 缓存、消息队列、对象存储 → 外部与运维：第三方支付、物流履约、监控与日志。商品服务读取缓存和数据库及图片存储，订单服务调用库存与支付，支付服务对接支付平台，支付成功事件通过队列触发物流消费者。监控覆盖全站，图中不逐一绘制监控连线。</p></details>
+</main><footer class="wzy_footer"><span>王梓杨 · 高级网页设计 · 第十八章</span><span>图形、文字与连线均由 Canvas 绘制 · 可离线使用</span></footer>
+</div>
+<script>
+(function () {
+  'use strict';
+  const wzy_get = (wzy_id) => document.getElementById(wzy_id);
+  const wzy_canvas = wzy_get('wzy_canvas'), wzy_ctx = wzy_canvas.getContext('2d');
+  if (!wzy_ctx) { wzy_get('wzy_flow_status').textContent = 'Canvas 不可用，请查看下方完整文本结构。'; return; }
+  // 坐标采用固定逻辑尺寸；实际像素按设备像素比调整。
+  const wzy_nodes = [
+    {id:'web',name:'商城网页',sub:'首页 / 搜索 / 购物车',x:210,y:74,w:225,layer:0,desc:'面向消费者的网页入口：浏览商品、管理购物车、提交订单与查询物流。页面通过网关调用服务。'},
+    {id:'mobile',name:'移动端',sub:'H5 / 小程序 / App',x:505,y:74,w:225,layer:0,desc:'移动端复用相同的后端业务接口，负责触屏交互、登录与订单查询。'},
+    {id:'admin',name:'管理后台',sub:'商品 / 订单 / 运营',x:800,y:74,w:225,layer:0,desc:'供商家维护商品、审核订单和管理库存。后台请求经过网关并校验管理员角色及权限。'},
+    {id:'gateway',name:'API 网关',sub:'HTTPS · 路由 · 身份校验 · 限流',x:210,y:204,w:815,layer:1,desc:'统一接收客户端请求，校验令牌、限制请求速率并路由到业务服务。登录凭据由用户认证服务校验。'},
+    {id:'user',name:'用户认证',sub:'账号 / 角色 / 权限',x:210,y:334,w:147,layer:2,desc:'处理注册、登录、令牌签发、用户资料和角色权限；敏感操作需要服务端再次授权校验。'},
+    {id:'product',name:'商品目录',sub:'商品 / 分类 / 检索',x:377,y:334,w:147,layer:2,desc:'提供商品列表、详情和分类检索。优先读取缓存，未命中时查数据库并回填缓存；商品图片保存在对象存储。'},
+    {id:'order',name:'订单中心',sub:'创建 / 状态 / 售后',x:544,y:334,w:147,layer:2,desc:'校验购物车、计算服务端价格并创建待支付订单，协调库存预占与支付；维护订单状态并处理超时取消。'},
+    {id:'inventory',name:'库存管理',sub:'查询 / 预占 / 回补',x:711,y:334,w:147,layer:2,desc:'通过数据库事务或条件更新预占库存，防止超卖。支付完成后确认扣减，取消或超时后释放预占。'},
+    {id:'payment',name:'支付结算',sub:'支付 / 回调 / 退款',x:878,y:334,w:147,layer:2,desc:'创建支付单并对接支付平台。服务端对回调验签与幂等处理，更新支付状态并发出支付成功事件。'},
+    {id:'db',name:'MySQL 数据库',sub:'用户 / 商品 / 订单 / 库存',x:210,y:484,w:190,layer:3,desc:'持久保存业务数据，以事务保证关键写入的一致性。这里统一表示逻辑数据层，实际可按服务划分库表。'},
+    {id:'cache',name:'Redis 缓存',sub:'热点商品 / 会话 / 过期',x:418,y:484,w:190,layer:3,desc:'加速热点商品与会话读取。缓存不是订单与库存的唯一事实来源；需要过期策略和更新后的失效机制。'},
+    {id:'queue',name:'消息队列',sub:'支付事件 / 异步消费',x:626,y:484,w:190,layer:3,desc:'传递支付成功等事件，使支付与履约解耦。消费者需支持幂等、失败重试和异常补偿。'},
+    {id:'storage',name:'对象存储',sub:'商品图片 / 静态资源',x:834,y:484,w:191,layer:3,desc:'保存商品图片和静态文件。商品数据库保存资源地址，由前端加载展示；生产环境可搭配内容分发。'},
+    {id:'external',name:'第三方支付',sub:'支付渠道 / 回调通知',x:210,y:644,w:225,layer:4,desc:'外部支付平台完成资金交易并向支付服务发送异步通知。支付服务必须验签，不能只凭前端支付成功页面确认到账。'},
+    {id:'logistics',name:'物流履约',sub:'事件消费 / 发货 / 轨迹',x:505,y:644,w:225,layer:4,desc:'履约消费者收到支付事件后校验订单状态，对接仓储及物流服务安排发货，并同步运单与物流轨迹。'},
+    {id:'ops',name:'监控与日志',sub:'指标 / 追踪 / 告警 / 备份',x:800,y:644,w:225,layer:4,desc:'贯穿所有层的运行保障：收集指标、日志与链路追踪，发现异常并告警，配合数据库备份和恢复演练。'}
+  ];
+  const wzy_layers = [ ['01','客户端','用户与运营入口','#edf3ed','#52866a'],['02','接入层','统一入口与安全','#eef3f7','#6189a3'],['03','业务服务','按业务职责拆分','#f0f3e9','#7a8b4d'],['04','数据基础设施','存储、缓存与事件','#f5f0e7','#a38753'],['05','外部与运维','第三方及运行保障','#f0edf4','#8c7da2'] ];
+  const wzy_edges = [
+    ['web','gateway'],['mobile','gateway'],['admin','gateway'],['gateway','user'],['gateway','product'],['gateway','order'],['gateway','inventory'],['gateway','payment'],
+    ['user','db'],['product','db'],['product','cache'],['product','storage'],['order','db'],['order','inventory'],['order','payment'],['inventory','db'],['payment','db'],['payment','external'],['payment','queue'],['queue','logistics']
+  ];
+  const wzy_flows = {
+    browse:{title:'商品浏览链路',steps:[['web','gateway','商城发起商品查询'],['gateway','product','网关路由到商品服务'],['product','cache','读取热点商品缓存'],['product','db','缓存未命中时查询数据库'],['product','storage','读取商品图片资源']]},
+    checkout:{title:'下单支付链路',steps:[['web','gateway','用户提交结算请求'],['gateway','order','校验价格，创建待支付订单'],['order','inventory','请求预占商品库存'],['inventory','db','事务校验并预占库存'],['order','payment','创建关联订单的支付单'],['payment','external','调用支付渠道并处理回调'],['payment','queue','验签后发布支付成功事件'],['queue','logistics','履约消费者安排发货']]},
+    admin:{title:'后台管理链路',steps:[['admin','gateway','管理员提交操作请求'],['gateway','user','认证身份与角色权限'],['gateway','product','授权后更新商品信息'],['product','db','持久化商品变更'],['product','cache','使相关商品缓存失效']]}
+  };
+  let wzy_selected = '', wzy_mode = 'overview', wzy_step = 0, wzy_progress = 0, wzy_running = false, wzy_last = 0, wzy_raf = 0;
+  const wzy_find = (wzy_id) => wzy_nodes.find((wzy_node) => wzy_node.id === wzy_id);
+  const wzy_module = wzy_get('wzy_module'), wzy_scenario = wzy_get('wzy_scenario');
+  wzy_nodes.forEach((wzy_node) => { const wzy_option = document.createElement('option'); wzy_option.value = wzy_node.id; wzy_option.textContent = wzy_layers[wzy_node.layer][1]+' / '+wzy_node.name; wzy_module.append(wzy_option); });
+  function wzy_route(wzy_from,wzy_to) {
+    const wzy_a = wzy_find(wzy_from), wzy_b = wzy_find(wzy_to);
+    if (wzy_a.y === wzy_b.y) {
+      if (Math.abs(wzy_b.x-wzy_a.x) > 200) return [[wzy_a.x+wzy_a.w/2,wzy_a.y+72],[wzy_a.x+wzy_a.w/2,432],[wzy_b.x+wzy_b.w/2,432],[wzy_b.x+wzy_b.w/2,wzy_b.y+72]];
+      const wzy_right = wzy_b.x > wzy_a.x;
+      return [[wzy_a.x+(wzy_right?wzy_a.w:0),wzy_a.y+36],[wzy_b.x+(wzy_right?0:wzy_b.w),wzy_b.y+36]];
+    }
+    const wzy_start = [wzy_a.x+wzy_a.w/2,wzy_a.y+72], wzy_end = [wzy_b.x+wzy_b.w/2,wzy_b.y];
+    // 跨两层的支付通道从图右侧绕行，避开数据层节点。
+    if (wzy_from === 'payment' && wzy_to === 'external') return [wzy_start,[1060,406],[1060,612],[wzy_end[0],612],wzy_end];
+    const wzy_mid = (wzy_start[1]+wzy_end[1])/2;
+    return [wzy_start,[wzy_start[0],wzy_mid],[wzy_end[0],wzy_mid],wzy_end];
+  }
+  function wzy_line(wzy_edge,wzy_active) {
+    const wzy_points = wzy_route(wzy_edge[0],wzy_edge[1]);
+    const wzy_async = wzy_edge[0] === 'queue' || wzy_edge[1] === 'queue';
+    wzy_ctx.strokeStyle = wzy_active ? '#34755b' : (wzy_async ? '#b79867' : '#bac9c0'); wzy_ctx.lineWidth = wzy_active ? 2.6 : 1.1;
+    wzy_ctx.setLineDash(wzy_async ? [5,4] : []); wzy_ctx.beginPath();
+    wzy_points.forEach((wzy_point,wzy_i) => { if(wzy_i === 0) wzy_ctx.moveTo(...wzy_point); else wzy_ctx.lineTo(...wzy_point); }); wzy_ctx.stroke(); wzy_ctx.setLineDash([]);
+    const wzy_end = wzy_points[wzy_points.length-1], wzy_before = wzy_points[wzy_points.length-2], wzy_angle = Math.atan2(wzy_end[1]-wzy_before[1],wzy_end[0]-wzy_before[0]);
+    wzy_ctx.fillStyle = wzy_ctx.strokeStyle; wzy_ctx.beginPath(); wzy_ctx.moveTo(...wzy_end); wzy_ctx.lineTo(wzy_end[0]-7*Math.cos(wzy_angle-.45),wzy_end[1]-7*Math.sin(wzy_angle-.45)); wzy_ctx.lineTo(wzy_end[0]-7*Math.cos(wzy_angle+.45),wzy_end[1]-7*Math.sin(wzy_angle+.45)); wzy_ctx.closePath(); wzy_ctx.fill();
+    return wzy_points;
+  }
+  function wzy_dot(wzy_points) {
+    const wzy_lengths = wzy_points.slice(1).map((wzy_point,wzy_i) => Math.hypot(wzy_point[0]-wzy_points[wzy_i][0],wzy_point[1]-wzy_points[wzy_i][1]));
+    let wzy_distance = wzy_lengths.reduce((wzy_sum,wzy_length) => wzy_sum+wzy_length,0)*wzy_progress;
+    for(let wzy_i=0;wzy_i<wzy_lengths.length;wzy_i++) {
+      if(wzy_distance <= wzy_lengths[wzy_i] && wzy_lengths[wzy_i] > 0) {
+        const wzy_ratio = wzy_distance/wzy_lengths[wzy_i], wzy_a = wzy_points[wzy_i], wzy_b = wzy_points[wzy_i+1];
+        wzy_ctx.fillStyle = '#34755b'; wzy_ctx.beginPath(); wzy_ctx.arc(wzy_a[0]+(wzy_b[0]-wzy_a[0])*wzy_ratio,wzy_a[1]+(wzy_b[1]-wzy_a[1])*wzy_ratio,5,0,Math.PI*2); wzy_ctx.fill(); break;
+      } wzy_distance -= wzy_lengths[wzy_i];
+    }
+  }
+  function wzy_draw() {
+    wzy_ctx.fillStyle = '#ffffff'; wzy_ctx.fillRect(0,0,1100,790);
+    wzy_ctx.fillStyle = '#8c9d91'; for(let wzy_x=18;wzy_x<1100;wzy_x+=22) for(let wzy_y=18;wzy_y<790;wzy_y+=22) { wzy_ctx.globalAlpha=.17; wzy_ctx.fillRect(wzy_x,wzy_y,1,1); } wzy_ctx.globalAlpha=1;
+    wzy_layers.forEach((wzy_layer,wzy_i) => {
+      const wzy_y = [54,184,314,464,624][wzy_i];
+      wzy_ctx.fillStyle = wzy_layer[3]; wzy_ctx.fillRect(24,wzy_y,1024,112);
+      wzy_ctx.fillStyle = wzy_layer[4]; wzy_ctx.font = '11px Consolas, monospace'; wzy_ctx.fillText(wzy_layer[0]+' / LAYER',42,wzy_y+28);
+      wzy_ctx.fillStyle = '#30483b'; wzy_ctx.font = 'bold 17px "Microsoft YaHei",sans-serif'; wzy_ctx.fillText(wzy_layer[1],42,wzy_y+56);
+      wzy_ctx.fillStyle = '#78877c'; wzy_ctx.font = '11px "Microsoft YaHei",sans-serif'; wzy_ctx.fillText(wzy_layer[2],42,wzy_y+80);
+    });
+    wzy_edges.forEach((wzy_edge) => wzy_line(wzy_edge,false));
+    const wzy_current = wzy_mode === 'overview' ? null : wzy_flows[wzy_mode].steps[wzy_step];
+    if(wzy_current) wzy_line(wzy_current,true);
+    else if(wzy_selected) wzy_edges.filter((wzy_edge) => wzy_edge.includes(wzy_selected)).forEach((wzy_edge) => wzy_line(wzy_edge,true));
+    wzy_nodes.forEach((wzy_node) => {
+      const wzy_active = wzy_selected === wzy_node.id || (wzy_current && wzy_current.slice(0,2).includes(wzy_node.id));
+      wzy_ctx.fillStyle = wzy_active ? '#e5efdf' : '#ffffff'; wzy_ctx.fillRect(wzy_node.x,wzy_node.y,wzy_node.w,72);
+      wzy_ctx.strokeStyle = wzy_active ? '#34755b' : '#d2ded3'; wzy_ctx.lineWidth = wzy_active ? 2 : 1; wzy_ctx.strokeRect(wzy_node.x,wzy_node.y,wzy_node.w,72);
+      wzy_ctx.fillStyle = wzy_layers[wzy_node.layer][4]; wzy_ctx.fillRect(wzy_node.x,wzy_node.y,3,72);
+      wzy_ctx.fillStyle = '#2a4436'; wzy_ctx.font = 'bold 15px "Microsoft YaHei",sans-serif'; wzy_ctx.fillText(wzy_node.name,wzy_node.x+15,wzy_node.y+29);
+      wzy_ctx.fillStyle = '#7a887c'; wzy_ctx.font = '11px "Microsoft YaHei",sans-serif'; wzy_ctx.fillText(wzy_node.sub,wzy_node.x+15,wzy_node.y+51);
+    });
+    if(wzy_current) wzy_dot(wzy_route(wzy_current[0],wzy_current[1]));
+    wzy_ctx.fillStyle = '#839386'; wzy_ctx.font = '11px "Microsoft YaHei",sans-serif';
+    wzy_ctx.fillText('E-COMMERCE / 全站逻辑架构 · 箭头表示调用方向 · 监控覆盖所有层',24,28);
+    wzy_ctx.fillText('王梓杨 / 18-2 · 教学示意，支付回调与响应返回线从略',24,768);
+  }
+  function wzy_inspect(wzy_id) {
+    wzy_selected = wzy_id; wzy_module.value = wzy_id; const wzy_node = wzy_find(wzy_id);
+    wzy_get('wzy_detail_title').textContent = wzy_node ? wzy_node.name : '全站架构总览';
+    wzy_get('wzy_detail_text').textContent = wzy_node ? wzy_node.desc : '上方是访问入口，中间是业务服务，下方是数据与外部能力。选择一条业务链路，逐步观察模块之间如何协作。';
+    wzy_get('wzy_detail_type').textContent = wzy_node ? wzy_layers[wzy_node.layer][1] : '教学示意 · 非真实后端'; wzy_draw();
+  }
+  function wzy_ui() {
+    const wzy_flow = wzy_flows[wzy_mode];
+    wzy_get('wzy_play').textContent = wzy_mode === 'overview' ? '演示下单流程' : wzy_running ? '暂停演示' : '播放演示';
+    wzy_get('wzy_next').disabled = !wzy_flow; wzy_get('wzy_steps').replaceChildren();
+    wzy_get('wzy_flow_title').textContent = wzy_flow ? wzy_flow.title : '从一次操作开始';
+    wzy_get('wzy_flow_status').textContent = wzy_flow ? '步骤 '+(wzy_step+1)+' / '+wzy_flow.steps.length+' · '+(wzy_running?'演示中':'已暂停') : '选择业务视角，或点击“演示下单流程”。';
+    if(wzy_flow) wzy_flow.steps.forEach((wzy_item,wzy_i) => { const wzy_li = document.createElement('li'); wzy_li.textContent = wzy_item[2]; if(wzy_i === wzy_step) wzy_li.setAttribute('aria-current','step'); wzy_get('wzy_steps').append(wzy_li); });
+  }
+  function wzy_stop() { wzy_running = false; cancelAnimationFrame(wzy_raf); wzy_raf = 0; wzy_last = 0; }
+  function wzy_frame(wzy_now) {
+    wzy_raf = 0; if(!wzy_running || document.hidden) return;
+    if(wzy_last) wzy_progress += Math.min((wzy_now-wzy_last)/1000,0.1)/1.6;
+    wzy_last = wzy_now;
+    if(wzy_progress >= 1) {
+      if(wzy_step === wzy_flows[wzy_mode].steps.length-1) { wzy_progress = 1; wzy_stop(); wzy_ui(); wzy_get('wzy_flow_status').textContent = '演示完成 · 共 '+wzy_flows[wzy_mode].steps.length+' 个步骤'; wzy_draw(); return; }
+      wzy_step++; wzy_progress = 0; wzy_ui();
+    }
+    wzy_draw(); wzy_raf = requestAnimationFrame(wzy_frame);
+  }
+  function wzy_choose(wzy_value) { wzy_stop(); wzy_mode = wzy_value; wzy_scenario.value = wzy_value; wzy_step = 0; wzy_progress = 0; wzy_inspect(''); wzy_ui(); }
+  function wzy_resize() { const wzy_dpr = Math.min(window.devicePixelRatio || 1,2); wzy_canvas.width = 1100*wzy_dpr; wzy_canvas.height = 790*wzy_dpr; wzy_ctx.setTransform(wzy_dpr,0,0,wzy_dpr,0,0); wzy_draw(); }
+  wzy_canvas.addEventListener('click',(wzy_event) => { const wzy_rect = wzy_canvas.getBoundingClientRect(), wzy_x = (wzy_event.clientX-wzy_rect.left)*1100/wzy_rect.width, wzy_y = (wzy_event.clientY-wzy_rect.top)*790/wzy_rect.height; const wzy_node = wzy_nodes.find((wzy_n) => wzy_x >= wzy_n.x && wzy_x <= wzy_n.x+wzy_n.w && wzy_y >= wzy_n.y && wzy_y <= wzy_n.y+72); wzy_inspect(wzy_node ? wzy_node.id : ''); });
+  wzy_module.addEventListener('change',() => wzy_inspect(wzy_module.value));
+  wzy_scenario.addEventListener('change',() => wzy_choose(wzy_scenario.value));
+  wzy_get('wzy_play').addEventListener('click',() => { if(wzy_mode === 'overview') wzy_choose('checkout'); if(wzy_running) wzy_stop(); else { if(wzy_progress >= 1) { wzy_step=0; wzy_progress=0; } wzy_running=true; wzy_last=0; wzy_raf=requestAnimationFrame(wzy_frame); } wzy_ui(); });
+  wzy_get('wzy_next').addEventListener('click',() => { wzy_stop(); wzy_step = (wzy_step+1)%wzy_flows[wzy_mode].steps.length; wzy_progress=0; wzy_ui(); wzy_draw(); });
+  wzy_get('wzy_reset').addEventListener('click',() => wzy_choose('overview'));
+  wzy_get('wzy_export').addEventListener('click',() => { const wzy_link = document.createElement('a'); wzy_link.download='18-2-电商系统架构图.png'; wzy_link.href=wzy_canvas.toDataURL('image/png'); wzy_link.click(); });
+  document.addEventListener('visibilitychange',() => { cancelAnimationFrame(wzy_raf); wzy_raf=0; wzy_last=0; if(wzy_running && !document.hidden) wzy_raf=requestAnimationFrame(wzy_frame); });
+  window.addEventListener('resize',wzy_resize); wzy_resize(); wzy_ui();
+})();
+</script>
+</body>
+</html>
